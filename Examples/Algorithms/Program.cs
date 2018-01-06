@@ -212,7 +212,9 @@ namespace Algorithms
 							return 5;
 						if (from == 2 && to == 3)
 							return 1;
-						throw new Exception("invalid path cost computation");
+                        if (from == 0 && to == 3)
+                            return 99;
+                        throw new Exception("invalid path cost computation");
 					};
 
 			// make a delegate for determining if the goal is reached

@@ -142,7 +142,7 @@ namespace Theta.Structures
 				throw new System.InvalidOperationException("Adding an edge to a graph to a node that does not exists");
 			this._edges.Stepper(
 					(Edge e) => { throw new System.InvalidOperationException("Adding an edge to a graph that already exists"); },
-					start, end, start, end);
+					start, start, end, end);
 
 			this._edges.Add(new Edge(start, end));
 		}
