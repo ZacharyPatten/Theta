@@ -17,6 +17,8 @@ namespace GraphicsWindow
         [STAThread]
         public static void Main()
         {
+            System.Windows.Forms.MessageBox.Show("NOTE! The GraphicsWindow demo is still in major development. It only opens a blank OpenGL window at the moment.");
+
             using (AnimationTest test = new AnimationTest())
             {
                 test.Run(30.0, 0.0);

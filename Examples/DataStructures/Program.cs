@@ -17,9 +17,7 @@ namespace Testing
 		{
 			Random random = new Random();
 			int test = 10;
-
-			Console.WriteLine("Welcome To SevenFramework! :)");
-			Console.WriteLine();
+            
 			Console.WriteLine("You are runnning the Data Structures example.");
 			Console.WriteLine("======================================================");
 			Console.WriteLine();
@@ -69,17 +67,17 @@ namespace Testing
 				list_array.Add(i);
 			Console.Write("    Traversal: ");
 			list_array.Stepper((int current) => { Console.Write(current); });
-			Console.WriteLine();
-            string list_array_serialization = (list_array as ListArray<int>).Serialize(x => x.ToString());
-            using (StreamWriter writer = new StreamWriter("ListArray.ListArray"))
-            {
-                writer.WriteLine(list_array_serialization);
-            }
-            using (StreamReader reader = new StreamReader("ListArray.ListArray"))
-            {
-                list_array = ListArray<int>.Deserialize(reader.ReadToEnd(), x => Int16.Parse(x.Trim()));
-            }
-            Console.Write("    Serialization/Deserialization is possible.");
+			//Console.WriteLine();
+            //string list_array_serialization = (list_array as ListArray<int>).Serialize(x => x.ToString());
+            //using (StreamWriter writer = new StreamWriter("ListArray.ListArray"))
+            //{
+            //    writer.WriteLine(list_array_serialization);
+            //}
+            //using (StreamReader reader = new StreamReader("ListArray.ListArray"))
+            //{
+            //    list_array = ListArray<int>.Deserialize(reader.ReadToEnd(), x => Int16.Parse(x.Trim()));
+            //}
+            //Console.Write("    Serialization/Deserialization is possible.");
             list_array.Add(11);
             list_array.Remove(7);
 			Console.WriteLine();
@@ -96,15 +94,15 @@ namespace Testing
                 }
                 list_array2.Add(nested_list);
             }
-            string list_array2_serialization = (list_array2 as ListArray<ListArray<int>>).Serialize(x => x.Serialize(y => y.ToString()));
-            using (StreamWriter writer = new StreamWriter("ListArray2.ListArray"))
-            {
-                writer.WriteLine(list_array2_serialization);
-            }
-            using (StreamReader reader = new StreamReader("ListArray2.ListArray"))
-            {
-                list_array2 = ListArray<ListArray<int>>.Deserialize(reader.ReadToEnd(), x => ListArray<int>.Deserialize(x, y => Int16.Parse(y.Trim())));
-            }
+            //string list_array2_serialization = (list_array2 as ListArray<ListArray<int>>).Serialize(x => x.Serialize(y => y.ToString()));
+            //using (StreamWriter writer = new StreamWriter("ListArray2.ListArray"))
+            //{
+            //    writer.WriteLine(list_array2_serialization);
+            //}
+            //using (StreamReader reader = new StreamReader("ListArray2.ListArray"))
+            //{
+            //    list_array2 = ListArray<ListArray<int>>.Deserialize(reader.ReadToEnd(), x => ListArray<int>.Deserialize(x, y => Int16.Parse(y.Trim())));
+            //}
 
 			Console.WriteLine("  Testing List_Linked<int>-------------------");
 			List<int> list_linked = new ListLinked<int>();
@@ -516,8 +514,7 @@ namespace Testing
 			//Console.WriteLine();
 
 			#endregion
-
-
+            
             #region Omnitree
 
             //Console.WriteLine("  Testing 2222222<int, double>-------");

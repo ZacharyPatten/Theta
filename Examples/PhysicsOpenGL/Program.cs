@@ -20,7 +20,7 @@ namespace JitterOpenGLDemo
         private PhysicsSystem<float> physicsSystem;
         private bool initFrame = true;
 
-        private const string title = "Jitter OpenGL - Press 'Space' to shoot a sphere, 'R' to Reset";
+        private const string title = ""; //"Press 'Space' to shoot a sphere, 'R' to Reset";
 
         public Program()
             : base(800, 600)
@@ -173,6 +173,8 @@ namespace JitterOpenGLDemo
 
         static void Main(string[] args)
         {
+            System.Windows.Forms.MessageBox.Show("NOTE! The Physics demo is still in major development. It only renders but is not yet interactable.");
+
             using (Program p = new Program())
             {
                 p.Run();
