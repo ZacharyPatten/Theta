@@ -15,8 +15,6 @@ namespace Tutorial_Mathematics
 
 		static void Main(string[] args)
         {
-            Console.WriteLine("Welcome To SevenFramework! :)");
-            Console.WriteLine();
             Console.WriteLine("You are runnning the Mathematics example.");
             Console.WriteLine("==========================================");
             Console.WriteLine();

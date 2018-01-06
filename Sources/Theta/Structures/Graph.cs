@@ -131,7 +131,7 @@ namespace Theta.Structures
 			if (!this._nodes.Contains(a))
 				throw new System.InvalidOperationException("Attempting to look up the neighbors of a node that does not belong to a graph");
 
-			this._edges.Stepper((Edge e) => { function(e.End); }, a, Omnitree.Bound<T>.None, a, Omnitree.Bound<T>.None);
+			this._edges.Stepper((Edge e) => { function(e.End); }, a, a, Omnitree.Bound<T>.None, Omnitree.Bound<T>.None);
 		}
 
 		public void Add(T start, T end)

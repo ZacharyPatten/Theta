@@ -10,8 +10,6 @@ namespace Algorithms
 	{
 		static void Main(string[] args)
 		{
-			Console.WriteLine("Welcome To SevenFramework! :)");
-			Console.WriteLine();
 			Console.WriteLine("You are runnning the Algorithms tutorial.");
 			Console.WriteLine("======================================================");
 			Console.WriteLine();

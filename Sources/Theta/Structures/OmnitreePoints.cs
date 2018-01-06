@@ -2119,10 +2119,10 @@ namespace Theta.Structures
             int splits = Compute<int>.Power(2, depth);
             int mid_child_range = count / splits;
 
-            if (child_index >= 1 << 1)
+            if (child_index >= 1)
             {
                 index1 = previous1 + mid_child_range;
-                child_index -= 1 << 1;
+                child_index -= 1;
             }
             else
             {
@@ -2271,11 +2271,11 @@ namespace Theta.Structures
         private Omnitree.Bounds<Axis1> DetermineChildBounds(Branch branch, int child_index)
         {
             Omnitree.Bound<Axis1> min1, max1;
-            if (child_index >= 1 << 2)
+            if (child_index >= 1)
             {
                 min1 = branch.PointOfDivision.Axis1;
                 max1 = branch.Bounds.Max1;
-                child_index -= 1 << 2;
+                child_index -= 1;
             }
             else
             {
@@ -3189,6 +3189,8 @@ namespace Theta.Structures
         private bool EncapsulationCheck(Omnitree.Bounds<Axis1> a, Omnitree.Bounds<Axis1> b)
         {
             if ((a.Min1.Exists && !b.Min1.Exists))
+                return false;
+			if ((a.Max1.Exists && !b.Max1.Exists))
                 return false;
             if (b.Min1.Exists && a.Min1.Exists && this._compare1(a.Min1.Value, b.Min1.Value) != Comparison.Less)
                 return false;
@@ -4291,20 +4293,20 @@ namespace Theta.Structures
             int splits = Compute<int>.Power(2, depth);
             int mid_child_range = count / splits;
 
-            if (child_index >= 1 << 2)
+            if (child_index >= 2)
             {
                 index2 = previous2 + mid_child_range;
-                child_index -= 1 << 2;
+                child_index -= 2;
             }
             else
             {
                 index2 = previous2 - mid_child_range;
             }
 
-            if (child_index >= 1 << 1)
+            if (child_index >= 1)
             {
                 index1 = previous1 + mid_child_range;
-                child_index -= 1 << 1;
+                child_index -= 1;
             }
             else
             {
@@ -4461,11 +4463,11 @@ namespace Theta.Structures
         private Omnitree.Bounds<Axis1, Axis2> DetermineChildBounds(Branch branch, int child_index)
         {
             Omnitree.Bound<Axis2> min2, max2;
-            if (child_index >= 1 << 2)
+            if (child_index >= 2)
             {
                 min2 = branch.PointOfDivision.Axis2;
                 max2 = branch.Bounds.Max2;
-                child_index -= 1 << 2;
+                child_index -= 2;
             }
             else
             {
@@ -4473,11 +4475,11 @@ namespace Theta.Structures
                 max2 = branch.PointOfDivision.Axis2;
             }
             Omnitree.Bound<Axis1> min1, max1;
-            if (child_index >= 1 << 2)
+            if (child_index >= 1)
             {
                 min1 = branch.PointOfDivision.Axis1;
                 max1 = branch.Bounds.Max1;
-                child_index -= 1 << 2;
+                child_index -= 1;
             }
             else
             {
@@ -5438,6 +5440,8 @@ namespace Theta.Structures
         private bool EncapsulationCheck(Omnitree.Bounds<Axis1, Axis2> a, Omnitree.Bounds<Axis1, Axis2> b)
         {
             if ((a.Min1.Exists && !b.Min1.Exists) || (a.Min2.Exists && !b.Min2.Exists))
+                return false;
+			if ((a.Max1.Exists && !b.Max1.Exists) || (a.Max2.Exists && !b.Max2.Exists))
                 return false;
             if (b.Min1.Exists && a.Min1.Exists && this._compare1(a.Min1.Value, b.Min1.Value) != Comparison.Less)
                 return false;
@@ -6707,30 +6711,30 @@ namespace Theta.Structures
             int splits = Compute<int>.Power(2, depth);
             int mid_child_range = count / splits;
 
-            if (child_index >= 1 << 3)
+            if (child_index >= 4)
             {
                 index3 = previous3 + mid_child_range;
-                child_index -= 1 << 3;
+                child_index -= 4;
             }
             else
             {
                 index3 = previous3 - mid_child_range;
             }
 
-            if (child_index >= 1 << 2)
+            if (child_index >= 2)
             {
                 index2 = previous2 + mid_child_range;
-                child_index -= 1 << 2;
+                child_index -= 2;
             }
             else
             {
                 index2 = previous2 - mid_child_range;
             }
 
-            if (child_index >= 1 << 1)
+            if (child_index >= 1)
             {
                 index1 = previous1 + mid_child_range;
-                child_index -= 1 << 1;
+                child_index -= 1;
             }
             else
             {
@@ -6895,11 +6899,11 @@ namespace Theta.Structures
         private Omnitree.Bounds<Axis1, Axis2, Axis3> DetermineChildBounds(Branch branch, int child_index)
         {
             Omnitree.Bound<Axis3> min3, max3;
-            if (child_index >= 1 << 2)
+            if (child_index >= 4)
             {
                 min3 = branch.PointOfDivision.Axis3;
                 max3 = branch.Bounds.Max3;
-                child_index -= 1 << 2;
+                child_index -= 4;
             }
             else
             {
@@ -6907,11 +6911,11 @@ namespace Theta.Structures
                 max3 = branch.PointOfDivision.Axis3;
             }
             Omnitree.Bound<Axis2> min2, max2;
-            if (child_index >= 1 << 2)
+            if (child_index >= 2)
             {
                 min2 = branch.PointOfDivision.Axis2;
                 max2 = branch.Bounds.Max2;
-                child_index -= 1 << 2;
+                child_index -= 2;
             }
             else
             {
@@ -6919,11 +6923,11 @@ namespace Theta.Structures
                 max2 = branch.PointOfDivision.Axis2;
             }
             Omnitree.Bound<Axis1> min1, max1;
-            if (child_index >= 1 << 2)
+            if (child_index >= 1)
             {
                 min1 = branch.PointOfDivision.Axis1;
                 max1 = branch.Bounds.Max1;
-                child_index -= 1 << 2;
+                child_index -= 1;
             }
             else
             {
@@ -7931,6 +7935,8 @@ namespace Theta.Structures
         private bool EncapsulationCheck(Omnitree.Bounds<Axis1, Axis2, Axis3> a, Omnitree.Bounds<Axis1, Axis2, Axis3> b)
         {
             if ((a.Min1.Exists && !b.Min1.Exists) || (a.Min2.Exists && !b.Min2.Exists) || (a.Min3.Exists && !b.Min3.Exists))
+                return false;
+			if ((a.Max1.Exists && !b.Max1.Exists) || (a.Max2.Exists && !b.Max2.Exists) || (a.Max3.Exists && !b.Max3.Exists))
                 return false;
             if (b.Min1.Exists && a.Min1.Exists && this._compare1(a.Min1.Value, b.Min1.Value) != Comparison.Less)
                 return false;
@@ -9367,40 +9373,40 @@ namespace Theta.Structures
             int splits = Compute<int>.Power(2, depth);
             int mid_child_range = count / splits;
 
-            if (child_index >= 1 << 4)
+            if (child_index >= 8)
             {
                 index4 = previous4 + mid_child_range;
-                child_index -= 1 << 4;
+                child_index -= 8;
             }
             else
             {
                 index4 = previous4 - mid_child_range;
             }
 
-            if (child_index >= 1 << 3)
+            if (child_index >= 4)
             {
                 index3 = previous3 + mid_child_range;
-                child_index -= 1 << 3;
+                child_index -= 4;
             }
             else
             {
                 index3 = previous3 - mid_child_range;
             }
 
-            if (child_index >= 1 << 2)
+            if (child_index >= 2)
             {
                 index2 = previous2 + mid_child_range;
-                child_index -= 1 << 2;
+                child_index -= 2;
             }
             else
             {
                 index2 = previous2 - mid_child_range;
             }
 
-            if (child_index >= 1 << 1)
+            if (child_index >= 1)
             {
                 index1 = previous1 + mid_child_range;
-                child_index -= 1 << 1;
+                child_index -= 1;
             }
             else
             {
@@ -9573,11 +9579,11 @@ namespace Theta.Structures
         private Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4> DetermineChildBounds(Branch branch, int child_index)
         {
             Omnitree.Bound<Axis4> min4, max4;
-            if (child_index >= 1 << 2)
+            if (child_index >= 8)
             {
                 min4 = branch.PointOfDivision.Axis4;
                 max4 = branch.Bounds.Max4;
-                child_index -= 1 << 2;
+                child_index -= 8;
             }
             else
             {
@@ -9585,11 +9591,11 @@ namespace Theta.Structures
                 max4 = branch.PointOfDivision.Axis4;
             }
             Omnitree.Bound<Axis3> min3, max3;
-            if (child_index >= 1 << 2)
+            if (child_index >= 4)
             {
                 min3 = branch.PointOfDivision.Axis3;
                 max3 = branch.Bounds.Max3;
-                child_index -= 1 << 2;
+                child_index -= 4;
             }
             else
             {
@@ -9597,11 +9603,11 @@ namespace Theta.Structures
                 max3 = branch.PointOfDivision.Axis3;
             }
             Omnitree.Bound<Axis2> min2, max2;
-            if (child_index >= 1 << 2)
+            if (child_index >= 2)
             {
                 min2 = branch.PointOfDivision.Axis2;
                 max2 = branch.Bounds.Max2;
-                child_index -= 1 << 2;
+                child_index -= 2;
             }
             else
             {
@@ -9609,11 +9615,11 @@ namespace Theta.Structures
                 max2 = branch.PointOfDivision.Axis2;
             }
             Omnitree.Bound<Axis1> min1, max1;
-            if (child_index >= 1 << 2)
+            if (child_index >= 1)
             {
                 min1 = branch.PointOfDivision.Axis1;
                 max1 = branch.Bounds.Max1;
-                child_index -= 1 << 2;
+                child_index -= 1;
             }
             else
             {
@@ -10668,6 +10674,8 @@ namespace Theta.Structures
         private bool EncapsulationCheck(Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4> a, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4> b)
         {
             if ((a.Min1.Exists && !b.Min1.Exists) || (a.Min2.Exists && !b.Min2.Exists) || (a.Min3.Exists && !b.Min3.Exists) || (a.Min4.Exists && !b.Min4.Exists))
+                return false;
+			if ((a.Max1.Exists && !b.Max1.Exists) || (a.Max2.Exists && !b.Max2.Exists) || (a.Max3.Exists && !b.Max3.Exists) || (a.Max4.Exists && !b.Max4.Exists))
                 return false;
             if (b.Min1.Exists && a.Min1.Exists && this._compare1(a.Min1.Value, b.Min1.Value) != Comparison.Less)
                 return false;
@@ -12271,50 +12279,50 @@ namespace Theta.Structures
             int splits = Compute<int>.Power(2, depth);
             int mid_child_range = count / splits;
 
-            if (child_index >= 1 << 5)
+            if (child_index >= 16)
             {
                 index5 = previous5 + mid_child_range;
-                child_index -= 1 << 5;
+                child_index -= 16;
             }
             else
             {
                 index5 = previous5 - mid_child_range;
             }
 
-            if (child_index >= 1 << 4)
+            if (child_index >= 8)
             {
                 index4 = previous4 + mid_child_range;
-                child_index -= 1 << 4;
+                child_index -= 8;
             }
             else
             {
                 index4 = previous4 - mid_child_range;
             }
 
-            if (child_index >= 1 << 3)
+            if (child_index >= 4)
             {
                 index3 = previous3 + mid_child_range;
-                child_index -= 1 << 3;
+                child_index -= 4;
             }
             else
             {
                 index3 = previous3 - mid_child_range;
             }
 
-            if (child_index >= 1 << 2)
+            if (child_index >= 2)
             {
                 index2 = previous2 + mid_child_range;
-                child_index -= 1 << 2;
+                child_index -= 2;
             }
             else
             {
                 index2 = previous2 - mid_child_range;
             }
 
-            if (child_index >= 1 << 1)
+            if (child_index >= 1)
             {
                 index1 = previous1 + mid_child_range;
-                child_index -= 1 << 1;
+                child_index -= 1;
             }
             else
             {
@@ -12495,11 +12503,11 @@ namespace Theta.Structures
         private Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5> DetermineChildBounds(Branch branch, int child_index)
         {
             Omnitree.Bound<Axis5> min5, max5;
-            if (child_index >= 1 << 2)
+            if (child_index >= 16)
             {
                 min5 = branch.PointOfDivision.Axis5;
                 max5 = branch.Bounds.Max5;
-                child_index -= 1 << 2;
+                child_index -= 16;
             }
             else
             {
@@ -12507,11 +12515,11 @@ namespace Theta.Structures
                 max5 = branch.PointOfDivision.Axis5;
             }
             Omnitree.Bound<Axis4> min4, max4;
-            if (child_index >= 1 << 2)
+            if (child_index >= 8)
             {
                 min4 = branch.PointOfDivision.Axis4;
                 max4 = branch.Bounds.Max4;
-                child_index -= 1 << 2;
+                child_index -= 8;
             }
             else
             {
@@ -12519,11 +12527,11 @@ namespace Theta.Structures
                 max4 = branch.PointOfDivision.Axis4;
             }
             Omnitree.Bound<Axis3> min3, max3;
-            if (child_index >= 1 << 2)
+            if (child_index >= 4)
             {
                 min3 = branch.PointOfDivision.Axis3;
                 max3 = branch.Bounds.Max3;
-                child_index -= 1 << 2;
+                child_index -= 4;
             }
             else
             {
@@ -12531,11 +12539,11 @@ namespace Theta.Structures
                 max3 = branch.PointOfDivision.Axis3;
             }
             Omnitree.Bound<Axis2> min2, max2;
-            if (child_index >= 1 << 2)
+            if (child_index >= 2)
             {
                 min2 = branch.PointOfDivision.Axis2;
                 max2 = branch.Bounds.Max2;
-                child_index -= 1 << 2;
+                child_index -= 2;
             }
             else
             {
@@ -12543,11 +12551,11 @@ namespace Theta.Structures
                 max2 = branch.PointOfDivision.Axis2;
             }
             Omnitree.Bound<Axis1> min1, max1;
-            if (child_index >= 1 << 2)
+            if (child_index >= 1)
             {
                 min1 = branch.PointOfDivision.Axis1;
                 max1 = branch.Bounds.Max1;
-                child_index -= 1 << 2;
+                child_index -= 1;
             }
             else
             {
@@ -13649,6 +13657,8 @@ namespace Theta.Structures
         private bool EncapsulationCheck(Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5> a, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5> b)
         {
             if ((a.Min1.Exists && !b.Min1.Exists) || (a.Min2.Exists && !b.Min2.Exists) || (a.Min3.Exists && !b.Min3.Exists) || (a.Min4.Exists && !b.Min4.Exists) || (a.Min5.Exists && !b.Min5.Exists))
+                return false;
+			if ((a.Max1.Exists && !b.Max1.Exists) || (a.Max2.Exists && !b.Max2.Exists) || (a.Max3.Exists && !b.Max3.Exists) || (a.Max4.Exists && !b.Max4.Exists) || (a.Max5.Exists && !b.Max5.Exists))
                 return false;
             if (b.Min1.Exists && a.Min1.Exists && this._compare1(a.Min1.Value, b.Min1.Value) != Comparison.Less)
                 return false;
@@ -15419,60 +15429,60 @@ namespace Theta.Structures
             int splits = Compute<int>.Power(2, depth);
             int mid_child_range = count / splits;
 
-            if (child_index >= 1 << 6)
+            if (child_index >= 32)
             {
                 index6 = previous6 + mid_child_range;
-                child_index -= 1 << 6;
+                child_index -= 32;
             }
             else
             {
                 index6 = previous6 - mid_child_range;
             }
 
-            if (child_index >= 1 << 5)
+            if (child_index >= 16)
             {
                 index5 = previous5 + mid_child_range;
-                child_index -= 1 << 5;
+                child_index -= 16;
             }
             else
             {
                 index5 = previous5 - mid_child_range;
             }
 
-            if (child_index >= 1 << 4)
+            if (child_index >= 8)
             {
                 index4 = previous4 + mid_child_range;
-                child_index -= 1 << 4;
+                child_index -= 8;
             }
             else
             {
                 index4 = previous4 - mid_child_range;
             }
 
-            if (child_index >= 1 << 3)
+            if (child_index >= 4)
             {
                 index3 = previous3 + mid_child_range;
-                child_index -= 1 << 3;
+                child_index -= 4;
             }
             else
             {
                 index3 = previous3 - mid_child_range;
             }
 
-            if (child_index >= 1 << 2)
+            if (child_index >= 2)
             {
                 index2 = previous2 + mid_child_range;
-                child_index -= 1 << 2;
+                child_index -= 2;
             }
             else
             {
                 index2 = previous2 - mid_child_range;
             }
 
-            if (child_index >= 1 << 1)
+            if (child_index >= 1)
             {
                 index1 = previous1 + mid_child_range;
-                child_index -= 1 << 1;
+                child_index -= 1;
             }
             else
             {
@@ -15661,11 +15671,11 @@ namespace Theta.Structures
         private Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6> DetermineChildBounds(Branch branch, int child_index)
         {
             Omnitree.Bound<Axis6> min6, max6;
-            if (child_index >= 1 << 2)
+            if (child_index >= 32)
             {
                 min6 = branch.PointOfDivision.Axis6;
                 max6 = branch.Bounds.Max6;
-                child_index -= 1 << 2;
+                child_index -= 32;
             }
             else
             {
@@ -15673,11 +15683,11 @@ namespace Theta.Structures
                 max6 = branch.PointOfDivision.Axis6;
             }
             Omnitree.Bound<Axis5> min5, max5;
-            if (child_index >= 1 << 2)
+            if (child_index >= 16)
             {
                 min5 = branch.PointOfDivision.Axis5;
                 max5 = branch.Bounds.Max5;
-                child_index -= 1 << 2;
+                child_index -= 16;
             }
             else
             {
@@ -15685,11 +15695,11 @@ namespace Theta.Structures
                 max5 = branch.PointOfDivision.Axis5;
             }
             Omnitree.Bound<Axis4> min4, max4;
-            if (child_index >= 1 << 2)
+            if (child_index >= 8)
             {
                 min4 = branch.PointOfDivision.Axis4;
                 max4 = branch.Bounds.Max4;
-                child_index -= 1 << 2;
+                child_index -= 8;
             }
             else
             {
@@ -15697,11 +15707,11 @@ namespace Theta.Structures
                 max4 = branch.PointOfDivision.Axis4;
             }
             Omnitree.Bound<Axis3> min3, max3;
-            if (child_index >= 1 << 2)
+            if (child_index >= 4)
             {
                 min3 = branch.PointOfDivision.Axis3;
                 max3 = branch.Bounds.Max3;
-                child_index -= 1 << 2;
+                child_index -= 4;
             }
             else
             {
@@ -15709,11 +15719,11 @@ namespace Theta.Structures
                 max3 = branch.PointOfDivision.Axis3;
             }
             Omnitree.Bound<Axis2> min2, max2;
-            if (child_index >= 1 << 2)
+            if (child_index >= 2)
             {
                 min2 = branch.PointOfDivision.Axis2;
                 max2 = branch.Bounds.Max2;
-                child_index -= 1 << 2;
+                child_index -= 2;
             }
             else
             {
@@ -15721,11 +15731,11 @@ namespace Theta.Structures
                 max2 = branch.PointOfDivision.Axis2;
             }
             Omnitree.Bound<Axis1> min1, max1;
-            if (child_index >= 1 << 2)
+            if (child_index >= 1)
             {
                 min1 = branch.PointOfDivision.Axis1;
                 max1 = branch.Bounds.Max1;
-                child_index -= 1 << 2;
+                child_index -= 1;
             }
             else
             {
@@ -16874,6 +16884,8 @@ namespace Theta.Structures
         private bool EncapsulationCheck(Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6> a, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6> b)
         {
             if ((a.Min1.Exists && !b.Min1.Exists) || (a.Min2.Exists && !b.Min2.Exists) || (a.Min3.Exists && !b.Min3.Exists) || (a.Min4.Exists && !b.Min4.Exists) || (a.Min5.Exists && !b.Min5.Exists) || (a.Min6.Exists && !b.Min6.Exists))
+                return false;
+			if ((a.Max1.Exists && !b.Max1.Exists) || (a.Max2.Exists && !b.Max2.Exists) || (a.Max3.Exists && !b.Max3.Exists) || (a.Max4.Exists && !b.Max4.Exists) || (a.Max5.Exists && !b.Max5.Exists) || (a.Max6.Exists && !b.Max6.Exists))
                 return false;
             if (b.Min1.Exists && a.Min1.Exists && this._compare1(a.Min1.Value, b.Min1.Value) != Comparison.Less)
                 return false;
@@ -18811,70 +18823,70 @@ namespace Theta.Structures
             int splits = Compute<int>.Power(2, depth);
             int mid_child_range = count / splits;
 
-            if (child_index >= 1 << 7)
+            if (child_index >= 64)
             {
                 index7 = previous7 + mid_child_range;
-                child_index -= 1 << 7;
+                child_index -= 64;
             }
             else
             {
                 index7 = previous7 - mid_child_range;
             }
 
-            if (child_index >= 1 << 6)
+            if (child_index >= 32)
             {
                 index6 = previous6 + mid_child_range;
-                child_index -= 1 << 6;
+                child_index -= 32;
             }
             else
             {
                 index6 = previous6 - mid_child_range;
             }
 
-            if (child_index >= 1 << 5)
+            if (child_index >= 16)
             {
                 index5 = previous5 + mid_child_range;
-                child_index -= 1 << 5;
+                child_index -= 16;
             }
             else
             {
                 index5 = previous5 - mid_child_range;
             }
 
-            if (child_index >= 1 << 4)
+            if (child_index >= 8)
             {
                 index4 = previous4 + mid_child_range;
-                child_index -= 1 << 4;
+                child_index -= 8;
             }
             else
             {
                 index4 = previous4 - mid_child_range;
             }
 
-            if (child_index >= 1 << 3)
+            if (child_index >= 4)
             {
                 index3 = previous3 + mid_child_range;
-                child_index -= 1 << 3;
+                child_index -= 4;
             }
             else
             {
                 index3 = previous3 - mid_child_range;
             }
 
-            if (child_index >= 1 << 2)
+            if (child_index >= 2)
             {
                 index2 = previous2 + mid_child_range;
-                child_index -= 1 << 2;
+                child_index -= 2;
             }
             else
             {
                 index2 = previous2 - mid_child_range;
             }
 
-            if (child_index >= 1 << 1)
+            if (child_index >= 1)
             {
                 index1 = previous1 + mid_child_range;
-                child_index -= 1 << 1;
+                child_index -= 1;
             }
             else
             {
@@ -19071,11 +19083,11 @@ namespace Theta.Structures
         private Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7> DetermineChildBounds(Branch branch, int child_index)
         {
             Omnitree.Bound<Axis7> min7, max7;
-            if (child_index >= 1 << 2)
+            if (child_index >= 64)
             {
                 min7 = branch.PointOfDivision.Axis7;
                 max7 = branch.Bounds.Max7;
-                child_index -= 1 << 2;
+                child_index -= 64;
             }
             else
             {
@@ -19083,11 +19095,11 @@ namespace Theta.Structures
                 max7 = branch.PointOfDivision.Axis7;
             }
             Omnitree.Bound<Axis6> min6, max6;
-            if (child_index >= 1 << 2)
+            if (child_index >= 32)
             {
                 min6 = branch.PointOfDivision.Axis6;
                 max6 = branch.Bounds.Max6;
-                child_index -= 1 << 2;
+                child_index -= 32;
             }
             else
             {
@@ -19095,11 +19107,11 @@ namespace Theta.Structures
                 max6 = branch.PointOfDivision.Axis6;
             }
             Omnitree.Bound<Axis5> min5, max5;
-            if (child_index >= 1 << 2)
+            if (child_index >= 16)
             {
                 min5 = branch.PointOfDivision.Axis5;
                 max5 = branch.Bounds.Max5;
-                child_index -= 1 << 2;
+                child_index -= 16;
             }
             else
             {
@@ -19107,11 +19119,11 @@ namespace Theta.Structures
                 max5 = branch.PointOfDivision.Axis5;
             }
             Omnitree.Bound<Axis4> min4, max4;
-            if (child_index >= 1 << 2)
+            if (child_index >= 8)
             {
                 min4 = branch.PointOfDivision.Axis4;
                 max4 = branch.Bounds.Max4;
-                child_index -= 1 << 2;
+                child_index -= 8;
             }
             else
             {
@@ -19119,11 +19131,11 @@ namespace Theta.Structures
                 max4 = branch.PointOfDivision.Axis4;
             }
             Omnitree.Bound<Axis3> min3, max3;
-            if (child_index >= 1 << 2)
+            if (child_index >= 4)
             {
                 min3 = branch.PointOfDivision.Axis3;
                 max3 = branch.Bounds.Max3;
-                child_index -= 1 << 2;
+                child_index -= 4;
             }
             else
             {
@@ -19131,11 +19143,11 @@ namespace Theta.Structures
                 max3 = branch.PointOfDivision.Axis3;
             }
             Omnitree.Bound<Axis2> min2, max2;
-            if (child_index >= 1 << 2)
+            if (child_index >= 2)
             {
                 min2 = branch.PointOfDivision.Axis2;
                 max2 = branch.Bounds.Max2;
-                child_index -= 1 << 2;
+                child_index -= 2;
             }
             else
             {
@@ -19143,11 +19155,11 @@ namespace Theta.Structures
                 max2 = branch.PointOfDivision.Axis2;
             }
             Omnitree.Bound<Axis1> min1, max1;
-            if (child_index >= 1 << 2)
+            if (child_index >= 1)
             {
                 min1 = branch.PointOfDivision.Axis1;
                 max1 = branch.Bounds.Max1;
-                child_index -= 1 << 2;
+                child_index -= 1;
             }
             else
             {
@@ -20343,6 +20355,8 @@ namespace Theta.Structures
         private bool EncapsulationCheck(Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7> a, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7> b)
         {
             if ((a.Min1.Exists && !b.Min1.Exists) || (a.Min2.Exists && !b.Min2.Exists) || (a.Min3.Exists && !b.Min3.Exists) || (a.Min4.Exists && !b.Min4.Exists) || (a.Min5.Exists && !b.Min5.Exists) || (a.Min6.Exists && !b.Min6.Exists) || (a.Min7.Exists && !b.Min7.Exists))
+                return false;
+			if ((a.Max1.Exists && !b.Max1.Exists) || (a.Max2.Exists && !b.Max2.Exists) || (a.Max3.Exists && !b.Max3.Exists) || (a.Max4.Exists && !b.Max4.Exists) || (a.Max5.Exists && !b.Max5.Exists) || (a.Max6.Exists && !b.Max6.Exists) || (a.Max7.Exists && !b.Max7.Exists))
                 return false;
             if (b.Min1.Exists && a.Min1.Exists && this._compare1(a.Min1.Value, b.Min1.Value) != Comparison.Less)
                 return false;
@@ -22447,80 +22461,80 @@ namespace Theta.Structures
             int splits = Compute<int>.Power(2, depth);
             int mid_child_range = count / splits;
 
-            if (child_index >= 1 << 8)
+            if (child_index >= 128)
             {
                 index8 = previous8 + mid_child_range;
-                child_index -= 1 << 8;
+                child_index -= 128;
             }
             else
             {
                 index8 = previous8 - mid_child_range;
             }
 
-            if (child_index >= 1 << 7)
+            if (child_index >= 64)
             {
                 index7 = previous7 + mid_child_range;
-                child_index -= 1 << 7;
+                child_index -= 64;
             }
             else
             {
                 index7 = previous7 - mid_child_range;
             }
 
-            if (child_index >= 1 << 6)
+            if (child_index >= 32)
             {
                 index6 = previous6 + mid_child_range;
-                child_index -= 1 << 6;
+                child_index -= 32;
             }
             else
             {
                 index6 = previous6 - mid_child_range;
             }
 
-            if (child_index >= 1 << 5)
+            if (child_index >= 16)
             {
                 index5 = previous5 + mid_child_range;
-                child_index -= 1 << 5;
+                child_index -= 16;
             }
             else
             {
                 index5 = previous5 - mid_child_range;
             }
 
-            if (child_index >= 1 << 4)
+            if (child_index >= 8)
             {
                 index4 = previous4 + mid_child_range;
-                child_index -= 1 << 4;
+                child_index -= 8;
             }
             else
             {
                 index4 = previous4 - mid_child_range;
             }
 
-            if (child_index >= 1 << 3)
+            if (child_index >= 4)
             {
                 index3 = previous3 + mid_child_range;
-                child_index -= 1 << 3;
+                child_index -= 4;
             }
             else
             {
                 index3 = previous3 - mid_child_range;
             }
 
-            if (child_index >= 1 << 2)
+            if (child_index >= 2)
             {
                 index2 = previous2 + mid_child_range;
-                child_index -= 1 << 2;
+                child_index -= 2;
             }
             else
             {
                 index2 = previous2 - mid_child_range;
             }
 
-            if (child_index >= 1 << 1)
+            if (child_index >= 1)
             {
                 index1 = previous1 + mid_child_range;
-                child_index -= 1 << 1;
+                child_index -= 1;
             }
             else
             {
@@ -22725,11 +22739,11 @@ namespace Theta.Structures
         private Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8> DetermineChildBounds(Branch branch, int child_index)
         {
             Omnitree.Bound<Axis8> min8, max8;
-            if (child_index >= 1 << 2)
+            if (child_index >= 128)
             {
                 min8 = branch.PointOfDivision.Axis8;
                 max8 = branch.Bounds.Max8;
-                child_index -= 1 << 2;
+                child_index -= 128;
             }
             else
             {
@@ -22737,11 +22751,11 @@ namespace Theta.Structures
                 max8 = branch.PointOfDivision.Axis8;
             }
             Omnitree.Bound<Axis7> min7, max7;
-            if (child_index >= 1 << 2)
+            if (child_index >= 64)
             {
                 min7 = branch.PointOfDivision.Axis7;
                 max7 = branch.Bounds.Max7;
-                child_index -= 1 << 2;
+                child_index -= 64;
             }
             else
             {
@@ -22749,11 +22763,11 @@ namespace Theta.Structures
                 max7 = branch.PointOfDivision.Axis7;
             }
             Omnitree.Bound<Axis6> min6, max6;
-            if (child_index >= 1 << 2)
+            if (child_index >= 32)
             {
                 min6 = branch.PointOfDivision.Axis6;
                 max6 = branch.Bounds.Max6;
-                child_index -= 1 << 2;
+                child_index -= 32;
             }
             else
             {
@@ -22761,11 +22775,11 @@ namespace Theta.Structures
                 max6 = branch.PointOfDivision.Axis6;
             }
             Omnitree.Bound<Axis5> min5, max5;
-            if (child_index >= 1 << 2)
+            if (child_index >= 16)
             {
                 min5 = branch.PointOfDivision.Axis5;
                 max5 = branch.Bounds.Max5;
-                child_index -= 1 << 2;
+                child_index -= 16;
             }
             else
             {
@@ -22773,11 +22787,11 @@ namespace Theta.Structures
                 max5 = branch.PointOfDivision.Axis5;
             }
             Omnitree.Bound<Axis4> min4, max4;
-            if (child_index >= 1 << 2)
+            if (child_index >= 8)
             {
                 min4 = branch.PointOfDivision.Axis4;
                 max4 = branch.Bounds.Max4;
-                child_index -= 1 << 2;
+                child_index -= 8;
             }
             else
             {
@@ -22785,11 +22799,11 @@ namespace Theta.Structures
                 max4 = branch.PointOfDivision.Axis4;
             }
             Omnitree.Bound<Axis3> min3, max3;
-            if (child_index >= 1 << 2)
+            if (child_index >= 4)
             {
                 min3 = branch.PointOfDivision.Axis3;
                 max3 = branch.Bounds.Max3;
-                child_index -= 1 << 2;
+                child_index -= 4;
             }
             else
             {
@@ -22797,11 +22811,11 @@ namespace Theta.Structures
                 max3 = branch.PointOfDivision.Axis3;
             }
             Omnitree.Bound<Axis2> min2, max2;
-            if (child_index >= 1 << 2)
+            if (child_index >= 2)
             {
                 min2 = branch.PointOfDivision.Axis2;
                 max2 = branch.Bounds.Max2;
-                child_index -= 1 << 2;
+                child_index -= 2;
             }
             else
             {
@@ -22809,11 +22823,11 @@ namespace Theta.Structures
                 max2 = branch.PointOfDivision.Axis2;
             }
             Omnitree.Bound<Axis1> min1, max1;
-            if (child_index >= 1 << 2)
+            if (child_index >= 1)
             {
                 min1 = branch.PointOfDivision.Axis1;
                 max1 = branch.Bounds.Max1;
-                child_index -= 1 << 2;
+                child_index -= 1;
             }
             else
             {
@@ -24056,6 +24070,8 @@ namespace Theta.Structures
         private bool EncapsulationCheck(Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8> a, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8> b)
         {
             if ((a.Min1.Exists && !b.Min1.Exists) || (a.Min2.Exists && !b.Min2.Exists) || (a.Min3.Exists && !b.Min3.Exists) || (a.Min4.Exists && !b.Min4.Exists) || (a.Min5.Exists && !b.Min5.Exists) || (a.Min6.Exists && !b.Min6.Exists) || (a.Min7.Exists && !b.Min7.Exists) || (a.Min8.Exists && !b.Min8.Exists))
+                return false;
+			if ((a.Max1.Exists && !b.Max1.Exists) || (a.Max2.Exists && !b.Max2.Exists) || (a.Max3.Exists && !b.Max3.Exists) || (a.Max4.Exists && !b.Max4.Exists) || (a.Max5.Exists && !b.Max5.Exists) || (a.Max6.Exists && !b.Max6.Exists) || (a.Max7.Exists && !b.Max7.Exists) || (a.Max8.Exists && !b.Max8.Exists))
                 return false;
             if (b.Min1.Exists && a.Min1.Exists && this._compare1(a.Min1.Value, b.Min1.Value) != Comparison.Less)
                 return false;
@@ -26327,90 +26343,90 @@ namespace Theta.Structures
             int splits = Compute<int>.Power(2, depth);
             int mid_child_range = count / splits;
 
-            if (child_index >= 1 << 9)
+            if (child_index >= 256)
             {
                 index9 = previous9 + mid_child_range;
-                child_index -= 1 << 9;
+                child_index -= 256;
             }
             else
             {
                 index9 = previous9 - mid_child_range;
             }
 
-            if (child_index >= 1 << 8)
+            if (child_index >= 128)
             {
                 index8 = previous8 + mid_child_range;
-                child_index -= 1 << 8;
+                child_index -= 128;
             }
             else
             {
                 index8 = previous8 - mid_child_range;
             }
 
-            if (child_index >= 1 << 7)
+            if (child_index >= 64)
             {
                 index7 = previous7 + mid_child_range;
-                child_index -= 1 << 7;
+                child_index -= 64;
             }
             else
             {
                 index7 = previous7 - mid_child_range;
             }
 
-            if (child_index >= 1 << 6)
+            if (child_index >= 32)
             {
                 index6 = previous6 + mid_child_range;
-                child_index -= 1 << 6;
+                child_index -= 32;
             }
             else
             {
                 index6 = previous6 - mid_child_range;
             }
 
-            if (child_index >= 1 << 5)
+            if (child_index >= 16)
             {
                 index5 = previous5 + mid_child_range;
-                child_index -= 1 << 5;
+                child_index -= 16;
             }
             else
             {
                 index5 = previous5 - mid_child_range;
             }
 
-            if (child_index >= 1 << 4)
+            if (child_index >= 8)
             {
                 index4 = previous4 + mid_child_range;
-                child_index -= 1 << 4;
+                child_index -= 8;
             }
             else
             {
                 index4 = previous4 - mid_child_range;
             }
 
-            if (child_index >= 1 << 3)
+            if (child_index >= 4)
             {
                 index3 = previous3 + mid_child_range;
-                child_index -= 1 << 3;
+                child_index -= 4;
             }
             else
             {
                 index3 = previous3 - mid_child_range;
             }
 
-            if (child_index >= 1 << 2)
+            if (child_index >= 2)
             {
                 index2 = previous2 + mid_child_range;
-                child_index -= 1 << 2;
+                child_index -= 2;
             }
             else
             {
                 index2 = previous2 - mid_child_range;
             }
 
-            if (child_index >= 1 << 1)
+            if (child_index >= 1)
             {
                 index1 = previous1 + mid_child_range;
-                child_index -= 1 << 1;
+                child_index -= 1;
             }
             else
             {
@@ -26623,11 +26639,11 @@ namespace Theta.Structures
         private Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9> DetermineChildBounds(Branch branch, int child_index)
         {
             Omnitree.Bound<Axis9> min9, max9;
-            if (child_index >= 1 << 2)
+            if (child_index >= 256)
             {
                 min9 = branch.PointOfDivision.Axis9;
                 max9 = branch.Bounds.Max9;
-                child_index -= 1 << 2;
+                child_index -= 256;
             }
             else
             {
@@ -26635,11 +26651,11 @@ namespace Theta.Structures
                 max9 = branch.PointOfDivision.Axis9;
             }
             Omnitree.Bound<Axis8> min8, max8;
-            if (child_index >= 1 << 2)
+            if (child_index >= 128)
             {
                 min8 = branch.PointOfDivision.Axis8;
                 max8 = branch.Bounds.Max8;
-                child_index -= 1 << 2;
+                child_index -= 128;
             }
             else
             {
@@ -26647,11 +26663,11 @@ namespace Theta.Structures
                 max8 = branch.PointOfDivision.Axis8;
             }
             Omnitree.Bound<Axis7> min7, max7;
-            if (child_index >= 1 << 2)
+            if (child_index >= 64)
             {
                 min7 = branch.PointOfDivision.Axis7;
                 max7 = branch.Bounds.Max7;
-                child_index -= 1 << 2;
+                child_index -= 64;
             }
             else
             {
@@ -26659,11 +26675,11 @@ namespace Theta.Structures
                 max7 = branch.PointOfDivision.Axis7;
             }
             Omnitree.Bound<Axis6> min6, max6;
-            if (child_index >= 1 << 2)
+            if (child_index >= 32)
             {
                 min6 = branch.PointOfDivision.Axis6;
                 max6 = branch.Bounds.Max6;
-                child_index -= 1 << 2;
+                child_index -= 32;
             }
             else
             {
@@ -26671,11 +26687,11 @@ namespace Theta.Structures
                 max6 = branch.PointOfDivision.Axis6;
             }
             Omnitree.Bound<Axis5> min5, max5;
-            if (child_index >= 1 << 2)
+            if (child_index >= 16)
             {
                 min5 = branch.PointOfDivision.Axis5;
                 max5 = branch.Bounds.Max5;
-                child_index -= 1 << 2;
+                child_index -= 16;
             }
             else
             {
@@ -26683,11 +26699,11 @@ namespace Theta.Structures
                 max5 = branch.PointOfDivision.Axis5;
             }
             Omnitree.Bound<Axis4> min4, max4;
-            if (child_index >= 1 << 2)
+            if (child_index >= 8)
             {
                 min4 = branch.PointOfDivision.Axis4;
                 max4 = branch.Bounds.Max4;
-                child_index -= 1 << 2;
+                child_index -= 8;
             }
             else
             {
@@ -26695,11 +26711,11 @@ namespace Theta.Structures
                 max4 = branch.PointOfDivision.Axis4;
             }
             Omnitree.Bound<Axis3> min3, max3;
-            if (child_index >= 1 << 2)
+            if (child_index >= 4)
             {
                 min3 = branch.PointOfDivision.Axis3;
                 max3 = branch.Bounds.Max3;
-                child_index -= 1 << 2;
+                child_index -= 4;
             }
             else
             {
@@ -26707,11 +26723,11 @@ namespace Theta.Structures
                 max3 = branch.PointOfDivision.Axis3;
             }
             Omnitree.Bound<Axis2> min2, max2;
-            if (child_index >= 1 << 2)
+            if (child_index >= 2)
             {
                 min2 = branch.PointOfDivision.Axis2;
                 max2 = branch.Bounds.Max2;
-                child_index -= 1 << 2;
+                child_index -= 2;
             }
             else
             {
@@ -26719,11 +26735,11 @@ namespace Theta.Structures
                 max2 = branch.PointOfDivision.Axis2;
             }
             Omnitree.Bound<Axis1> min1, max1;
-            if (child_index >= 1 << 2)
+            if (child_index >= 1)
             {
                 min1 = branch.PointOfDivision.Axis1;
                 max1 = branch.Bounds.Max1;
-                child_index -= 1 << 2;
+                child_index -= 1;
             }
             else
             {
@@ -28013,6 +28029,8 @@ namespace Theta.Structures
         private bool EncapsulationCheck(Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9> a, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9> b)
         {
             if ((a.Min1.Exists && !b.Min1.Exists) || (a.Min2.Exists && !b.Min2.Exists) || (a.Min3.Exists && !b.Min3.Exists) || (a.Min4.Exists && !b.Min4.Exists) || (a.Min5.Exists && !b.Min5.Exists) || (a.Min6.Exists && !b.Min6.Exists) || (a.Min7.Exists && !b.Min7.Exists) || (a.Min8.Exists && !b.Min8.Exists) || (a.Min9.Exists && !b.Min9.Exists))
+                return false;
+			if ((a.Max1.Exists && !b.Max1.Exists) || (a.Max2.Exists && !b.Max2.Exists) || (a.Max3.Exists && !b.Max3.Exists) || (a.Max4.Exists && !b.Max4.Exists) || (a.Max5.Exists && !b.Max5.Exists) || (a.Max6.Exists && !b.Max6.Exists) || (a.Max7.Exists && !b.Max7.Exists) || (a.Max8.Exists && !b.Max8.Exists) || (a.Max9.Exists && !b.Max9.Exists))
                 return false;
             if (b.Min1.Exists && a.Min1.Exists && this._compare1(a.Min1.Value, b.Min1.Value) != Comparison.Less)
                 return false;
@@ -30451,100 +30469,100 @@ namespace Theta.Structures
             int splits = Compute<int>.Power(2, depth);
             int mid_child_range = count / splits;
 
-            if (child_index >= 1 << 10)
+            if (child_index >= 512)
             {
                 index10 = previous10 + mid_child_range;
-                child_index -= 1 << 10;
+                child_index -= 512;
             }
             else
             {
                 index10 = previous10 - mid_child_range;
             }
 
-            if (child_index >= 1 << 9)
+            if (child_index >= 256)
             {
                 index9 = previous9 + mid_child_range;
-                child_index -= 1 << 9;
+                child_index -= 256;
             }
             else
             {
                 index9 = previous9 - mid_child_range;
             }
 
-            if (child_index >= 1 << 8)
+            if (child_index >= 128)
             {
                 index8 = previous8 + mid_child_range;
-                child_index -= 1 << 8;
+                child_index -= 128;
             }
             else
             {
                 index8 = previous8 - mid_child_range;
             }
 
-            if (child_index >= 1 << 7)
+            if (child_index >= 64)
             {
                 index7 = previous7 + mid_child_range;
-                child_index -= 1 << 7;
+                child_index -= 64;
             }
             else
             {
                 index7 = previous7 - mid_child_range;
             }
 
-            if (child_index >= 1 << 6)
+            if (child_index >= 32)
             {
                 index6 = previous6 + mid_child_range;
-                child_index -= 1 << 6;
+                child_index -= 32;
             }
             else
             {
                 index6 = previous6 - mid_child_range;
             }
 
-            if (child_index >= 1 << 5)
+            if (child_index >= 16)
             {
                 index5 = previous5 + mid_child_range;
-                child_index -= 1 << 5;
+                child_index -= 16;
             }
             else
             {
                 index5 = previous5 - mid_child_range;
             }
 
-            if (child_index >= 1 << 4)
+            if (child_index >= 8)
             {
                 index4 = previous4 + mid_child_range;
-                child_index -= 1 << 4;
+                child_index -= 8;
             }
             else
             {
                 index4 = previous4 - mid_child_range;
             }
 
-            if (child_index >= 1 << 3)
+            if (child_index >= 4)
             {
                 index3 = previous3 + mid_child_range;
-                child_index -= 1 << 3;
+                child_index -= 4;
             }
             else
             {
                 index3 = previous3 - mid_child_range;
             }
 
-            if (child_index >= 1 << 2)
+            if (child_index >= 2)
             {
                 index2 = previous2 + mid_child_range;
-                child_index -= 1 << 2;
+                child_index -= 2;
             }
             else
             {
                 index2 = previous2 - mid_child_range;
             }
 
-            if (child_index >= 1 << 1)
+            if (child_index >= 1)
             {
                 index1 = previous1 + mid_child_range;
-                child_index -= 1 << 1;
+                child_index -= 1;
             }
             else
             {
@@ -30765,11 +30783,11 @@ namespace Theta.Structures
         private Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10> DetermineChildBounds(Branch branch, int child_index)
         {
             Omnitree.Bound<Axis10> min10, max10;
-            if (child_index >= 1 << 2)
+            if (child_index >= 512)
             {
                 min10 = branch.PointOfDivision.Axis10;
                 max10 = branch.Bounds.Max10;
-                child_index -= 1 << 2;
+                child_index -= 512;
             }
             else
             {
@@ -30777,11 +30795,11 @@ namespace Theta.Structures
                 max10 = branch.PointOfDivision.Axis10;
             }
             Omnitree.Bound<Axis9> min9, max9;
-            if (child_index >= 1 << 2)
+            if (child_index >= 256)
             {
                 min9 = branch.PointOfDivision.Axis9;
                 max9 = branch.Bounds.Max9;
-                child_index -= 1 << 2;
+                child_index -= 256;
             }
             else
             {
@@ -30789,11 +30807,11 @@ namespace Theta.Structures
                 max9 = branch.PointOfDivision.Axis9;
             }
             Omnitree.Bound<Axis8> min8, max8;
-            if (child_index >= 1 << 2)
+            if (child_index >= 128)
             {
                 min8 = branch.PointOfDivision.Axis8;
                 max8 = branch.Bounds.Max8;
-                child_index -= 1 << 2;
+                child_index -= 128;
             }
             else
             {
@@ -30801,11 +30819,11 @@ namespace Theta.Structures
                 max8 = branch.PointOfDivision.Axis8;
             }
             Omnitree.Bound<Axis7> min7, max7;
-            if (child_index >= 1 << 2)
+            if (child_index >= 64)
             {
                 min7 = branch.PointOfDivision.Axis7;
                 max7 = branch.Bounds.Max7;
-                child_index -= 1 << 2;
+                child_index -= 64;
             }
             else
             {
@@ -30813,11 +30831,11 @@ namespace Theta.Structures
                 max7 = branch.PointOfDivision.Axis7;
             }
             Omnitree.Bound<Axis6> min6, max6;
-            if (child_index >= 1 << 2)
+            if (child_index >= 32)
             {
                 min6 = branch.PointOfDivision.Axis6;
                 max6 = branch.Bounds.Max6;
-                child_index -= 1 << 2;
+                child_index -= 32;
             }
             else
             {
@@ -30825,11 +30843,11 @@ namespace Theta.Structures
                 max6 = branch.PointOfDivision.Axis6;
             }
             Omnitree.Bound<Axis5> min5, max5;
-            if (child_index >= 1 << 2)
+            if (child_index >= 16)
             {
                 min5 = branch.PointOfDivision.Axis5;
                 max5 = branch.Bounds.Max5;
-                child_index -= 1 << 2;
+                child_index -= 16;
             }
             else
             {
@@ -30837,11 +30855,11 @@ namespace Theta.Structures
                 max5 = branch.PointOfDivision.Axis5;
             }
             Omnitree.Bound<Axis4> min4, max4;
-            if (child_index >= 1 << 2)
+            if (child_index >= 8)
             {
                 min4 = branch.PointOfDivision.Axis4;
                 max4 = branch.Bounds.Max4;
-                child_index -= 1 << 2;
+                child_index -= 8;
             }
             else
             {
@@ -30849,11 +30867,11 @@ namespace Theta.Structures
                 max4 = branch.PointOfDivision.Axis4;
             }
             Omnitree.Bound<Axis3> min3, max3;
-            if (child_index >= 1 << 2)
+            if (child_index >= 4)
             {
                 min3 = branch.PointOfDivision.Axis3;
                 max3 = branch.Bounds.Max3;
-                child_index -= 1 << 2;
+                child_index -= 4;
             }
             else
             {
@@ -30861,11 +30879,11 @@ namespace Theta.Structures
                 max3 = branch.PointOfDivision.Axis3;
             }
             Omnitree.Bound<Axis2> min2, max2;
-            if (child_index >= 1 << 2)
+            if (child_index >= 2)
             {
                 min2 = branch.PointOfDivision.Axis2;
                 max2 = branch.Bounds.Max2;
-                child_index -= 1 << 2;
+                child_index -= 2;
             }
             else
             {
@@ -30873,11 +30891,11 @@ namespace Theta.Structures
                 max2 = branch.PointOfDivision.Axis2;
             }
             Omnitree.Bound<Axis1> min1, max1;
-            if (child_index >= 1 << 2)
+            if (child_index >= 1)
             {
                 min1 = branch.PointOfDivision.Axis1;
                 max1 = branch.Bounds.Max1;
-                child_index -= 1 << 2;
+                child_index -= 1;
             }
             else
             {
@@ -32214,6 +32232,8 @@ namespace Theta.Structures
         private bool EncapsulationCheck(Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10> a, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10> b)
         {
             if ((a.Min1.Exists && !b.Min1.Exists) || (a.Min2.Exists && !b.Min2.Exists) || (a.Min3.Exists && !b.Min3.Exists) || (a.Min4.Exists && !b.Min4.Exists) || (a.Min5.Exists && !b.Min5.Exists) || (a.Min6.Exists && !b.Min6.Exists) || (a.Min7.Exists && !b.Min7.Exists) || (a.Min8.Exists && !b.Min8.Exists) || (a.Min9.Exists && !b.Min9.Exists) || (a.Min10.Exists && !b.Min10.Exists))
+                return false;
+			if ((a.Max1.Exists && !b.Max1.Exists) || (a.Max2.Exists && !b.Max2.Exists) || (a.Max3.Exists && !b.Max3.Exists) || (a.Max4.Exists && !b.Max4.Exists) || (a.Max5.Exists && !b.Max5.Exists) || (a.Max6.Exists && !b.Max6.Exists) || (a.Max7.Exists && !b.Max7.Exists) || (a.Max8.Exists && !b.Max8.Exists) || (a.Max9.Exists && !b.Max9.Exists) || (a.Max10.Exists && !b.Max10.Exists))
                 return false;
             if (b.Min1.Exists && a.Min1.Exists && this._compare1(a.Min1.Value, b.Min1.Value) != Comparison.Less)
                 return false;
