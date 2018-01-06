@@ -159,6 +159,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>OmnitreePoints.tt</DependentUpon>
     </Compile>
+    <Compile Include="Structures\OmnitreePoints_ND.cs" />
     <Compile Include="Structures\Order.cs" />
     <Compile Include="Structures\RedBlackTree.cs" />
     <Compile Include="Structures\Set.cs" />
@@ -169,7 +170,6 @@
     <Compile Include="Structures\Queue.cs" />
     <Compile Include="Algorithms\Sort.cs" />
     <Compile Include="Structures\Stack.cs" />
-    <Compile Include="Structures\Temp_Omnitree_N.cs" />
     <Compile Include="Structures\Tree.cs" />
     <Compile Include="Structures\Trie.cs" />
   </ItemGroup>

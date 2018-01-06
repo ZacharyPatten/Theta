@@ -1,4 +1,76 @@
-﻿//using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Theta.Structures
+{
+    /// <summary>Contains the necessary type definitions for the various omnitree types.</summary>
+    public static partial class Omnitree
+    {
+        #region N Dimensional
+
+        public struct Vector
+        {
+            internal object[] _location;
+
+
+            /// <summary>The locations along each axis.</summary>
+            public object[] Location { get { return _location; } }
+
+
+            /// <summary>Returns a vector with defaulted values.</summary>
+            public static Vector Default
+            {
+                get { return new Vector(null); }
+            }
+
+            public Vector(params object[] location)
+            {
+                this._location = location.Clone() as object[];
+            }
+        }
+
+        public struct Bounds
+        {
+
+            Bound<object>[] _min, _max;
+
+            public Bound<object>[] Min { get { return this._min; } }
+            public Bound<object>[] Max { get { return this._max; } }
+
+            /// <summary>Extends infinitely along each axis.</summary>
+            public static Bounds None(int dimensions)
+            {
+                Bound<object>[] min = new Bound<object>[dimensions];
+                for (int i = 0; i < dimensions; i++)
+                    min[i] = Bound<object>.None;
+                Bound<object>[] max = new Bound<object>[dimensions];
+                for (int i = 0; i < dimensions; i++)
+                    max[i] = Bound<object>.None;
+                return new Bounds(min, max);
+            }
+
+            /// <summary>A set of values denoting a range (or lack of range) along each axis.</summary>
+            public Bounds(Bound<object>[] min, Bound<object>[] max)
+            {
+                this._min = min.Clone() as Bound<object>[];
+                this._max = max.Clone() as Bound<object>[];
+            }
+        }
+
+        //public delegate void Location<T, object[]>();
+
+        //public delegate void GetBounds<T, object[]>();
+
+        #endregion
+    }
+    
+}
+
+#region OLD VERSION
+
+//using System;
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
@@ -1425,7 +1497,7 @@
 //                        this.Add(updated, whereToAdd, location, whereToAdd.Depth);
 //                    }
 //                    previous = current;
-//                HeadRemoved:
+//                    HeadRemoved:
 //                    current = current.Next;
 //                }
 //                leaf.Count -= removals;
@@ -1435,7 +1507,7 @@
 //            {
 //                Branch branch = node as Branch;
 //                int skipped = 0;
-//                for (int i = 0; i + skipped < branch.Children.Length; )
+//                for (int i = 0; i + skipped < branch.Children.Length;)
 //                {
 //                    removals += this.Update(branch.Children[i], depth + 1);
 //                    if (branch.Children[i].Count == 0)
@@ -1526,7 +1598,7 @@
 //                        this.Add(updated, whereToAdd, location, whereToAdd.Depth);
 //                    }
 //                    previous = current;
-//                HeadRemoved:
+//                    HeadRemoved:
 //                    current = current.Next;
 //                }
 //                leaf.Count -= removals;
@@ -1536,7 +1608,7 @@
 //            {
 //                Branch branch = node as Branch;
 //                int skipped = 0;
-//                for (int i = 0; i + skipped < branch.Children.Length; )
+//                for (int i = 0; i + skipped < branch.Children.Length;)
 //                {
 //                    removals += this.Update(branch.Children[i], depth + 1);
 //                    if (branch.Children[i].Count == 0)
@@ -1603,7 +1675,7 @@
 //            {
 //                Branch branch = node as Branch;
 //                int skipped = 0;
-//                for (int i = 0; i + skipped < branch.Children.Length; )
+//                for (int i = 0; i + skipped < branch.Children.Length;)
 //                {
 //                    removals += this.Remove(branch.Children[i], where);
 //                    if (branch.Children[i].Count == 0)
@@ -1691,7 +1763,7 @@
 //                {
 //                    Branch branch = node as Branch;
 //                    int skipped = 0;
-//                    for (int i = 0; i + skipped < branch.Children.Length; )
+//                    for (int i = 0; i + skipped < branch.Children.Length;)
 //                    {
 //                        removals += this.Remove(branch.Children[i], bounds);
 //                        if (branch.Children[i].Count == 0)
@@ -1773,7 +1845,7 @@
 //                            previous.Next = current.Next;
 //                    }
 //                    previous = current;
-//                HeadRemoved:
+//                    HeadRemoved:
 //                    current = current.Next;
 //                }
 
@@ -1784,7 +1856,7 @@
 //            {
 //                Branch branch = node as Branch;
 //                int skipped = 0;
-//                for (int i = 0; i + skipped < branch.Children.Length; )
+//                for (int i = 0; i + skipped < branch.Children.Length;)
 //                {
 //                    removals += this.Remove(branch.Children[i], bounds, where);
 //                    if (branch.Children[i].Count == 0)
@@ -2328,3 +2400,6 @@
 //        #endregion
 //    }
 //}
+
+
+#endregion
