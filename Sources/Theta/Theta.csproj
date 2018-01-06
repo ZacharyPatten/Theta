@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9F8E4738-7AA5-4D37-964F-83CFAEEDE8AA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Theta</RootNamespace>
+    <AssemblyName>Theta</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Debug\Theta.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>1</WarningLevel>
+    <DocumentationFile>bin\Release\Theta.xml</DocumentationFile>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release +Unsafe|AnyCPU'">
+    <OutputPath>bin\Release +Unsafe\</OutputPath>
+    <DocumentationFile>bin\Release +Unsafe\Theta.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <DefineConstants>unsafe_code</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release +Unsafe -Errors|AnyCPU'">
+    <OutputPath>bin\Release +Unsafe -Errors\</OutputPath>
+    <DocumentationFile>bin\Release +Unsafe -Errors\Theta.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>unsafe_code, no_error_checking</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug +Unsafe|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug +Numeric +Unsafe\</OutputPath>
+    <DefineConstants>unsafe_code</DefineConstants>
+    <DocumentationFile>bin\Debug\Seven.xml</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug +Unsafe -Errors|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug +Numeric +Unsafe -Errors\</OutputPath>
+    <DefineConstants>unsafe_code, no_error_checking</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Debug\Seven.xml</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Accessor.cs" />
+    <Compile Include="Algorithms\Arbitrary.cs" />
+    <Compile Include="Algorithms\Search.cs" />
+    <Compile Include="Code.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Integer.cs" />
+    <Compile Include="Logic\Logic.cs" />
+    <Compile Include="Measurements\Angle.cs" />
+    <Compile Include="Mathematics\Compute.cs" />
+    <Compile Include="Mathematics\Constants.cs" />
+    <Compile Include="Mathematics\Spaces\Collision.cs" />
+    <Compile Include="Mathematics\Spaces\Cube.cs" />
+    <Compile Include="Mathematics\Spaces\Line.cs" />
+    <Compile Include="Mathematics\Matrix.cs" />
+    <Compile Include="Mathematics\Spaces\PointRadius.cs" />
+    <Compile Include="Mathematics\Spaces\Rectangle.cs" />
+    <Compile Include="Mathematics\Spaces\Space.cs" />
+    <Compile Include="Mathematics\Spaces\Square.cs" />
+    <Compile Include="Mathematics\Spaces\VectorRange.cs" />
+    <Compile Include="Measurements\Attenuation.cs" />
+    <Compile Include="Measurements\Current.cs" />
+    <Compile Include="Measurements\Delegates.cs" />
+    <Compile Include="Measurements\Density.cs" />
+    <Compile Include="Measurements\Energy.cs" />
+    <Compile Include="Measurements\Force.cs" />
+    <Compile Include="Measurements\Length.cs" />
+    <Compile Include="Measurements\Luminosity.cs" />
+    <Compile Include="Measurements\Mass.cs" />
+    <Compile Include="Measurements\Metric.cs" />
+    <Compile Include="Measurements\Power.cs" />
+    <Compile Include="Measurements\Pressure.cs" />
+    <Compile Include="Measurements\Tempurature.cs" />
+    <Compile Include="Measurements\Time.cs" />
+    <Compile Include="Measurements\Torque.cs" />
+    <Compile Include="Measurements\Volume.cs" />
+    <Compile Include="Meta.cs" />
+    <Compile Include="Diagnostics\Performance.cs" />
+    <Compile Include="Equate.cs" />
+    <Compile Include="Fraction.cs" />
+    <Compile Include="Compare.cs" />
+    <Compile Include="Mathematics\Quaternion.cs" />
+    <Compile Include="Mathematics\Range.cs" />
+    <Compile Include="Mathematics\Symbolics.cs" />
+    <Compile Include="Mathematics\Tableau.cs" />
+    <Compile Include="Mathematics\Tween.cs" />
+    <Compile Include="Mathematics\Vector.cs" />
+    <Compile Include="Parallels\PriorityLock.cs" />
+    <Compile Include="Parallels\Parallel.cs" />
+    <Compile Include="Predicate.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssemblyInfo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RegularExpressions\RegularExpressionLibrary.cs" />
+    <Compile Include="Serialize.cs" />
+    <Compile Include="Structures\Array.cs" />
+    <Compile Include="Structures\BTree.cs" />
+    <Compile Include="Structures\Deque.cs" />
+    <Compile Include="Step.cs" />
+    <Compile Include="Structures\Graph.cs" />
+    <Compile Include="Hash.cs" />
+    <Compile Include="Structures\KdTree.cs" />
+    <Compile Include="Structures\Link.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Link.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Structures\Map.cs" />
+    <Compile Include="Structures\Heap.cs" />
+    <Compile Include="Structures\OmnitreePoints.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OmnitreePoints.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Structures\Order.cs" />
+    <Compile Include="Structures\RedBlackTree.cs" />
+    <Compile Include="Structures\Set.cs" />
+    <Compile Include="Structures\SkipList.cs" />
+    <Compile Include="Structures\AvlTree.cs" />
+    <Compile Include="Structures\Structure.cs" />
+    <Compile Include="Structures\List.cs" />
+    <Compile Include="Structures\Queue.cs" />
+    <Compile Include="Algorithms\Sort.cs" />
+    <Compile Include="Structures\Stack.cs" />
+    <Compile Include="Structures\Temp_Omnitree_N.cs" />
+    <Compile Include="Structures\Tree.cs" />
+    <Compile Include="Structures\Trie.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\AssemblyInfo.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
+    </None>
+    <None Include="Structures\Link.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Link.cs</LastGenOutput>
+    </None>
+    <None Include="Structures\OmnitreePoints.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>OmnitreePoints.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
