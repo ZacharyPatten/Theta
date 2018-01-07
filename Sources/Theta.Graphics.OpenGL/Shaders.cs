@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Theta.Graphics.OpenGL
+﻿namespace Theta.Graphics.OpenGL
 {
     public static class Shaders
     {
         public static string AnimatedModelVertexShader =
+        #region AnimatedModelVertexShader glsl code
 @"#version 150
 
 const int MAX_JOINTS = 50;//max joints allowed in a skeleton
@@ -45,8 +40,10 @@ void main(void){
 	pass_textureCoords = in_textureCoords;
 
 }";
+        #endregion
 
         public static string AnimatedModelFragmentShader =
+        #region AnimatedModelFragmentShader glsl code
 @"#version 150
 
 const vec2 lightBias = vec2(0.7, 0.6);//just indicates the balance between diffuse and ambient lighting
@@ -67,5 +64,40 @@ void main(void){
 	out_colour = diffuseColour * diffuseLight;
 	
 }";
+        #endregion
+
+        internal const string StaticModelVertexShader =
+        #region StaticModelVertexShader glsl code
+@"varying vec3 light;
+varying vec3 normal;
+
+void main()
+{
+  normal = normalize(gl_NormalMatrix * gl_Normal);
+  light = normalize(vec3(gl_LightSource[0].position));
+  gl_TexCoord[0] = gl_MultiTexCoord0;
+  gl_Position = ftransform();
+}";
+        #endregion
+
+        public static string StaticModelFragmentShader =
+        #region StaticModelFragmentShader glsl code
+@"varying vec3 light;
+varying vec3 normal;
+uniform sampler2D tex;
+void main()
+{
+     vec3 ct,cf;
+     vec4 texel;
+     float intensity,at,af;
+     intensity = max(dot(light,normalize(normal)),0.0);
+     cf = intensity * (gl_FrontMaterial.diffuse).rgb + gl_FrontMaterial.ambient.rgb;
+     af = gl_FrontMaterial.diffuse.a;
+     texel = texture2D(tex,gl_TexCoord[0].st);
+     ct = texel.rgb;
+     at = texel.a;
+     gl_FragColor = vec4(ct * cf, at * af);	
+}";
+        #endregion
     }
 }

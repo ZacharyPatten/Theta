@@ -6,7 +6,7 @@ using System.Drawing;
 using Theta.Graphics;
 using System.Reflection;
 using System.IO;
-using Theta.Graphics.Parsers;
+using Theta.Graphics.Formats;
 using Theta.Graphics.OpenGL;
 using Theta.Mathematics;
 
@@ -57,7 +57,7 @@ namespace GraphicsWindow
             {
                 xml_file_contents = reader.ReadToEnd();
             }
-            Model model = ColladaParser.Parse(xml_file_contents);
+            Model model = Collada.Parse(xml_file_contents);
             var textureFile = "GraphicsWindow.Resources.diffuse.png";
             Bitmap texture = new Bitmap(assembly.GetManifestResourceStream(textureFile));
             model._texture = texture;
