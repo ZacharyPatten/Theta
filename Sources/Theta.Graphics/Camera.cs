@@ -68,31 +68,31 @@ namespace Theta.Graphics
 
         public Matrix<float> GetViewMatrix()
         {
-            //Matrix<float> camera = ComputeViewMatrix(
-            //  _position.X, _position.Y, _position.Z,
-            //  _position.X + _forward.X, _position.Y + _forward.Y, _position.Z + _forward.Z,
-            //  _up.X, _up.Y, _up.Z);
+            Matrix<float> camera = ComputeViewMatrix(
+              _position.X, _position.Y, _position.Z,
+              _position.X + _forward.X, _position.Y + _forward.Y, _position.Z + _forward.Z,
+              _up.X, _up.Y, _up.Z);
 
-            //return camera;
+            return camera;
 
 
-            float FOV = 70;
-            float NEAR_PLANE = 0.2f;
-            float FAR_PLANE = 400;
+            //float FOV = 70;
+            //float NEAR_PLANE = 0.2f;
+            //float FAR_PLANE = 400;
 
-            Matrix<float> projectionMatrix = new Matrix<float>(4, 4);
-            float aspectRatio = (float)800 / (float)600;
-            float y_scale = (float)((1f / Math.Tan(Angle.DegreesToRadians(FOV / 2f))));
-            float x_scale = y_scale / aspectRatio;
-            float frustum_length = FAR_PLANE - NEAR_PLANE;
+            //Matrix<float> projectionMatrix = new Matrix<float>(4, 4);
+            //float aspectRatio = (float)800 / (float)600;
+            //float y_scale = (float)((1f / Math.Tan(Angle.DegreesToRadians(FOV / 2f))));
+            //float x_scale = y_scale / aspectRatio;
+            //float frustum_length = FAR_PLANE - NEAR_PLANE;
 
-            projectionMatrix[0, 0] = x_scale;
-            projectionMatrix[1, 1] = y_scale;
-            projectionMatrix[2, 2] = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
-            projectionMatrix[2, 3] = -1;
-            projectionMatrix[3, 2] = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
-            projectionMatrix[3, 3] = 0;
-            return projectionMatrix;
+            //projectionMatrix[0, 0] = x_scale;
+            //projectionMatrix[1, 1] = y_scale;
+            //projectionMatrix[2, 2] = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
+            //projectionMatrix[2, 3] = -1;
+            //projectionMatrix[3, 2] = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
+            //projectionMatrix[3, 3] = 0;
+            //return projectionMatrix;
         }
 
         private static Matrix<float> ComputeViewMatrix(Vector<float> eye, Vector<float> target, Vector<float> up)

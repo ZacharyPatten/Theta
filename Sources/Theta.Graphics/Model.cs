@@ -96,13 +96,18 @@ namespace Theta.Graphics
 
         public void ActivateAnimation(string animationName)
         {
+            this.ActivateAnimation(animationName, DateTime.Now);
+        }
+
+        public void ActivateAnimation(string animationName, DateTime startTime)
+        {
             if (!this._animations.Contains(animationName))
             {
-                throw new System.ArgumentException("the requested animation does not exist");
+                throw new System.ArgumentException("The requested animation does not exist.");
             }
 
             this._activeAnimation = this._animations[animationName];
-            this._animationStartTime = DateTime.Now;
+            this._animationStartTime = startTime;
         }
 
         public Matrix<float>[] CalculateAnimatedJointMatrices()
@@ -147,7 +152,7 @@ namespace Theta.Graphics
                 {
                     Link<Vector<float>, Quaternion<float>> previousTransform = previousFrame.JointTransformations[joint];
                     Link<Vector<float>, Quaternion<float>> nextTransform = nextFrame.JointTransformations[joint];
-                    
+
                     Vector<float> currentTranslation = Vector<float>.Lerp(previousTransform._1, nextTransform._1, keyFrameRatio);
                     Quaternion<float> currentRotation = Quaternion<float>.Lerp(previousTransform._2, nextTransform._2, keyFrameRatio);
 

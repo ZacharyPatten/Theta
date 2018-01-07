@@ -1,11 +1,8 @@
-﻿using OpenTK.Graphics.OpenGL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 using Theta.Mathematics;
+
+using OpenTK.Graphics.OpenGL;
 
 namespace Theta.Graphics.OpenGL
 {
@@ -68,6 +65,10 @@ namespace Theta.Graphics.OpenGL
             public void loadMatrix(Matrix<float> matrix){
                 matrixBuffer = matrix._matrix;
                 //matrixBuffer.flip();
+
+                Array.Reverse(matrixBuffer);
+
+
                 int location = base.getLocation();
 
                 //foreach (float value in matrixBuffer)

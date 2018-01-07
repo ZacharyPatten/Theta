@@ -43,7 +43,7 @@ namespace GraphicsWindow
                 throw new NotSupportedException(String.Format("OpenGL {0} is required (you only have {1}).", target, version));
             }
             
-            Vector<float> camera_pos = new Vector<float>(0, 0, -10);
+            Vector<float> camera_pos = new Vector<float>(0, 0, -20);
             Vector<float> camera_forward = new Vector<float>(0, 0, 1);
             Vector<float> camera_up = new Vector<float>(0, 1, 0);
 
@@ -94,7 +94,13 @@ namespace GraphicsWindow
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
-            
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
+
+
             GL.ClearColor(System.Drawing.Color.DarkKhaki);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             
