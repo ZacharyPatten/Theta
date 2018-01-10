@@ -48,6 +48,8 @@ namespace Theta.Graphics
 
         #endregion
 
+        public const int MaximumJoints = 50;
+
         // model data
         public string _name;
         public Vector<float> _position = Vector<float>.FactoryZero(3);
@@ -79,6 +81,7 @@ namespace Theta.Graphics
         public string Name { get { return this._name; } }
         public Vector<float> Position { get { return this._position; } set { this._position = value; } }
         public Quaternion<float> Rotation { get { return this._orientation; } set { this._orientation = value; } }
+
         public bool HasTextureCoordinates { get { return this._textureCoordinates != null && this._textureCoordinates.Length > 0; } }
         public bool HasNormals { get { return this._normals != null && this._normals.Length > 0; } }
         public bool HasColors { get { return this._colors != null && this._colors.Length > 0; } }
@@ -113,8 +116,8 @@ namespace Theta.Graphics
         public Matrix<float>[] CalculateAnimatedJointMatrices()
         {
             // initialize the matrix array and set the base matrix of each joint
-            Matrix<float>[] jointMatrices = new Matrix<float>[16];
-
+            Matrix<float>[] jointMatrices = new Matrix<float>[this._joints.Count];
+            
             // if no animation is active, the base matrices wer all we needed
             if (this._activeAnimation == null)
             {
@@ -170,7 +173,7 @@ namespace Theta.Graphics
                 });
 
             // multiply the current pose and the bind local transform
-            this._joints.Stepper(x => jointMatrices[x.Id] = currentPose[x.Name] * x.BindLocalTransform);
+            this._joints.Stepper(x => jointMatrices[x.Id] = currentPose[x.Name] * x.BindLocalTransform.Inverse());
 
             return jointMatrices;
         }

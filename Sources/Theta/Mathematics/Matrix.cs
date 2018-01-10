@@ -1224,10 +1224,10 @@ namespace Theta.Mathematics
 
         #region Rotate
 
-        /// <summary>Rotates a matrix around an axis by a specified angle.</summary>
+        /// <summary>Rotates a 4x4 matrix around an 3D axis by a specified angle.</summary>
         /// <param name="angle">The angle of rotation around the axis.</param>
-        /// <param name="axis">The axis to rotate the matrix around.</param>
-        /// <param name="matrix">The matrix to rotate.</param>
+        /// <param name="axis">The 3D axis to rotate the matrix around.</param>
+        /// <param name="matrix">The 4x4 matrix to rotate.</param>
         /// <returns>The rotated matrix.</returns>
         public static Matrix<T> Rotate4x4(Angle<T> angle, Vector<T> axis, Matrix<T> matrix)
         {
@@ -1623,21 +1623,21 @@ namespace Theta.Mathematics
 		", RowMultiplication("j", "rref", "i", "temp_rowMultiplication2"), @"
 		for (int j = i + 1; j < rref.Rows; j++)
 		{
-			", T_Source, @" scalar1 = -result[j, i];
+			", T_Source, @" scalar1 = -rref[j, i];
 			", RowAddition("k", "identity", "j", "i", "scalar1"), @"
-			", T_Source, @" scalar2 = -result[j, i];
+			", T_Source, @" scalar2 = -rref[j, i];
 			", RowAddition("k", "rref", "j", "i", "scalar2"), @"
 		}
 		for (int j = i - 1; j >= 0; j--)
 		{
-			", T_Source, @" scalar1 = -result[j, i];
+			", T_Source, @" scalar1 = -rref[j, i];
 			", RowAddition("k", "identity", "j", "i", "scalar1"), @"
-			", T_Source, @" scalar2 = -result[j, i];
+			", T_Source, @" scalar2 = -rref[j, i];
 			", RowAddition("k", "rref", "j", "i", "scalar2"), @"
 		}
 	}
 	return identity;
-}"));
+})"));
 
 			return Matrix<T>.Matrix_Inverse(matrix);
 

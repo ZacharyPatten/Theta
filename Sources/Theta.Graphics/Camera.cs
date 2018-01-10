@@ -55,14 +55,26 @@ namespace Theta.Graphics
         public void RotateY(float angle)
         {
             Vector<float> Haxis = Y_AXIS.CrossProduct(_forward.Normalize());
-            _forward = _forward.RotateBy(angle, 0, 1, 0).Normalize();
+
+            _forward = (Matrix<float>.Rotate4x4(
+                Angle<float>.Factory_Degrees(angle),
+                new Vector<float>(0, 1, 0),
+                Matrix<float>.FactoryIdentity(4, 4)).Minor(3, 3) * _forward).Normalize();
+            //_forward = _forward.RotateBy(angle, 0, 1, 0).Normalize();
+
             _up = _forward.CrossProduct(Haxis.Normalize());
         }
 
         public void RotateX(float angle)
         {
             Vector<float> Haxis = Y_AXIS.CrossProduct(_forward.Normalize());
-            _forward = _forward.RotateBy(angle, Haxis.X, Haxis.Y, Haxis.Z).Normalize();
+
+            _forward = (Matrix<float>.Rotate4x4(
+                Angle<float>.Factory_Degrees(angle),
+                new Vector<float>(1, 0, 0),
+                Matrix<float>.FactoryIdentity(4, 4)).Minor(3, 3) * _forward).Normalize();
+            //_forward = _forward.RotateBy(angle, Haxis.X, Haxis.Y, Haxis.Z).Normalize();
+
             _up = _forward.CrossProduct(Haxis.Normalize());
         }
 

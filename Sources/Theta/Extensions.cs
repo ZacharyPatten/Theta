@@ -658,5 +658,30 @@ namespace System
         }
 
         #endregion
+
+        #region Array
+        
+        public static bool ValuesAreEqual<T>(this T[] a1, T[] a2)
+        {
+            return a1.ValuesAreEqual(a2, Theta.Equate.Default);
+        }
+
+        public static bool ValuesAreEqual<T>(this T[] a1, T[] a2, Equate<T> equate)
+        {
+            if (ReferenceEquals(a1, a2))
+                return true;
+            if (a1 == null || a2 == null)
+                return false;
+            if (a1.Length != a2.Length)
+                return false;
+            for (int i = 0; i < a1.Length; i++)
+            {
+                if (!equate(a1[i], a2[i]))
+                    return false;
+            }
+            return true;
+        }
+
+        #endregion
     }
 }

@@ -26,6 +26,8 @@ namespace Theta.Graphics.OpenGL
 
         public static LoadedModel Model(Model model)
         {
+            int textureId = Load.Image(model._texture);
+
             LoadedModel.VertexArrayObject vao = LoadedModel.VertexArrayObject.Create();
             vao.Bind();
             vao.CreateIndexBuffer(model._indices);
@@ -35,9 +37,7 @@ namespace Theta.Graphics.OpenGL
             vao.CreateIntAttribute(3, model._jointIds, 3);
             vao.CreateAttribute(4, model._jointWeights, 3);
             vao.Unbind();
-
-            int textureId = Load.Image(model._texture);
-
+            
             return new LoadedModel(model, vao, textureId);
         }
     }

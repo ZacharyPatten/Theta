@@ -310,7 +310,9 @@ namespace Theta.Mathematics
 	return (", Meta.ConvertTypeToCsharpSource(typeof(T)), @")pi;
 }"));
 
-			return computation();
+            _pi_computed = true;
+            
+            return computation();
 		}
 		#endregion
 

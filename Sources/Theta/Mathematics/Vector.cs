@@ -1530,7 +1530,7 @@ namespace Theta.Mathematics
 			for (int i = 1; i < this.Dimensions; i++)
 			{
 				str.Append(", ");
-				str.Append(this._vector[0]);
+				str.Append(this._vector[i]);
 			}
 			str.Append("]");
 			return str.ToString(); 

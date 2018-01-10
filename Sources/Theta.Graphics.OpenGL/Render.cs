@@ -66,7 +66,7 @@ namespace Theta.Graphics.OpenGL
                 matrixBuffer = matrix._matrix;
                 //matrixBuffer.flip();
 
-                Array.Reverse(matrixBuffer);
+                //Array.Reverse(matrixBuffer);
 
 
                 int location = base.getLocation();
@@ -229,32 +229,65 @@ namespace Theta.Graphics.OpenGL
 
         public static void Model(AnimatedModelShader shaderProgram, LoadedModel loadedModel, Camera camera, Vector<float> lightDir)
         {
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
-
             shaderProgram.start();
-            shaderProgram.projectionViewMatrix.loadMatrix(camera.GetViewMatrix());
-            shaderProgram.lightDirection.loadVec3(lightDir);
-            //OpenGlUtils.antialias(true);
-            //OpenGlUtils.disableBlending();
-            //OpenGlUtils.enableDepthTesting(true);
-            GL.ActiveTexture(TextureUnit.Texture0);
-            GL.BindTexture(TextureTarget.Texture2D, loadedModel.LoadedTextureId);
+
+            OpenTK.Matrix4 perspective = OpenTK.Matrix4.CreatePerspectiveFieldOfView(
+                (float).5f,
+                (float)600 / (float)800,
+                (float)1,
+                (float)65);
+
+            Matrix<float> projection = new Matrix<float>(new float[,] {
+                { perspective.M11, perspective.M12, perspective.M13, perspective.M14 },
+                { perspective.M21, perspective.M22, perspective.M23, perspective.M24 },
+                { perspective.M31, perspective.M32, perspective.M33, perspective.M34 },
+                { perspective.M41, perspective.M42, perspective.M43, perspective.M44 },
+            });
+
+            Matrix<float> projectionView = projection * camera.GetViewMatrix();
+
+            //projectionView = new Matrix<float>(new float[,] {
+            //    { 1, 0, 0, 0 },
+            //    { 0, 1, 0, 0 },
+            //    { 0, 0, 1, -100 },
+            //    { 0, 0, 0, 1 },
+            //});
+
             GL.BindVertexArray(loadedModel.LoadedVertexArrayObject._id);
             GL.EnableVertexAttribArray(0);
             GL.EnableVertexAttribArray(1);
             GL.EnableVertexAttribArray(2);
             GL.EnableVertexAttribArray(3);
             GL.EnableVertexAttribArray(4);
+
+            shaderProgram.projectionViewMatrix.loadMatrix(projectionView);
+            shaderProgram.lightDirection.loadVec3(lightDir);
+            
+            //OpenGlUtils.enableDepthTesting(true);
+            
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, loadedModel.LoadedTextureId);
+            
+            //foreach (LoadedModel.VertexBufferObject vbo in loadedModel.LoadedVertexArrayObject._dataVbos)
+            //{
+            //    GL.EnableVertexAttribArray(vbo.Id);
+            //}
+
             shaderProgram.jointTransforms.loadMatrixArray(loadedModel.CalculateAnimatedJointMatrices());
             GL.DrawElements(BeginMode.Triangles, loadedModel.LoadedVertexArrayObject.IndexCount, DrawElementsType.UnsignedInt, 0);
-            GL.DisableVertexAttribArray(0);
-            GL.DisableVertexAttribArray(1);
-            GL.DisableVertexAttribArray(2);
-            GL.DisableVertexAttribArray(3);
-            GL.DisableVertexAttribArray(4);
+
+            //GL.BindVertexArray(loadedModel.LoadedVertexArrayObject._id);
+            //GL.DisableVertexAttribArray(0);
+            //GL.DisableVertexAttribArray(1);
+            //GL.DisableVertexAttribArray(2);
+            //GL.DisableVertexAttribArray(3);
+            //GL.DisableVertexAttribArray(4);
+
+            //foreach (LoadedModel.VertexBufferObject vbo in loadedModel.LoadedVertexArrayObject._dataVbos)
+            //{
+            //    GL.EnableVertexAttribArray(vbo.Id);
+            //}
+
             GL.BindVertexArray(0);
             shaderProgram.stop();
         }

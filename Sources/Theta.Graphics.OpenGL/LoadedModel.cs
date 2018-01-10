@@ -62,8 +62,8 @@ namespace Theta.Graphics.OpenGL
             private static int BYTES_PER_INT = 4;
 
             public int _id;
-            private List<VertexBufferObject> _dataVbos = new ListArray<VertexBufferObject>();
-            private VertexBufferObject _indexVbo;
+            public List<VertexBufferObject> _dataVbos = new ListArray<VertexBufferObject>();
+            public VertexBufferObject _indexVbo;
             private int _indexCount;
 
             private VertexArrayObject(int id)
@@ -122,6 +122,7 @@ namespace Theta.Graphics.OpenGL
                 dataVbo.Bind();
                 dataVbo.StoreData(data);
                 GL.VertexAttribIPointer(attribute, attrSize, VertexAttribIntegerType.Int, attrSize * BYTES_PER_INT, System.IntPtr.Zero);
+
                 dataVbo.Unbind();
                 _dataVbos.Add(dataVbo);
             }
