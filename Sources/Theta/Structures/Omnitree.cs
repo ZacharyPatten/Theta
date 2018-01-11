@@ -2880,7 +2880,7 @@ namespace Theta.Structures
             {
                 Branch branch = node as Branch;
                 int child_index = DetermineChildIndex(branch.PointOfDivision, vector);
-                removals += Remove(branch[child_index], vector);
+                removals += Remove(branch[child_index], vector, where);
                 branch.Count -= removals;
                 // convert this branch back into a leaf
                 // Note: if count is zero, it will be chopped off
@@ -3148,7 +3148,7 @@ namespace Theta.Structures
             {
                 removal = parent[child_index];
                 leaf = new Leaf(removal.Bounds, removal.Parent, removal.Index);
-                parent[child_index] = new Leaf(removal.Bounds, removal.Parent, removal.Index);
+                parent[child_index] = leaf;
             }
 
             this.Stepper((T step) => { leaf.Add(step); }, removal);
@@ -5145,7 +5145,7 @@ namespace Theta.Structures
             {
                 Branch branch = node as Branch;
                 int child_index = DetermineChildIndex(branch.PointOfDivision, vector);
-                removals += Remove(branch[child_index], vector);
+                removals += Remove(branch[child_index], vector, where);
                 branch.Count -= removals;
                 // convert this branch back into a leaf
                 // Note: if count is zero, it will be chopped off
@@ -5427,7 +5427,7 @@ namespace Theta.Structures
             {
                 removal = parent[child_index];
                 leaf = new Leaf(removal.Bounds, removal.Parent, removal.Index);
-                parent[child_index] = new Leaf(removal.Bounds, removal.Parent, removal.Index);
+                parent[child_index] = leaf;
             }
 
             this.Stepper((T step) => { leaf.Add(step); }, removal);
@@ -7666,7 +7666,7 @@ namespace Theta.Structures
             {
                 Branch branch = node as Branch;
                 int child_index = DetermineChildIndex(branch.PointOfDivision, vector);
-                removals += Remove(branch[child_index], vector);
+                removals += Remove(branch[child_index], vector, where);
                 branch.Count -= removals;
                 // convert this branch back into a leaf
                 // Note: if count is zero, it will be chopped off
@@ -7962,7 +7962,7 @@ namespace Theta.Structures
             {
                 removal = parent[child_index];
                 leaf = new Leaf(removal.Bounds, removal.Parent, removal.Index);
-                parent[child_index] = new Leaf(removal.Bounds, removal.Parent, removal.Index);
+                parent[child_index] = leaf;
             }
 
             this.Stepper((T step) => { leaf.Add(step); }, removal);
@@ -10443,7 +10443,7 @@ namespace Theta.Structures
             {
                 Branch branch = node as Branch;
                 int child_index = DetermineChildIndex(branch.PointOfDivision, vector);
-                removals += Remove(branch[child_index], vector);
+                removals += Remove(branch[child_index], vector, where);
                 branch.Count -= removals;
                 // convert this branch back into a leaf
                 // Note: if count is zero, it will be chopped off
@@ -10753,7 +10753,7 @@ namespace Theta.Structures
             {
                 removal = parent[child_index];
                 leaf = new Leaf(removal.Bounds, removal.Parent, removal.Index);
-                parent[child_index] = new Leaf(removal.Bounds, removal.Parent, removal.Index);
+                parent[child_index] = leaf;
             }
 
             this.Stepper((T step) => { leaf.Add(step); }, removal);
@@ -13476,7 +13476,7 @@ namespace Theta.Structures
             {
                 Branch branch = node as Branch;
                 int child_index = DetermineChildIndex(branch.PointOfDivision, vector);
-                removals += Remove(branch[child_index], vector);
+                removals += Remove(branch[child_index], vector, where);
                 branch.Count -= removals;
                 // convert this branch back into a leaf
                 // Note: if count is zero, it will be chopped off
@@ -13800,7 +13800,7 @@ namespace Theta.Structures
             {
                 removal = parent[child_index];
                 leaf = new Leaf(removal.Bounds, removal.Parent, removal.Index);
-                parent[child_index] = new Leaf(removal.Bounds, removal.Parent, removal.Index);
+                parent[child_index] = leaf;
             }
 
             this.Stepper((T step) => { leaf.Add(step); }, removal);
@@ -16765,7 +16765,7 @@ namespace Theta.Structures
             {
                 Branch branch = node as Branch;
                 int child_index = DetermineChildIndex(branch.PointOfDivision, vector);
-                removals += Remove(branch[child_index], vector);
+                removals += Remove(branch[child_index], vector, where);
                 branch.Count -= removals;
                 // convert this branch back into a leaf
                 // Note: if count is zero, it will be chopped off
@@ -17103,7 +17103,7 @@ namespace Theta.Structures
             {
                 removal = parent[child_index];
                 leaf = new Leaf(removal.Bounds, removal.Parent, removal.Index);
-                parent[child_index] = new Leaf(removal.Bounds, removal.Parent, removal.Index);
+                parent[child_index] = leaf;
             }
 
             this.Stepper((T step) => { leaf.Add(step); }, removal);
@@ -20310,7 +20310,7 @@ namespace Theta.Structures
             {
                 Branch branch = node as Branch;
                 int child_index = DetermineChildIndex(branch.PointOfDivision, vector);
-                removals += Remove(branch[child_index], vector);
+                removals += Remove(branch[child_index], vector, where);
                 branch.Count -= removals;
                 // convert this branch back into a leaf
                 // Note: if count is zero, it will be chopped off
@@ -20662,7 +20662,7 @@ namespace Theta.Structures
             {
                 removal = parent[child_index];
                 leaf = new Leaf(removal.Bounds, removal.Parent, removal.Index);
-                parent[child_index] = new Leaf(removal.Bounds, removal.Parent, removal.Index);
+                parent[child_index] = leaf;
             }
 
             this.Stepper((T step) => { leaf.Add(step); }, removal);
@@ -24111,7 +24111,7 @@ namespace Theta.Structures
             {
                 Branch branch = node as Branch;
                 int child_index = DetermineChildIndex(branch.PointOfDivision, vector);
-                removals += Remove(branch[child_index], vector);
+                removals += Remove(branch[child_index], vector, where);
                 branch.Count -= removals;
                 // convert this branch back into a leaf
                 // Note: if count is zero, it will be chopped off
@@ -24477,7 +24477,7 @@ namespace Theta.Structures
             {
                 removal = parent[child_index];
                 leaf = new Leaf(removal.Bounds, removal.Parent, removal.Index);
-                parent[child_index] = new Leaf(removal.Bounds, removal.Parent, removal.Index);
+                parent[child_index] = leaf;
             }
 
             this.Stepper((T step) => { leaf.Add(step); }, removal);
@@ -28168,7 +28168,7 @@ namespace Theta.Structures
             {
                 Branch branch = node as Branch;
                 int child_index = DetermineChildIndex(branch.PointOfDivision, vector);
-                removals += Remove(branch[child_index], vector);
+                removals += Remove(branch[child_index], vector, where);
                 branch.Count -= removals;
                 // convert this branch back into a leaf
                 // Note: if count is zero, it will be chopped off
@@ -28548,7 +28548,7 @@ namespace Theta.Structures
             {
                 removal = parent[child_index];
                 leaf = new Leaf(removal.Bounds, removal.Parent, removal.Index);
-                parent[child_index] = new Leaf(removal.Bounds, removal.Parent, removal.Index);
+                parent[child_index] = leaf;
             }
 
             this.Stepper((T step) => { leaf.Add(step); }, removal);
@@ -32481,7 +32481,7 @@ namespace Theta.Structures
             {
                 Branch branch = node as Branch;
                 int child_index = DetermineChildIndex(branch.PointOfDivision, vector);
-                removals += Remove(branch[child_index], vector);
+                removals += Remove(branch[child_index], vector, where);
                 branch.Count -= removals;
                 // convert this branch back into a leaf
                 // Note: if count is zero, it will be chopped off
@@ -32875,7 +32875,7 @@ namespace Theta.Structures
             {
                 removal = parent[child_index];
                 leaf = new Leaf(removal.Bounds, removal.Parent, removal.Index);
-                parent[child_index] = new Leaf(removal.Bounds, removal.Parent, removal.Index);
+                parent[child_index] = leaf;
             }
 
             this.Stepper((T step) => { leaf.Add(step); }, removal);

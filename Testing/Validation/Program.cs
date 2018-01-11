@@ -30,12 +30,12 @@ namespace Validation
             Console.WriteLine(Compute<Fraction128>.Pi);
 
 
-            //TestOmnitree1();
-            //Console.WriteLine();
-            //TestOmnitree2();
-            //Console.WriteLine();
+            TestOmnitree1();
+            Console.WriteLine();
+            TestOmnitree2();
+            Console.WriteLine();
 
-			Console.WriteLine("Press Enter To Exit...");
+            Console.WriteLine("Press Enter To Exit...");
 			Console.ReadLine();
 		}
 
@@ -168,24 +168,24 @@ namespace Validation
 			else
 				Console.WriteLine("Querying INVALID.");
 
-			#endregion
+            #endregion
 
-			#region dynamic values (re-randomizing)
+            #region dynamic values (re-randomizing)
 
-			Console.WriteLine("Moving randomized data...");
+            Console.WriteLine("Moving randomized data...");
 
-			foreach (TestObject record in records)
-			{
-				record.X += Math.Max(0d, Math.Min(1d, (random.NextDouble() / 100D) - .5D));
-				record.Y += Math.Max(0d, Math.Min(1d, (random.NextDouble() / 100D) - .5D));
-				record.Z += Math.Max(0d, Math.Min(1d, (random.NextDouble() / 100D) - .5D));
-			}
+            foreach (TestObject record in records)
+            {
+                record.X += Math.Max(0d, Math.Min(1d, (random.NextDouble() / 100D) - .5D));
+                record.Y += Math.Max(0d, Math.Min(1d, (random.NextDouble() / 100D) - .5D));
+                record.Z += Math.Max(0d, Math.Min(1d, (random.NextDouble() / 100D) - .5D));
+            }
 
-			Console.WriteLine("Randomized data moved.");
+            Console.WriteLine("Randomized data moved.");
 
-			#endregion
+            #endregion
 
-			#region Updating
+            #region Updating
 
             Console.WriteLine("Updating Tree Positions...");
             //// Update Method #1
@@ -196,11 +196,11 @@ namespace Validation
 
             Console.WriteLine("Tree Positions Updated.");
 
-			#endregion
+            #endregion
 
-			#region removal
+            #region removal
 
-			Console.WriteLine("Removing Values: ");
+            Console.WriteLine("Removing Values: ");
 			for (int i = 0; i < count; i++)
 			{
                 int tempCount = omnitree.Count;
@@ -358,39 +358,39 @@ namespace Validation
 			else
 				Console.WriteLine("Querying INVALID.");
 
-			#endregion
+            #endregion
 
-			#region dynamic values (re-randomizing)
+            #region dynamic values (re-randomizing)
 
-			Console.WriteLine("Moving randomized data...");
+            Console.WriteLine("Moving randomized data...");
 
-			foreach (TestObject record in records)
-			{
-				record.X += Math.Max(0d, Math.Min(1d, (random.NextDouble() / 100D) - .5D));
-				record.Y += Math.Max(0d, Math.Min(1d, (random.NextDouble() / 100D) - .5D));
-				record.Z += Math.Max(0d, Math.Min(1d, (random.NextDouble() / 100D) - .5D));
-			}
+            foreach (TestObject record in records)
+            {
+                record.X += Math.Max(0d, Math.Min(1d, (random.NextDouble() / 100D) - .5D));
+                record.Y += Math.Max(0d, Math.Min(1d, (random.NextDouble() / 100D) - .5D));
+                record.Z += Math.Max(0d, Math.Min(1d, (random.NextDouble() / 100D) - .5D));
+            }
 
-			Console.WriteLine("Randomized data moved.");
+            Console.WriteLine("Randomized data moved.");
 
-			#endregion
+            #endregion
 
-			#region updating
+            #region updating
 
-			Console.WriteLine("Updating Tree Positions...");
-			//// Update Method #1
-			omnitree.Update();
+            Console.WriteLine("Updating Tree Positions...");
+            //// Update Method #1
+            omnitree.Update();
 
-			//// Update Method #2
-			//omnitree.Update(omnitree.Min, omnitree.Max);
+            //// Update Method #2
+            //omnitree.Update(omnitree.Min, omnitree.Max);
 
-			Console.WriteLine("Tree Positions Updated.");
+            Console.WriteLine("Tree Positions Updated.");
 
-			#endregion
+            #endregion
 
-			#region removal
+            #region removal
 
-			Console.WriteLine("Removing Values: ");
+            Console.WriteLine("Removing Values: ");
 			for (int i = 0; i < count; i++)
 			{
 				//// Removal Method #1
