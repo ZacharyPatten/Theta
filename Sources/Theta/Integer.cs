@@ -398,8 +398,8 @@ namespace Theta
 
 		public Integer Modulus(Integer that)
 		{
-			Integer abs = Compute<Integer>.AbsoluteValue_private(that);
-			Integer result = Compute<Integer>.AbsoluteValue_private(this);
+			Integer abs = Compute<Integer>.AbsoluteValue(that);
+			Integer result = Compute<Integer>.AbsoluteValue(this);
 			while (result < that)
 			{
 				result = result - that;

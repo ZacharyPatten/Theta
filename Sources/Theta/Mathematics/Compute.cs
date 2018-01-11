@@ -254,7 +254,7 @@ namespace Theta.Mathematics
 
 		#endregion
 
-        #region Constants
+        // Constants
 
         #region Pi
         /// <summary>The mathematical constant for pi. [3.14159265...]</summary>
@@ -314,46 +314,41 @@ namespace Theta.Mathematics
 		#region FromInt32
 		public static T FromInt32(int value)
 		{
-            if (FromInt32_private == null)
-            {
-                FromInt32_private = (int __value) =>
-                {
-                    // compile checks
-                    if (!Meta.ValidateConvert<T>())
-                        throw new System.ArithmeticException("Cannot perform Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.IntCast; " + Meta.ConvertTypeToCsharpSource(typeof(T)) + " lacks explicit casting from int operator.");
-                    // shared expressions
-                    ParameterExpression _value = Expression.Parameter(typeof(int));
-                    LabelTarget _label = Expression.Label(typeof(T));
-                    // code builder
-                    ListLinked<Expression> expressions = new ListLinked<Expression>();
-                    // null checks
-                    if (!typeof(T).IsValueType) // is nullable?
-                    {
-                        expressions.Add(
-                            Expression.IfThen(
-                                Expression.Equal(_value, Expression.Constant(null, typeof(T))),
-                                Expression.Throw(Expression.New(typeof(System.ArgumentNullException).GetConstructor(new System.Type[] { typeof(string) }), Expression.Constant("value")))));
-                    }
-                    // code
-                    expressions.Add(Expression.Return(_label, Expression.Convert(_value, typeof(T))));
-                    expressions.Add(Expression.Label(_label, Expression.Constant(default(T))));
-                    // compilation
-                    Compute<T>.FromInt32_private = Expression.Lambda<Compute<T>.Delegates.FromInt32>(
-                        Expression.Block(expressions.ToArray()),
-                        _value).Compile();
-                    // invocation
-                    return Compute<T>.FromInt32_private(__value);
-                };
-            }
-
 			return Compute<T>.FromInt32_private(value);
 		}
 
-		internal static Compute<T>.Delegates.FromInt32 FromInt32_private;
+        private static Compute<T>.Delegates.FromInt32 FromInt32_private = (int value) =>
+        {
+            // compile checks
+            if (!Meta.ValidateConvert<T>())
+                throw new System.ArithmeticException("Cannot perform Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.IntCast; " + Meta.ConvertTypeToCsharpSource(typeof(T)) + " lacks explicit casting from int operator.");
+            // shared expressions
+            ParameterExpression _value = Expression.Parameter(typeof(int));
+            LabelTarget _label = Expression.Label(typeof(T));
+            // code builder
+            ListLinked<Expression> expressions = new ListLinked<Expression>();
+            // null checks
+            if (!typeof(T).IsValueType) // is nullable?
+            {
+                expressions.Add(
+                    Expression.IfThen(
+                        Expression.Equal(_value, Expression.Constant(null, typeof(T))),
+                        Expression.Throw(Expression.New(typeof(System.ArgumentNullException).GetConstructor(new System.Type[] { typeof(string) }), Expression.Constant("value")))));
+            }
+            // code
+            expressions.Add(Expression.Return(_label, Expression.Convert(_value, typeof(T))));
+            expressions.Add(Expression.Label(_label, Expression.Constant(default(T))));
+            // compilation
+            Compute<T>.FromInt32_private = Expression.Lambda<Compute<T>.Delegates.FromInt32>(
+                Expression.Block(expressions.ToArray()),
+                _value).Compile();
+            // invocation
+            return Compute<T>.FromInt32_private(value);
+        };
 
-		#endregion
+        #endregion
 
-		#region Zero
+        #region Zero
         private static bool zero_computed = false;
         private static T zero_value;
 		public static T Zero
@@ -363,6 +358,7 @@ namespace Theta.Mathematics
                 if (!zero_computed)
                 {
                     zero_value = Compute<T>.FromInt32(0);
+                    zero_computed = true;
                 }
                 return zero_value;
             }
@@ -379,6 +375,7 @@ namespace Theta.Mathematics
                 if (!one_computed)
                 {
                     one_value = Compute<T>.FromInt32(1);
+                    one_computed = true;
                 }
                 return one_value;
             }
@@ -414,68 +411,12 @@ namespace Theta.Mathematics
             throw new System.NotImplementedException();
         }
         #endregion
-        
-        #endregion
 
-        #region Properties
-
-        #region IsInteger
-
-        internal static bool IsInteger(T value)
-        {
-            return Equate(Modulus(value, FromInt32(1)), FromInt32(0));
-        }
-
-        #endregion
-
-        #region IsNonNegative
-
-        internal static bool IsNonNegative(T value)
-        {
-            return GreaterThanOrEqualTo(value, FromInt32(0));
-        }
-
-        #endregion
-
-        #region IsPrime
-        /// <summary>Computes (natrual log): [ ln(n) ].</summary>
-        internal static Compute<T>.Delegates.IsPrime IsPrime_private = (T value) =>
-        {
-            Compute<T>.IsPrime_private =
-    Meta.Compile<Compute<T>.Delegates.IsPrime>(
-        string.Concat(
-@"(", Meta.ConvertTypeToCsharpSource(typeof(T)), @" candidate) =>
-{
-	if (candidate % (", Meta.ConvertTypeToCsharpSource(typeof(T)), @")1 == 0)
-	{
-		if (candidate == 2)
-			return true;
-		", Meta.ConvertTypeToCsharpSource(typeof(T)), @" squareRoot = Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.SquareRoot(candidate);
-		for (int divisor = 3; divisor <= squareRoot; divisor += 2)
-			if ((candidate % divisor) == 0)
-				return false;
-		return true;
-	}
-	else
-		return false;
-}"));
-
-            return Compute<T>.IsPrime_private(value);
-        };
-
-        public static bool IsPrime(T value)
-        {
-            return IsPrime_private(value);
-        }
-        #endregion
-        
-        #endregion
-
-        #region Fundamental Operations
+        // Fundamental Operations
 
         #region AbsoluteValue
         /// <summary>Computes the absolute value of a value.</summary>
-        internal static Compute<T>.Delegates.AbsoluteValue AbsoluteValue_private = (T value) =>
+        private static Compute<T>.Delegates.AbsoluteValue AbsoluteValue_private = (T value) =>
         {
             // compile checks
             if (!Meta.ValidateEqual<T>())
@@ -491,7 +432,7 @@ namespace Theta.Mathematics
                 (Expression _operand, LabelTarget _returnLabel) =>
                 {
                     return Expression.IfThenElse(
-                        Expression.LessThan(_operand, Expression.Constant(Compute<T>.FromInt32(0), typeof(T))),
+                        Expression.LessThan(_operand, Expression.Constant(Compute<T>.Zero, typeof(T))),
                         Expression.Return(_returnLabel, Expression.Negate(_operand), typeof(T)),
                         Expression.Return(_returnLabel, _operand, typeof(T)));
                 });
@@ -527,7 +468,7 @@ namespace Theta.Mathematics
 			return Compute<T>.Negate_private(operand);
 		}
 
-		internal static Compute<T>.Delegates.Negate Negate_private = (T value) =>
+        private static Compute<T>.Delegates.Negate Negate_private = (T value) =>
 		{
 			// compile checks
 			if (!Meta.ValidateNegate<T>())
@@ -555,10 +496,10 @@ namespace Theta.Mathematics
 			// invocation
 			return Compute<T>.Negate_private(value);
 		};
-		#endregion
+        #endregion
 
-		#region Add
-		internal static Compute<T>.Delegates.Add Add_private = (T left, T right) =>
+        #region Add
+        private static Compute<T>.Delegates.Add Add_private = (T left, T right) =>
 		{
 			// compile checks
 			if (!Meta.ValidateAdd<T>())
@@ -579,8 +520,8 @@ namespace Theta.Mathematics
 			return Compute<T>.Add_private(operand_left, operand_right);
 		}
 
-		/// <summary>Compuates the algebraic summation [ Σ (stepper) ].</summary>
-		internal static Compute<T>.Delegates.Summation Summation_private = (Stepper<T> stepper) =>
+        /// <summary>Compuates the algebraic summation [ Σ (stepper) ].</summary>
+        private static Compute<T>.Delegates.Summation Summation_private = (Stepper<T> stepper) =>
 		{
 			if (!Meta.ValidateAdd<T>()) { throw new System.ArithmeticException(string.Concat("computation requires an addition operator: ", Meta.ConvertTypeToCsharpSource(typeof(T)), " +(", Meta.ConvertTypeToCsharpSource(typeof(T)), ", ", Meta.ConvertTypeToCsharpSource(typeof(T)), ")")); }
 
@@ -606,10 +547,10 @@ namespace Theta.Mathematics
         {
             return Add(values as System.Collections.Generic.IEnumerable<T>);
         }
-		#endregion
+        #endregion
 
-		#region Subtract
-		internal static Compute<T>.Delegates.Subtract Subtract_private = (T left, T right) =>
+        #region Subtract
+        private static Compute<T>.Delegates.Subtract Subtract_private = (T left, T right) =>
 		{
 			// compile checks
 			if (!Meta.ValidateSubtract<T>())
@@ -629,10 +570,10 @@ namespace Theta.Mathematics
 		{
 			return Compute<T>.Subtract_private(operand_left, operand_right);
 		}
-		#endregion
+        #endregion
 
-		#region Multiply
-		internal static Compute<T>.Delegates.Multiply Multiply_private = (T left, T right) =>
+        #region Multiply
+        private static Compute<T>.Delegates.Multiply Multiply_private = (T left, T right) =>
 		{
 			// compile checks
 			if (!Meta.ValidateMultiply<T>())
@@ -660,11 +601,11 @@ namespace Theta.Mathematics
 				result = Compute<T>.Multiply_private(result, operands[i]);
 			return result;
 		}
-		#endregion
+        #endregion
 
-		#region Divide
-		/// <summary>Divides two operands.</summary>
-		internal static Compute<T>.Delegates.Divide Divide_private = (T left, T right) =>
+        #region Divide
+        /// <summary>Divides two operands.</summary>
+        private static Compute<T>.Delegates.Divide Divide_private = (T left, T right) =>
 		{
 			// compile checks
 			if (!Meta.ValidateDivide<T>())
@@ -687,7 +628,7 @@ namespace Theta.Mathematics
 
         #region Invert
         /// <summary>Computes: [ 1 / n ].</summary>
-        public static Compute<T>.Delegates.Invert Invert_private = (T value) =>
+        private static Compute<T>.Delegates.Invert Invert_private = (T value) =>
         {
             if (!Meta.ValidateDivide<T>()) { throw new System.ArithmeticException(string.Concat("computation requires a division operator: ", Meta.ConvertTypeToCsharpSource(typeof(T)), " /(", Meta.ConvertTypeToCsharpSource(typeof(T)), ", ", Meta.ConvertTypeToCsharpSource(typeof(T)), ")")); }
 
@@ -704,9 +645,9 @@ namespace Theta.Mathematics
         }
         #endregion
 
-		#region Modulus
-		/// <summary>Modulus of two operands.</summary>
-		internal static Compute<T>.Delegates.Modulus Modulus_private = (T left, T right) =>
+        #region Modulus
+        /// <summary>Modulus of two operands.</summary>
+        private static Compute<T>.Delegates.Modulus Modulus_private = (T left, T right) =>
 		{
 			// compile checks
 			if (!Meta.ValidateModulo<T>())
@@ -828,11 +769,11 @@ namespace Theta.Mathematics
             }
 			return Compute<T>.Power_private(operand_left, operand_right);
 		}
-		#endregion
+        #endregion
 
-		#region SquareRoot
-		/// <summary>Solves for "x": [ x ^ 2 = b ].</summary>
-		internal static Compute<T>.Delegates.SquareRoot SquareRoot_private = (T value) =>
+        #region SquareRoot
+        /// <summary>Solves for "x": [ x ^ 2 = b ].</summary>
+        private static Compute<T>.Delegates.SquareRoot SquareRoot_private = (T value) =>
 		{
 			Compute<T>.SquareRoot_private = Meta.Compile<Compute<T>.Delegates.SquareRoot>(
 				string.Concat("(", Meta.ConvertTypeToCsharpSource(typeof(T)), " _value) => { return (", Meta.ConvertTypeToCsharpSource(typeof(T)), ")System.Math.Sqrt((double)_value); }"));
@@ -845,12 +786,12 @@ namespace Theta.Mathematics
 			return Compute<T>.SquareRoot_private(operand);
 		}
 
-		#endregion
+        #endregion
 
-		#region Root
+        #region Root
 
-		/// <summary>Solves for "x": [ x ^ r = b ].</summary>
-		internal static Compute<T>.Delegates.Root Root_private = (T _base, T root) =>
+        /// <summary>Solves for "x": [ x ^ r = b ].</summary>
+        private static Compute<T>.Delegates.Root Root_private = (T _base, T root) =>
 		{
 			Compute<T>.Root_private = Meta.Compile<Compute<T>.Delegates.Root>(
 								string.Concat("(", Meta.ConvertTypeToCsharpSource(typeof(T)), " __base, ", Meta.ConvertTypeToCsharpSource(typeof(T)), " _root) => { return (", Meta.ConvertTypeToCsharpSource(typeof(T)), ")System.Math.Pow((double)__base, (1D / (double)_root)); }"));
@@ -866,7 +807,7 @@ namespace Theta.Mathematics
 
 		#region Logarithm
 		/// <summary>Computes: [ log_b(n) ].</summary>
-		public static Compute<T>.Delegates.Logarithm Logarithm_private = (T value, T _base) =>
+		private static Compute<T>.Delegates.Logarithm Logarithm_private = (T value, T _base) =>
 		{
 			Compute<T>.Logarithm_private =
 				Meta.Compile<Compute<T>.Delegates.Logarithm>(
@@ -879,16 +820,66 @@ namespace Theta.Mathematics
 		{
 			return Compute<T>.Logarithm_private(operand_value, operand_base);
 		}
-		#endregion
+        #endregion
+
+        // Logic (properties)
+
+        #region IsInteger
+
+        public static bool IsInteger(T value)
+        {
+            return Equate(Modulus(value, FromInt32(1)), FromInt32(0));
+        }
 
         #endregion
 
-        #region Mathematic Logic
+        #region IsNonNegative
+
+        public static bool IsNonNegative(T value)
+        {
+            return GreaterThanOrEqualTo(value, FromInt32(0));
+        }
+
+        #endregion
+
+        #region IsPrime
+        /// <summary>Computes (natrual log): [ ln(n) ].</summary>
+        private static Compute<T>.Delegates.IsPrime IsPrime_private = (T value) =>
+        {
+            Compute<T>.IsPrime_private =
+    Meta.Compile<Compute<T>.Delegates.IsPrime>(
+        string.Concat(
+@"(", Meta.ConvertTypeToCsharpSource(typeof(T)), @" candidate) =>
+{
+	if (candidate % (", Meta.ConvertTypeToCsharpSource(typeof(T)), @")1 == 0)
+	{
+		if (candidate == 2)
+			return true;
+		", Meta.ConvertTypeToCsharpSource(typeof(T)), @" squareRoot = Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.SquareRoot(candidate);
+		for (int divisor = 3; divisor <= squareRoot; divisor += 2)
+			if ((candidate % divisor) == 0)
+				return false;
+		return true;
+	}
+	else
+		return false;
+}"));
+
+            return Compute<T>.IsPrime_private(value);
+        };
+
+        public static bool IsPrime(T value)
+        {
+            return IsPrime_private(value);
+        }
+        #endregion
+
+        // Logic
 
         #region Maximum
 
         /// <summary>Finds the max value in a set.</summary>
-        internal static Compute<T>.Delegates.Maximum2 Maximum2_private = (T a, T b) =>
+        private static Compute<T>.Delegates.Maximum2 Maximum2_private = (T a, T b) =>
         {
             // compile checks
             if (!Meta.ValidateEqual<T>())
@@ -926,7 +917,7 @@ namespace Theta.Mathematics
         };
 
         /// <summary>Finds the max value in a set.</summary>
-		internal static Compute<T>.Delegates.Maximum Maximum_private = (Stepper<T> stepper) =>
+		private static Compute<T>.Delegates.Maximum Maximum_private = (Stepper<T> stepper) =>
 		{
 			// compile checks
 			if (!Meta.ValidateEqual<T>())
@@ -1115,12 +1106,12 @@ namespace Theta.Mathematics
             return Compute<T>.Maximum2_private(a, b);
         }
 
-		#endregion
+        #endregion
 
-		#region Minimum
+        #region Minimum
 
         /// <summary>Finds the min value in a set.</summary>
-        internal static Compute<T>.Delegates.Minimum2 Minimum2_private = (T a, T b) =>
+        private static Compute<T>.Delegates.Minimum2 Minimum2_private = (T a, T b) =>
         {
             // compile checks
             if (!Meta.ValidateEqual<T>())
@@ -1157,8 +1148,8 @@ namespace Theta.Mathematics
             return Compute<T>.Minimum2_private(a, b);
         };
 
-		/// <summary>Finds the min value in a set.</summary>
-		internal static Compute<T>.Delegates.Minimum Minimum_private = (Stepper<T> stepper) =>
+        /// <summary>Finds the min value in a set.</summary>
+        private static Compute<T>.Delegates.Minimum Minimum_private = (Stepper<T> stepper) =>
 		{
 			// compile checks
 			if (!Meta.ValidateEqual<T>())
@@ -1350,7 +1341,7 @@ namespace Theta.Mathematics
 
 		#region Clamp
 		/// <summary>Restricts a value to a min-max range.</summary>
-		public static Compute<T>.Delegates.Clamp Clamp_private = (T value, T minimum, T maximum) =>
+		private static Compute<T>.Delegates.Clamp Clamp_private = (T value, T minimum, T maximum) =>
         {
         	// compile checks
         	if (!Meta.ValidateEqual<T>())
@@ -1410,11 +1401,11 @@ namespace Theta.Mathematics
 		{
 			return Compute<T>.Clamp_private(operand_value, operand_minimum, operand_maximum);
 		}
-		#endregion
+        #endregion
 
-		#region EqualsLeniency
-		/// <summary>Checks for equality by value with a leniency.</summary>
-		internal static Compute<T>.Delegates.EqualsLeniency EqualsLeniency_private = (T left, T right, T leniency) =>
+        #region EqualsLeniency
+        /// <summary>Checks for equality by value with a leniency.</summary>
+        private static Compute<T>.Delegates.EqualsLeniency EqualsLeniency_private = (T left, T right, T leniency) =>
 		{
 			// compile checks
 			if (!Meta.ValidateEqual<T>())
@@ -1510,11 +1501,11 @@ namespace Theta.Mathematics
 		{
 			return EqualsLeniency_private(left, right, leniency);
 		}
-		#endregion
+        #endregion
 
-		#region Compare
-		/// <summary>Compares two operands of </summary>
-		internal static Compare<T> Compare_private = (T left, T right) =>
+        #region Compare
+        /// <summary>Compares two operands of </summary>
+        private static Compare<T> Compare_private = (T left, T right) =>
 		{
 			// compile checks
 			if (!Meta.ValidateLessThan<T>())
@@ -1575,10 +1566,10 @@ namespace Theta.Mathematics
 		{
 			return Compare_private(left, right);
 		}
-		#endregion
+        #endregion
 
-		#region Equate
-		internal static Equate<T> Equate_private = (T left, T right) =>
+        #region Equate
+        private static Equate<T> Equate_private = (T left, T right) =>
 		{
 			// compile checks
 			if (!Meta.ValidateEqual<T>())
@@ -1597,10 +1588,10 @@ namespace Theta.Mathematics
 		{
 			return Equate_private(left, right);
 		}
-		#endregion
+        #endregion
 
-		#region EquateNot
-		internal static EquateNot<T> EquateNot_private = (T left, T right) =>
+        #region EquateNot
+        private static EquateNot<T> EquateNot_private = (T left, T right) =>
 		{
 			// compile checks
 			if (!Meta.ValidateEqual<T>())
@@ -1619,10 +1610,10 @@ namespace Theta.Mathematics
 		{
 			return EquateNot_private(left, right);
 		}
-		#endregion
+        #endregion
 
-		#region LessThan
-		public static Compute<T>.Delegates.LessThan LessThan_private = (T left, T right) =>
+        #region LessThan
+        private static Compute<T>.Delegates.LessThan LessThan_private = (T left, T right) =>
 		{
 			// compile checks
 			if (!Meta.ValidateLessThan<T>())
@@ -1641,10 +1632,10 @@ namespace Theta.Mathematics
 		{
 			return LessThan_private(left, right);
 		}
-		#endregion
+        #endregion
 
-		#region Greater
-		internal static Compute<T>.Delegates.GreaterThan GreaterThan_private = (T left, T right) =>
+        #region Greater
+        private static Compute<T>.Delegates.GreaterThan GreaterThan_private = (T left, T right) =>
 		{
 			// compile checks
 			if (!Meta.ValidateLessThan<T>())
@@ -1663,10 +1654,10 @@ namespace Theta.Mathematics
 		{
 			return GreaterThan_private(left, right);
 		}
-		#endregion
+        #endregion
 
-		#region LessThanOrEqualTo
-		public static Compute<T>.Delegates.LessThanOrEqualTo LessThanOrEqualTo_private = (T left, T right) =>
+        #region LessThanOrEqualTo
+        private static Compute<T>.Delegates.LessThanOrEqualTo LessThanOrEqualTo_private = (T left, T right) =>
 		{
 			// compile checks
 			if (!Meta.ValidateLessThan<T>())
@@ -1685,10 +1676,10 @@ namespace Theta.Mathematics
 		{
 			return LessThanOrEqualTo_private(left, right);
 		}
-		#endregion
+        #endregion
 
-		#region GreaterOrEqualTo
-		internal static Compute<T>.Delegates.GreaterThanOrEqualTo GreaterThanOrEqualTo_private = (T left, T right) =>
+        #region GreaterOrEqualTo
+        private static Compute<T>.Delegates.GreaterThanOrEqualTo GreaterThanOrEqualTo_private = (T left, T right) =>
 		{
 			// compile checks
 			if (!Meta.ValidateLessThan<T>())
@@ -1707,15 +1698,14 @@ namespace Theta.Mathematics
 		{
 			return GreaterThanOrEqualTo_private(left, right);
 		}
-		#endregion
+        #endregion
 
-		#region GreatestCommonFactor
-		/// <summary>Computes (greatest common factor): [ GCF(set) ].</summary>
-		internal static Compute<T>.Delegates.GreatestCommonFactor GreatestCommonFactor_private = (Stepper<T> stepper) =>
-{
-	Compute<T>.GreatestCommonFactor_private =
-Meta.Compile<Compute<T>.Delegates.GreatestCommonFactor>(
-string.Concat(
+        #region GreatestCommonFactor
+        /// <summary>Computes (greatest common factor): [ GCF(set) ].</summary>
+        private static Compute<T>.Delegates.GreatestCommonFactor GreatestCommonFactor_private = (Stepper<T> stepper) =>
+        {
+	        Compute<T>.GreatestCommonFactor_private =
+                Meta.Compile<Compute<T>.Delegates.GreatestCommonFactor>(string.Concat(
 @"(Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> _stepper) =>
 {
 	if (_stepper == null) { throw new System.ArgumentNullException(", "\"stepper\"", @"); }
@@ -1751,18 +1741,18 @@ string.Concat(
 	return gcf;
 }"));
 
-	return Compute<T>.GreatestCommonFactor_private(stepper);
-};
+	        return Compute<T>.GreatestCommonFactor_private(stepper);
+        };
 
 		public static T GreatestCommonFactor(Stepper<T> stepper)
 		{
 			return GreatestCommonFactor_private(stepper);
 		}
-		#endregion
+        #endregion
 
-		#region LeastCommonMultiple
-		/// <summary>Computes (least common multiple): [ LCM(set) ].</summary>
-		internal static Compute<T>.Delegates.LeastCommonMultiple LeastCommonMultiple_private = (Stepper<T> stepper) =>
+        #region LeastCommonMultiple
+        /// <summary>Computes (least common multiple): [ LCM(set) ].</summary>
+        private static Compute<T>.Delegates.LeastCommonMultiple LeastCommonMultiple_private = (Stepper<T> stepper) =>
 		{
 			Compute<T>.LeastCommonMultiple_private =
 	Meta.Compile<Compute<T>.Delegates.LeastCommonMultiple>(
@@ -1806,9 +1796,1069 @@ string.Concat(
 		{
 			return LeastCommonMultiple_private(stepper);
 		}
-		#endregion
-
         #endregion
+
+        // Interpolation
+
+        #region LinearInterpolation
+        /// <summary>Interpolates in a linear fashion.</summary>
+        private static Compute<T>.Delegates.LinearInterpolation LinearInterpolation_private = (T x, T x0, T x1, T y0, T y1) =>
+        {
+            Compute<T>.LinearInterpolation_private =
+                Meta.Compile<Compute<T>.Delegates.LinearInterpolation>(
+                    string.Concat(
+@"(", Meta.ConvertTypeToCsharpSource(typeof(T)), " _x, ", Meta.ConvertTypeToCsharpSource(typeof(T)), " _x0, ", Meta.ConvertTypeToCsharpSource(typeof(T)), " _x1, ", Meta.ConvertTypeToCsharpSource(typeof(T)), " _y0, ", Meta.ConvertTypeToCsharpSource(typeof(T)), @" _y1) =>
+{
+	if (_x0 > _x1)
+		throw new System.Exception(", "\"invalid arguments: x0 > x1\"", @");
+	else if (_x < _x0)
+		throw new System.Exception(", "\"invalid arguments: x < x0\"", @");
+	else if (_x > _x1)
+		throw new System.Exception(", "\"invalid arguments: x > x1\"", @");
+	else if (_x0 == _x1)
+		if (_y0 != _y1)
+			throw new System.Exception(", "\"invalid arguments: _x0 == _x1 && _y0 != _y1\"", @");
+		else
+			return _y0;
+	else
+		return _y0 + (_x - _x0) * (_y1 - _y0) / (_x1 - _x0);
+}"));
+
+            return Compute<T>.LinearInterpolation_private(x, x0, x1, y0, y1);
+        };
+
+        public static T LinearInterpolation(T x, T x0, T x1, T y0, T y1)
+        {
+            return LinearInterpolation_private(x, x0, x1, y0, y1);
+        }
+        #endregion
+
+        // Statistics
+
+        #region Factorial
+        /// <summary>Computes: [ N! ].</summary>
+        private static Compute<T>.Delegates.Factorial Factorial_private = (T value) =>
+		{
+			Compute<T>.Factorial_private =
+	Meta.Compile<Compute<T>.Delegates.Factorial>(
+		string.Concat(
+@"(", Meta.ConvertTypeToCsharpSource(typeof(T)), @" N) =>
+{
+	if (N % 1 != 0)
+		throw new System.Exception(", "\"invalid factorial: N must be a whole number.\"", @");
+	if (N < 0)
+		throw new System.Exception(", "\"invalid factorial: [ N < 0 ] (N = \\\" + N + \\\").\"", @");
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" result = 1;
+	for (; N > 1; N--)
+		result *= N;
+	return result;
+}"));
+
+			return Compute<T>.Factorial_private(value);
+		};
+
+		public static T Factorial(T value)
+		{
+			return Factorial_private(value);
+		}
+        #endregion
+
+        #region Combinations
+        /// <summary>Computes: [ N! / (n[0]! + n[1]! + n[3]! ...) ].</summary>
+        private static Compute<T>.Delegates.Combinations Combinations_private = (T N, T[] n) =>
+		{
+			Compute<T>.Combinations_private =
+	Meta.Compile<Compute<T>.Delegates.Combinations>(
+		string.Concat(
+@"(", Meta.ConvertTypeToCsharpSource(typeof(T)), " _N, ", Meta.ConvertTypeToCsharpSource(typeof(T)), @"[] _n) =>
+{
+	if (_N % 1 != 0)
+		throw new System.Exception(", "\"invalid combination: N must be a whole number.\"", @");
+	for (int i = 0; i < _n.Length; i++)
+		if (_n[i] % 1 != 0)
+			throw new System.Exception(", "\"invalid combination: n[\\\" + i + \\\"] must be a whole number.\"", @");
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), " result = Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Factorial(_N);
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" sum = 0;
+	for (int i = 0; i < _n.Length; i++)
+	{
+		result /= Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Factorial(_n[i]);
+		sum += _n[i];
+	}
+	if (sum > _N)
+		throw new System.Exception(", "\"invalid combination: [ N < Sum(n) ].\"", @");
+	return result;
+}"));
+
+			return Compute<T>.Combinations_private(N, n);
+		};
+
+		public static T Combinations(T N, T[] n)
+		{
+			return Combinations_private(N, n);
+		}
+        #endregion
+
+        #region Choose
+        /// <summary>Computes: [ N! / (N - n)! ]</summary>
+        private static Compute<T>.Delegates.Choose Choose_private = (T N, T n) =>
+		{
+			Compute<T>.Choose_private =
+	Meta.Compile<Compute<T>.Delegates.Choose>(
+		string.Concat(
+@"(", Meta.ConvertTypeToCsharpSource(typeof(T)), " _N, ", Meta.ConvertTypeToCsharpSource(typeof(T)), @" _n) =>
+{
+	if (_N % 1 != 0)
+		throw new System.Exception(", "\"invalid chose: N must be a whole number.\"", @");
+	if (_n % 1 != 0)
+		throw new System.Exception(", "\"invalid combination: n must be a whole number.\"", @");
+	if (!(_N <= _n || _N >= 0))
+		throw new System.Exception(", "\"invalid choose: [ !(N <= n || N >= 0) ].\"", @");
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), " factorial_N = Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Factorial(_N);
+	return Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), ">.Factorial(_N) / (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), ">.Factorial(_n) * Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Factorial(_N - _n));
+}"));
+
+			return Compute<T>.Choose_private(N, n);
+		};
+
+		public static T Choose(T N, T n)
+		{
+			return Choose_private(N, n);
+		}
+        #endregion
+
+        #region Mode
+        /// <summary>Finds the number of occurences for each item and sorts them into a heap.</summary>
+        private static Compute<T>.Delegates.Mode Mode_private = (Stepper<T> stepper) =>
+		{
+			string heap_type = typeof(HeapArray<Link<T, int>>).ToCsharpSource();
+			string link_type = typeof(Link<T, int>).ToCsharpSource();
+			Compute<T>.Mode_private =
+	Meta.Compile<Compute<T>.Delegates.Mode>(
+		string.Concat(
+@"(Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> stepper) =>
+{
+	", heap_type, @" heap =
+		new ", heap_type, @"(
+			(Link<", Meta.ConvertTypeToCsharpSource(typeof(T)), ", int> left, Link<", Meta.ConvertTypeToCsharpSource(typeof(T)), @", int> right) =>
+			{
+				return Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Compare(left._1, right._1);
+			});
+	stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" step) =>
+	{
+		bool contains = false;
+		heap.Stepper((", link_type, @" nested_step) =>
+		{
+			if (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Equate(nested_step._1, step))
+			{
+				contains = true;
+				nested_step._2++;
+				heap.Requeue(nested_step);
+				return StepStatus.Break;
+			}
+			else
+				return StepStatus.Continue;
+		});
+		if (!contains)
+			heap.Enqueue(new ", link_type, @"(step, 1));
+	});
+	return heap;
+}"));
+
+			return Compute<T>.Mode_private(stepper);
+		};
+
+		public static Heap<Link<T, int>> Mode(Stepper<T> stepper)
+		{
+			return Mode_private(stepper);
+		}
+        #endregion
+
+        #region Mean
+        /// <summary>Computes the mean (or average) between multiple values.</summary>
+        private static Compute<T>.Delegates.Mean Mean_private = (Stepper<T> stepper) =>
+		{
+			Compute<T>.Mean_private =
+	Meta.Compile<Compute<T>.Delegates.Mean>(
+		string.Concat(
+@"(Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> stepper) =>
+{
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i = 0;
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" sum = 0;
+	stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" step) => { i++; sum += step; });
+	return sum / i;
+}"));
+
+			return Compute<T>.Mean_private(stepper);
+		};
+
+		public static T Mean(Stepper<T> stepper)
+		{
+			return Mean_private(stepper);
+		}
+
+        /// <summary>Computes the mean (or average) between multiple values.</summary>
+        private static Compute<T>.Delegates.Mean2 Mean2_private = (T a, T b) =>
+		{
+			Mean2_private = Meta.BinaryOperationHelper<Compute<T>.Delegates.Mean2, T, T, T>(
+					(Expression left, Expression right, LabelTarget returnLabel) =>
+					{
+						return Expression.Return(returnLabel, Expression.Divide(Expression.Add(left, right), Expression.Constant(Compute<T>.FromInt32(2))), typeof(T));
+					});
+
+			return Compute<T>.Mean2_private(a, b);
+		};
+
+		public static T Mean(T a, T b)
+		{
+			return Mean2_private(a, b);
+		}
+        #endregion
+
+        #region Median
+        /// <summary>Computes the median of a set of values.</summary>
+        private static Compute<T>.Delegates.Median Median_private = (Stepper<T> stepper) =>
+		{
+			Compute<T>.Median_private =
+				Meta.Compile<Compute<T>.Delegates.Median>(
+					string.Concat(
+@"(Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> _stepper) =>
+{
+	long count =	0;
+	_stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" step) => { count++; });
+	long half = count / 2;
+	if (count % 1 == 0)
+	{
+		", Meta.ConvertTypeToCsharpSource(typeof(T)), " left = default(", Meta.ConvertTypeToCsharpSource(typeof(T)), @");
+		", Meta.ConvertTypeToCsharpSource(typeof(T)), " right = default(", Meta.ConvertTypeToCsharpSource(typeof(T)), @");
+		count = 0;
+		_stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" step) =>
+		{
+			if (count == half)
+				left = step;
+			else if (count == half + 1)
+				right = step;
+			count++;
+		});
+		return (left + right) / (", Meta.ConvertTypeToCsharpSource(typeof(T)), @")2;
+	}
+	else
+	{
+		", Meta.ConvertTypeToCsharpSource(typeof(T)), " median = default(", Meta.ConvertTypeToCsharpSource(typeof(T)), @");
+		_stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) =>
+		{
+			count = 0;
+			_stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" step) =>
+			{
+				if (count == half)
+					median = step;
+				count++;
+			});
+		});
+		return median;
+	}
+}"));
+
+			return Compute<T>.Median_private(stepper);
+		};
+
+		public static T Median(Stepper<T> stepper)
+		{
+			return Median_private(stepper);
+		}
+
+		public static T Median(params T[] values)
+		{
+			return Median(values.Stepper());
+		}
+        #endregion
+
+        #region GeometricMean
+        /// <summary>Computes the median of a set of values.</summary>
+        private static Compute<T>.Delegates.GeometricMean GeometricMean_private = (Stepper<T> stepper) =>
+		{
+			Compute<T>.GeometricMean_private =
+				Meta.Compile<Compute<T>.Delegates.GeometricMean>(
+					string.Concat(
+@"(Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> _stepper) =>
+{
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" multiple = 1;
+	int count = 0;
+	_stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" current) =>
+	{
+		count++;
+		multiple *= current;
+	});
+	return Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), ">.Root(multiple, (", Meta.ConvertTypeToCsharpSource(typeof(T)), @")count);
+}"));
+
+			return Compute<T>.GeometricMean_private(stepper);
+		};
+
+		public static T GeometricMean(Stepper<T> stepper)
+		{
+			return GeometricMean_private(stepper);
+		}
+        #endregion
+
+        #region Variance
+        /// <summary>Computes the variance of a set of values.</summary>
+        private static Compute<T>.Delegates.Variance Variance_private = (Stepper<T> stepper) =>
+		{
+			Compute<T>.Variance_private =
+				Meta.Compile<Compute<T>.Delegates.Variance>(
+					"(Stepper<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + "> _stepper) =>" +
+					"{" +
+ "	if (_stepper == null)" +
+					"		throw new System.Exception(\"null reference: _stepper\");" +
+ "	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " mean = Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Mean(_stepper);" +
+					"	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " variance = 0;" +
+					"	int count = 0;" +
+					"	_stepper((" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " i) =>" +
+					"		{" +
+					"			" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " i_minus_mean = i - mean;" +
+					"			variance += i_minus_mean * i_minus_mean;" +
+					"			count++;" +
+					"		});" +
+					"	return variance / (" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ")count;" +
+					"}");
+
+			return Compute<T>.Variance_private(stepper);
+		};
+
+		public static T Variance(Stepper<T> stepper)
+		{
+			return Variance_private(stepper);
+		}
+        #endregion
+
+        #region StandardDeviation
+        /// <summary>Computes the standard deviation of a set of values.</summary>
+        private static Compute<T>.Delegates.StandardDeviation StandardDeviation_private = (Stepper<T> stepper) =>
+		{
+			Compute<T>.StandardDeviation_private =
+	Meta.Compile<Compute<T>.Delegates.StandardDeviation>(
+		string.Concat(
+@"(Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> _stepper) =>
+{",
+@"	if (_stepper == null)
+		throw new System.Exception(", "\"null reference: _stepper\");",
+@"	return Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), ">.SquareRoot(Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Variance(_stepper));
+}"));
+
+			return Compute<T>.StandardDeviation_private(stepper);
+		};
+
+		public static T StandardDeviation(Stepper<T> stepper)
+		{
+			return StandardDeviation_private(stepper);
+		}
+        #endregion
+
+        #region MeanDeviation
+        /// <summary>Computes the mean deviation of a set of values.</summary>
+        /// <see cref="Theta.Mathematics.Logic<T>.abs"/>
+        /// <see cref="Theta.Mathematics.Compute<T>.Mean"/>
+        private static Compute<T>.Delegates.MeanDeviation MeanDeviation_private = (Stepper<T> stepper) =>
+		{
+			Compute<T>.MeanDeviation_private =
+	Meta.Compile<Compute<T>.Delegates.MeanDeviation>(
+		string.Concat(
+@"(Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> _stepper) =>
+{
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), " mean = Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Mean(_stepper);
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" temp = 0;
+	int count = 0;
+	_stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) =>
+	{
+		temp += Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.AbsoluteValue(i - mean);
+		count++;
+	});
+	return temp / (", Meta.ConvertTypeToCsharpSource(typeof(T)), @")count;
+}"));
+
+			return Compute<T>.MeanDeviation_private(stepper);
+		};
+
+		public static T MeanDeviation(Stepper<T> stepper)
+		{
+			return MeanDeviation_private(stepper);
+		}
+        #endregion
+
+        #region Range
+        /// <summary>Computes the standard deviation of a set of values.</summary>
+        private static Compute<T>.Delegates.Range Range_private = (Stepper<T> stepper) =>
+		{
+			Compute<T>.Range_private =
+				Meta.Compile<Compute<T>.Delegates.Range>(
+					string.Concat(
+@"(Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> _stepper) =>
+{
+	bool set = false;
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" temp_min = 0;
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" temp_max = 0;
+	_stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) =>
+	{
+		if (!set)
+		{
+			temp_min = i;
+			temp_max = i;
+			set = true;
+		}
+		else
+		{
+			temp_min = i < temp_min ? i : temp_min;
+			temp_max = i > temp_max ? i : temp_max;
+		}
+	});
+	return new Range<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">(temp_min, temp_max);
+}"));
+
+			return Compute<T>.Range_private(stepper);
+		};
+
+		public static Range<T> Range(Stepper<T> stepper)
+		{
+			return Range_private(stepper);
+		}
+        #endregion
+
+        #region Quantiles
+        /// <summary>Computes the quantiles of a set of values.</summary>
+        private static Compute<T>.Delegates.Quantiles Quantiles_private = (int quantiles, Stepper<T> stepper) =>
+{
+	Compute<T>.Quantiles_private =
+Meta.Compile<Compute<T>.Delegates.Quantiles>(
+string.Concat(
+@"(int _quantiles, Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> _stepper) =>
+{",
+@"	if (_stepper == null)
+		throw new System.Exception(", "\"null reference: _stepper\"", @");
+	if (_quantiles < 1)
+		throw new System.Exception(", "\"invalid numer of dimensions on Quantile division\");",
+@"	int count = 0;
+	_stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) => { count++; });
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), "[] ordered = new ", Meta.ConvertTypeToCsharpSource(typeof(T)), @"[count];
+	int a = 0;
+	_stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) => { ordered[a++] = i; });
+	Algorithms.Sort.Quick<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + @">(Logic.compare, ordered);
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), "[] __quantiles = new ", Meta.ConvertTypeToCsharpSource(typeof(T)), @"[_quantiles + 1];
+	__quantiles[0] = ordered[0];
+	__quantiles[__quantiles.Length - 1] = ordered[ordered.Length - 1];
+	for (int i = 1; i < _quantiles; i++)
+	{
+		", Meta.ConvertTypeToCsharpSource(typeof(T)), " temp = (ordered.Length / (", Meta.ConvertTypeToCsharpSource(typeof(T)), @")(_quantiles + 1)) * i;
+		if (temp % 1 == 0)
+			__quantiles[i] = ordered[(int)temp];
+		else
+			__quantiles[i] = (ordered[(int)temp] + ordered[(int)temp + 1]) / (", Meta.ConvertTypeToCsharpSource(typeof(T)), @")2;
+	}
+	return __quantiles;
+}"));
+
+	return Compute<T>.Quantiles_private(quantiles, stepper);
+};
+
+		public static T[] Quantiles(int quantiles, Stepper<T> stepper)
+		{
+			return Quantiles_private(quantiles, stepper);
+		}
+        #endregion
+
+        #region Correlation
+        /// <summary>Computes the median of a set of values.</summary>
+        private static Compute<T>.Delegates.Correlation Correlation_private = (Stepper<T> a, Stepper<T> b) =>
+        {
+	throw new System.NotImplementedException("I introduced an error here when I removed the stepref off of structure. will fix soon");
+
+	Compute<T>.Correlation_private =
+Meta.Compile<Compute<T>.Delegates.Correlation>(
+string.Concat(
+@"(Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), "> _a, Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> _b) =>
+{
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), " a_mean = Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Mean(_a);
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), " b_mean = Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Mean(_b);
+	List<", Meta.ConvertTypeToCsharpSource(typeof(T)), "> a_temp = new List_Linked<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">();
+	_a((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) => { a_temp.Add(i - b_mean); });
+	List<", Meta.ConvertTypeToCsharpSource(typeof(T)), "> b_temp = new List_Linked<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">();
+	_b((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) => { b_temp.Add(i - a_mean); });
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), "[] a_cross_b = new ", Meta.ConvertTypeToCsharpSource(typeof(T)), @"[a_temp.Count * b_temp.Count];
+	int count = 0;
+	a_temp.Stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i_a) =>
+	{
+		b_temp.Stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i_b) =>
+		{
+			a_cross_b[count++] = i_a * i_b;
+		});
+	});
+	a_temp.Stepper((ref ", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) => { i *= i; });
+	b_temp.Stepper((ref ", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) => { i *= i; });
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" sum_a_cross_b = 0;
+	foreach (", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i in a_cross_b)
+		sum_a_cross_b += i;
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" sum_a_temp = 0;
+	a_temp.Stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) => { sum_a_temp += i; });
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" sum_b_temp = 0;
+	b_temp.Stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) => { sum_b_temp += i; });
+	return sum_a_cross_b / Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.sqrt(sum_a_temp * sum_b_temp);
+}"));
+
+	return Compute<T>.Correlation_private(a, b);
+};
+
+		public static T Correlation(Stepper<T> a, Stepper<T> b)
+		{
+			return Correlation_private(a, b);
+		}
+        #endregion
+
+        // Common Defined Functions
+
+        #region Exponential
+        /// <summary>Computes: [ e ^ x ].</summary>
+        private static Compute<T>.Delegates.Exponential Exponential_private = (T value) =>
+        {
+            Compute<T>.Exponential_private = Meta.Compile<Compute<T>.Delegates.Exponential>(
+                string.Concat("(", Meta.ConvertTypeToCsharpSource(typeof(T)), " _value) => { return (", Meta.ConvertTypeToCsharpSource(typeof(T)), ")System.Math.Sqrt((double)_value); }"));
+
+            return Compute<T>.Exponential_private(value);
+        };
+
+        public static T Exponential(T value)
+        {
+            return Exponential_private(value);
+        }
+        #endregion
+
+        #region Natural Logarithm
+        /// <summary>Computes (natrual log): [ ln(n) ].</summary>
+        private static Compute<T>.Delegates.NaturalLogarithm NaturalLogarithm_private = (T value) =>
+        {
+            Compute<T>.NaturalLogarithm_private =
+    Meta.Compile<Compute<T>.Delegates.NaturalLogarithm>(
+        string.Concat("(", Meta.ConvertTypeToCsharpSource(typeof(T)), " _value) => { throw new System.Exception(\"not yet implemented\"); }"));
+
+            return Compute<T>.NaturalLogarithm_private(value);
+        };
+
+        public static T NaturalLogarithm(T value)
+        {
+            return NaturalLogarithm_private(value);
+        }
+        #endregion
+
+        // Trigonometric functions
+
+        #region Sine
+        /// <summary>Computes the ratio [length of the side opposite to the angle / hypotenuse] in a right triangle.</summary>
+		private static Compute<T>.Delegates.Sine Sine_private = (Angle<T> angle) =>
+				{
+					#region Optimizations
+					if (typeof(T) == typeof(double)) // double optimization
+					{
+						Compute<double>.Sine_private = (Angle<double> _angle) => { return System.Math.Sin(_angle.Radians); };
+                        return Compute<T>.Sine(angle);
+                    }
+					if (typeof(T) == typeof(float)) // float optimization
+					{
+						Compute<float>.Sine_private = (Angle<float> _angle) => { return (float)System.Math.Sin(_angle.Radians); };
+                        return Compute<T>.Sine(angle);
+                    }
+					#endregion
+					// Series: sin(x) = x - x^3/3! + x^5/5! - x^7/7! ...
+					// more terms in computation inproves accuracy
+
+					Compute<T>.Sine_private =
+							Meta.Compile<Compute<T>.Delegates.Sine>(
+									string.Concat(
+@"(", Meta.ConvertTypeToCsharpSource(typeof(T)), @" _angle) =>
+{
+	// get the angle into the positive unit circle
+	_angle = _angle % (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi * 2);
+	if (_angle < 0)
+		_angle = (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi * 2) + _angle;
+	if (_angle <= Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi / 2)
+		goto QuandrantSkip;
+	else if (_angle <= Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi)
+		_angle = (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), ">.Pi / 2) - (_angle % (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi / 2));
+	else if (_angle <= (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi * 3) / 2)
+		_angle = _angle % Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi;
+	else
+		_angle = (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), ">.Pi / 2) - (_angle % (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi / 2));
+QuandrantSkip:
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" three_factorial = 6;
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" five_factorial = 120;
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" seven_factorial = 5040;
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" angleCubed = _angle * _angle * _angle;
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" angleToTheFifth = angleCubed * _angle * _angle;
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" angleToTheSeventh = angleToTheFifth * _angle * _angle;
+	return -(_angle
+		- (angleCubed / three_factorial)
+		+ (angleToTheFifth / five_factorial)
+		- (angleToTheSeventh / seven_factorial));
+}"));
+
+					return Compute<T>.Sine(angle);
+				};
+
+		public static T Sine(Angle<T> angle)
+		{
+			return Sine_private(angle);
+		}
+        #endregion
+
+        #region Cosine
+        /// <summary>Computes the ratio [length of the side adjacent to the angle / hypotenuse] in a right triangle.</summary>
+        private static Compute<T>.Delegates.Cosine Cosine_private = (Angle<T> angle) =>
+{
+	// rather than computing cos, you could do a phase shift and use sin
+	// return Sin(angle + (Pi / 2));
+
+	if (typeof(T) == typeof(double)) // double optimization
+		Compute<double>.Cosine_private = (Angle<double> _angle) => { return System.Math.Cos(_angle.Radians); };
+	else if (typeof(T) == typeof(float)) // float optimization
+		Compute<float>.Cosine_private = (Angle<float> _angle) => { return (float)System.Math.Cos(_angle.Radians); };
+	else
+	{
+		// Series: cos(x) = 1 - x^2/2! + x^4/4! - x^6/6! ...
+		// more terms in computation inproves accuracy
+
+		Compute<T>.Cosine_private =
+Meta.Compile<Compute<T>.Delegates.Cosine>(
+string.Concat(
+@"(", Meta.ConvertTypeToCsharpSource(typeof(T)), @" _angle) =>
+{
+	// get the angle into the positive unit circle
+	_angle = _angle % (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi * 2);
+	if (_angle < 0)
+		_angle = (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi * 2) + _angle;
+	if (_angle <= Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi / 2)
+		goto QuandrantSkip;
+	else if (_angle <= Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi)
+		_angle = (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), ">.Pi / 2) - (_angle % (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi / 2));
+	else if (_angle <= (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi * 3) / 2)
+		_angle = _angle % Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi;
+	else
+		_angle = (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), ">.Pi / 2) - (_angle % (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi / 2));
+QuandrantSkip:
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" one = 1;
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" two_factorial = 2;
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" four_factorial = 24;
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" six_factorial = 720;
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" angleSquared = _angle * _angle;
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" angleToTheFourth = angleSquared * _angle * _angle;
+	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" angleToTheSixth = angleToTheFourth * _angle * _angle;
+	return one
+		- (angleSquared / two_factorial)
+		+ (angleToTheFourth / four_factorial)
+		- (angleToTheSixth / six_factorial);
+}"));
+	}
+
+	return Compute<T>.Cosine(angle);
+};
+
+		public static T Cosine(Angle<T> angle)
+		{
+			return Cosine_private(angle);
+		}
+        #endregion
+
+        #region Tangent
+        /// <summary>Computes the ratio [length of the side opposite to the angle / length of the side adjacent to the angle] in a right triangle.</summary>
+        private static Compute<T>.Delegates.Tangent Tangent_private = (Angle<T> angle) =>
+		{
+			if (typeof(T) == typeof(double)) // double optimization
+				Compute<double>.Tangent_private = (Angle<double> _angle) => { return System.Math.Tan(_angle.Radians); };
+			else if (typeof(T) == typeof(float)) // float optimization
+				Compute<float>.Tangent_private = (Angle<float> _angle) => { return (float)System.Math.Tan(_angle.Radians); };
+			else
+			{
+				// Series: tan(x) = x + x^3/3 + 2x^5/15 + 17x^7/315 ...
+				// more terms in computation inproves accuracy
+
+				Compute<T>.Tangent_private =
+	Meta.Compile<Compute<T>.Delegates.Tangent>(
+		"(" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " _angle) =>" +
+		"{" +
+		"	// get the angle into the positive unit circle" +
+		"	_angle = _angle % (Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi * 2);" +
+		"	if (_angle < 0)" +
+		"		_angle = (Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi * 2) + _angle;" +
+		"	if (_angle <= Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi / 2) // quadrant 1" +
+		"		goto QuandrantSkip;" +
+		"	else if (_angle <= Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi) // quadrant 2" +
+		"		_angle = (Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi / 2) - (_angle % (Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi / 2));" +
+		"	else if (_angle <= (Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi * 3) / 2) // quadrant 3" +
+		"		_angle = _angle % Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi;" +
+		"	else // quadrant 4" +
+		"		_angle = (Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi / 2) - (_angle % (Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi / 2));" +
+		"QuandrantSkip:" +
+		"	// do the computation" +
+		"	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " two = 2;" +
+		"	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " three = 3;" +
+		"	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " fifteen = 15;" +
+		"	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " seventeen = 17;" +
+		"	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " threehundredfifteen = 315;" +
+		"	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " angleCubed = _angle * _angle * _angle; // angle ^ 3" +
+		"	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " angleToTheFifth = angleCubed * _angle * _angle; // angle ^ 5" +
+		"	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " angleToTheSeventh = angleToTheFifth * _angle * _angle;  // angle ^ 7" +
+		"	return angle" +
+		"		+ (angleCubed / three)" +
+		"		+ (two * angleToTheFifth / fifteen)" +
+		"		+ (seventeen * angleToTheSeventh / threehundredfifteen);" +
+		"}");
+			}
+
+			return Compute<T>.Tangent_private(angle);
+		};
+
+		public static T Tangent(Angle<T> angle)
+		{
+			return Tangent_private(angle);
+		}
+        #endregion
+
+        #region Cosecant
+        /// <summary>Computes the ratio [hypotenuse / length of the side opposite to the angle] in a right triangle.</summary>
+        private static Compute<T>.Delegates.Cosecant Cosecant_private = (Angle<T> angle) =>
+		{
+			// Series: csc(x) = x^-1 + x/6 + 7x^3/360 + 31x^5/15120 ...
+			// more terms in computation inproves accuracy
+
+			Compute<T>.Cosecant_private =
+				Meta.Compile<Compute<T>.Delegates.Cosecant>(
+					"(" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " _angle) =>" +
+					"{" +
+					"	return (" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ")1 / Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Sine(_angle);" +
+					"}");
+
+			return Compute<T>.Cosecant_private(angle);
+		};
+
+        public static T Cosecant(Angle<T> angle)
+        {
+            return Cosecant_private(angle);
+        }
+        #endregion
+
+        #region Secant
+        /// <summary>Computes the ratio [hypotenuse / length of the side adjacent to the angle] in a right triangle.</summary>
+        private static Compute<T>.Delegates.Secant Secant_private = (Angle<T> angle) =>
+		{
+			// Series: sec(x) = ...
+			// more terms in computation inproves accuracy
+
+			Compute<T>.Secant_private =
+				Meta.Compile<Compute<T>.Delegates.Secant>(
+					"(" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " _angle) =>" +
+					"{" +
+					"	return (" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ")1 / Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Cosine(_angle);" +
+					"}");
+
+			return Compute<T>.Secant_private(angle);
+		};
+
+        public static T Secant(Angle<T> angle)
+        {
+            return Secant_private(angle);
+        }
+        #endregion
+
+        #region Cotangent
+        /// <summary>Computes the ratio [length of the side adjacent to the angle / length of the side opposite to the angle] in a right triangle.</summary>
+        private static Compute<T>.Delegates.Cotangent Cotangent_private = (Angle<T> angle) =>
+		{
+			// Series: cot(x) = ...
+			// more terms in computation inproves accuracy
+
+			Compute<T>.Cotangent_private =
+				Meta.Compile<Compute<T>.Delegates.Cotangent>(
+					"(" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " _angle) =>" +
+					"{" +
+					"	return (" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ")1 / Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Tangent(_angle);" +
+					"}");
+
+			return Compute<T>.Cotangent_private(angle);
+		};
+
+        public static T Cotangent(Angle<T> angle)
+        {
+            return Cotangent_private(angle);
+        }
+        #endregion
+
+        #region InverseSine
+        private static Compute<T>.Delegates.InverseSine InverseSine_private = (T ratio) =>
+		{
+			if (typeof(T) == typeof(double))
+				Compute<double>.InverseSine_private = (double _ratio) => { return Angle<double>.Factory_Radians(System.Math.Asin(_ratio)); };
+			else if (typeof(T) == typeof(float))
+				Compute<float>.InverseSine_private = (float _ratio) => { return Angle<float>.Factory_Radians((float)System.Math.Asin(_ratio)); };
+			else
+				throw new System.NotImplementedException("unsupported parameter type for Cot function");
+
+			return Compute<T>.InverseSine_private(ratio);
+		};
+
+        public static Angle<T> InverseSine(T ratio)
+        {
+            return InverseSine_private(ratio);
+        }
+        #endregion
+
+        #region InverseCosine
+        private static Compute<T>.Delegates.InverseCosine InverseCosine_private = (T ratio) =>
+		{
+			if (typeof(T) == typeof(double))
+				Compute<double>.InverseCosine_private = (double _ratio) => { return Angle<double>.Factory_Radians(System.Math.Acos(_ratio)); };
+			else if (typeof(T) == typeof(float))
+				Compute<float>.InverseCosine_private = (float _ratio) => { return Angle<float>.Factory_Radians((float)System.Math.Acos(_ratio)); };
+			else
+				throw new System.NotImplementedException();
+
+			return Compute<T>.InverseCosine_private(ratio);
+		};
+
+        public static Angle<T> InverseCosine(T ratio)
+        {
+            return InverseCosine_private(ratio);
+        }
+        #endregion
+
+        #region InverseTangent
+        private static Compute<T>.Delegates.InverseTangent InverseTangent_private = (T ratio) =>
+		{
+			if (typeof(T) == typeof(double))
+				Compute<double>.InverseTangent_private = (double _ratio) => { return Angle<double>.Factory_Radians(System.Math.Atan(_ratio)); };
+			else if (typeof(T) == typeof(float))
+				Compute<float>.InverseTangent_private = (float _ratio) => { return Angle<float>.Factory_Radians((float)System.Math.Atan(_ratio)); };
+			else
+				throw new System.NotImplementedException();
+
+			return Compute<T>.InverseTangent_private(ratio);
+		};
+
+        public static Angle<T> InverseTangent(T ratio)
+        {
+            return InverseTangent_private(ratio);
+        }
+        #endregion
+
+        #region InverseCosecant
+        private static Compute<T>.Delegates.InverseCosecant InverseCosecant_private = (T ratio) =>
+		{
+			if (typeof(T) == typeof(double))
+				Compute<double>.InverseCosecant_private = (double _ratio) => { return Angle<double>.Factory_Radians(System.Math.Asin(1d / _ratio)); };
+			else if (typeof(T) == typeof(float))
+				Compute<float>.InverseCosecant_private = (float _ratio) => { return Angle<float>.Factory_Radians((float)System.Math.Asin(1f / _ratio)); };
+			else
+				throw new System.NotImplementedException("unsupported parameter type for Cot function");
+
+			return Compute<T>.InverseCosecant_private(ratio);
+		};
+
+        public static Angle<T> InverseCosecant(T ratio)
+        {
+            return InverseCosecant_private(ratio);
+        }
+        #endregion
+
+        #region InverseSecant
+        private static Compute<T>.Delegates.InverseSecant InverseSecant_private = (T ratio) =>
+		{
+			if (typeof(T) == typeof(double))
+				Compute<double>.InverseSecant_private = (double _ratio) => { return Angle<double>.Factory_Radians(System.Math.Acos(1d / _ratio)); };
+			else if (typeof(T) == typeof(float))
+				Compute<float>.InverseSecant_private = (float _ratio) => { return Angle<float>.Factory_Radians((float)System.Math.Acos(1f / _ratio)); };
+			else
+				throw new System.NotImplementedException("unsupported parameter type for Cot function");
+
+			return Compute<T>.InverseSecant_private(ratio);
+		};
+
+        public static Angle<T> InverseSecant(T ratio)
+        {
+            return InverseSecant_private(ratio);
+        }
+        #endregion
+
+        #region InverseCotangent
+        private static Compute<T>.Delegates.InverseCotangent InverseCotangent_private = (T ratio) =>
+		{
+			if (typeof(T) == typeof(double))
+				Compute<double>.InverseCotangent_private = (double _ratio) => { return Angle<double>.Factory_Radians(System.Math.Atan(1d / _ratio)); };
+			else if (typeof(T) == typeof(float))
+				Compute<float>.InverseCotangent_private = (float _ratio) => { return Angle<float>.Factory_Radians((float)System.Math.Atan(1f / _ratio)); };
+			else
+				throw new System.NotImplementedException("unsupported parameter type for Cot function");
+
+			return Compute<T>.InverseCotangent_private(ratio);
+		};
+
+        public static Angle<T> InverseCotangent(T ratio)
+        {
+            return InverseCotangent_private(ratio);
+        }
+        #endregion
+
+        #region HyperbolicSine
+        private static Compute<T>.Delegates.HyperbolicSine HyperbolicSine_private = (Angle<T> angle) =>
+		{
+			if (typeof(T) == typeof(double))
+				Compute<double>.HyperbolicSine_private = (Angle<double> _angle) => { return System.Math.Sinh(_angle.Radians); };
+			else if (typeof(T) == typeof(float))
+				Compute<float>.HyperbolicSine_private = (Angle<float> _angle) => { return (float)System.Math.Sinh(_angle.Radians); };
+			else
+				throw new System.NotImplementedException();
+
+			return Compute<T>.HyperbolicSine_private(angle);
+		};
+
+        public static T HyperbolicSine(Angle<T> angle)
+        {
+            return HyperbolicSine_private(angle);
+        }
+        #endregion
+
+        #region HyperbolicCosine
+        private static Compute<T>.Delegates.HyperbolicCosine HyperbolicCosine_private = (Angle<T> angle) =>
+		{
+			if (typeof(T) == typeof(double))
+				Compute<double>.HyperbolicCosine_private = (Angle<double> _angle) => { return System.Math.Cosh(_angle.Radians); };
+			else if (typeof(T) == typeof(float))
+				Compute<float>.HyperbolicCosine_private = (Angle<float> _angle) => { return (float)System.Math.Cosh(_angle.Radians); };
+			else
+				throw new System.NotImplementedException();
+
+			return Compute<T>.HyperbolicCosine_private(angle);
+		};
+
+        public static T HyperbolicCosine(Angle<T> angle)
+        {
+            return HyperbolicCosine_private(angle);
+        }
+        #endregion
+
+        #region HyperbolicTangent
+        private static Compute<T>.Delegates.HyperbolicTangent HyperbolicTangent_private = (Angle<T> angle) =>
+		{
+			if (typeof(T) == typeof(double))
+				Compute<double>.HyperbolicTangent_private = (Angle<double> _angle) => { return System.Math.Tanh(_angle.Radians); };
+			else if (typeof(T) == typeof(float))
+				Compute<float>.HyperbolicTangent_private = (Angle<float> _angle) => { return (float)System.Math.Tanh(_angle.Radians); };
+			else
+				throw new System.NotImplementedException("unsupported parameter type for Cot function");
+
+			return Compute<T>.HyperbolicTangent_private(angle);
+		};
+
+        public static T HyperbolicTangent(Angle<T> angle)
+        {
+            return HyperbolicTangent_private(angle);
+        }
+        #endregion
+
+        #region HyperbolicSecant
+        private static Compute<T>.Delegates.HyperbolicSecant HyperbolicSecant_private = (Angle<T> angle) =>
+		{
+			if (typeof(T) == typeof(double))
+				Compute<double>.HyperbolicSecant_private = (Angle<double> _angle) => { return 1d / System.Math.Cosh(_angle.Radians); };
+			else if (typeof(T) == typeof(float))
+				Compute<float>.HyperbolicSecant_private = (Angle<float> _angle) => { return 1f / (float)System.Math.Cosh(_angle.Radians); };
+			else
+				throw new System.NotImplementedException("unsupported parameter type for Cot function");
+
+			return Compute<T>.HyperbolicSecant_private(angle);
+		};
+
+        public static T HyperbolicSecant(Angle<T> angle)
+        {
+            return HyperbolicSecant_private(angle);
+        }
+        #endregion
+
+        #region HyperbolicCosecant
+        private static Compute<T>.Delegates.HyperbolicCosecant HyperbolicCosecant_private = (Angle<T> angle) =>
+		{
+			if (typeof(T) == typeof(double))
+				Compute<double>.HyperbolicCosecant_private = (Angle<double> _angle) => { return 1d / System.Math.Sinh(_angle.Radians); };
+			else if (typeof(T) == typeof(float))
+				Compute<float>.HyperbolicCosecant_private = (Angle<float> _angle) => { return 1f / (float)System.Math.Sinh(_angle.Radians); };
+			else
+				throw new System.NotImplementedException("unsupported parameter type for Cot function");
+
+			return Compute<T>.HyperbolicCosecant_private(angle);
+		};
+
+        public static T HyperbolicCosecant(Angle<T> angle)
+        {
+            return HyperbolicCosecant_private(angle);
+        }
+        #endregion
+
+        #region HyperbolicCotangent
+        private static Compute<T>.Delegates.HyperbolicCotangent HyperbolicCotangent_private = (Angle<T> angle) =>
+		{
+			if (typeof(T) == typeof(double))
+				Compute<double>.HyperbolicCotangent_private = (Angle<double> _angle) => { return 1d / System.Math.Tanh(_angle.Radians); };
+			else if (typeof(T) == typeof(float))
+				Compute<float>.HyperbolicCotangent_private = (Angle<float> _angle) => { return 1f / (float)System.Math.Tanh(_angle.Radians); };
+			else
+				throw new System.NotImplementedException("unsupported parameter type for Cot function");
+
+			return Compute<T>.HyperbolicCotangent_private(angle);
+		};
+
+        public static T HyperbolicCotangent(Angle<T> angle)
+        {
+            return HyperbolicCotangent_private(angle);
+        }
+        #endregion
+
+        #region InverseHyperbolicSine
+        private static Compute<T>.Delegates.InverseHyperbolicSine InverseHyperbolicSine_private = (T ratio) =>
+		{
+			throw new System.NotImplementedException();
+		};
+        #endregion
+
+        #region InverseHyperbolicCosine
+        private static Compute<T>.Delegates.InverseHyperbolicCosine InverseHyperbolicCosine_private = (T ratio) =>
+		{
+			throw new System.NotImplementedException();
+		};
+        #endregion
+
+        #region InverseHyperbolicTangent
+        private static Compute<T>.Delegates.InverseHyperbolicTangent InverseHyperbolicTangent_private = (T ratio) =>
+		{
+			throw new System.NotImplementedException();
+		};
+        #endregion
+
+        #region InverseHyperbolicCosecant
+        private static Compute<T>.Delegates.InverseHyperbolicCosecant InverseHyperbolicCosecant_private = (T ratio) =>
+		{
+			throw new System.NotImplementedException();
+		};
+        #endregion
+
+        #region InverseHyperbolicSecant
+        private static Compute<T>.Delegates.InverseHyperbolicSecant InverseHyperbolicSecant_private = (T ratio) =>
+		{
+			throw new System.NotImplementedException();
+		};
+        #endregion
+
+        #region InverseHyperbolicCotangent
+        private static Compute<T>.Delegates.InverseHyperbolicCotangent InverseHyperbolicCotangent_private = (T ratio) =>
+		{
+			throw new System.NotImplementedException();
+		};
+        #endregion
+
+        // Other
 
         #region Regression
 
@@ -1923,11 +2973,11 @@ string.Concat(
 
         #region FactorPrimes
         /// <summary>Computes the prime factors of n.</summary>
-		internal static Compute<T>.Delegates.FactorPrimes FactorPrimes_private = (T value, Step<T> step) =>
-		{
-			Compute<T>.FactorPrimes_private =
-				Meta.Compile<Compute<T>.Delegates.FactorPrimes>(
-					string.Concat(
+		private static Compute<T>.Delegates.FactorPrimes FactorPrimes_private = (T value, Step<T> step) =>
+        {
+            Compute<T>.FactorPrimes_private =
+                Meta.Compile<Compute<T>.Delegates.FactorPrimes>(
+                    string.Concat(
 @"(", Meta.ConvertTypeToCsharpSource(typeof(T)), " _value, Step<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> _step) =>
 {
 	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" __value = _value;
@@ -1955,1003 +3005,13 @@ string.Concat(
 		_step(__value);
 }"));
 
-			Compute<T>.FactorPrimes_private(value, step);
-		};
-
-		public static void FactorPrimes(T value, Step<T> step)
-		{
-			FactorPrimes_private(value, step);
-		}
-		#endregion
-
-		#region LinearInterpolation
-		/// <summary>Interpolates in a linear fashion.</summary>
-		internal static Compute<T>.Delegates.LinearInterpolation LinearInterpolation_private = (T x, T x0, T x1, T y0, T y1) =>
-		{
-			Compute<T>.LinearInterpolation_private =
-				Meta.Compile<Compute<T>.Delegates.LinearInterpolation>(
-					string.Concat(
-@"(", Meta.ConvertTypeToCsharpSource(typeof(T)), " _x, ", Meta.ConvertTypeToCsharpSource(typeof(T)), " _x0, ", Meta.ConvertTypeToCsharpSource(typeof(T)), " _x1, ", Meta.ConvertTypeToCsharpSource(typeof(T)), " _y0, ", Meta.ConvertTypeToCsharpSource(typeof(T)), @" _y1) =>
-{
-	if (_x0 > _x1)
-		throw new System.Exception(", "\"invalid arguments: x0 > x1\"", @");
-	else if (_x < _x0)
-		throw new System.Exception(", "\"invalid arguments: x < x0\"", @");
-	else if (_x > _x1)
-		throw new System.Exception(", "\"invalid arguments: x > x1\"", @");
-	else if (_x0 == _x1)
-		if (_y0 != _y1)
-			throw new System.Exception(", "\"invalid arguments: _x0 == _x1 && _y0 != _y1\"", @");
-		else
-			return _y0;
-	else
-		return _y0 + (_x - _x0) * (_y1 - _y0) / (_x1 - _x0);
-}"));
-
-			return Compute<T>.LinearInterpolation_private(x, x0, x1, y0, y1);
-		};
-
-		public static T LinearInterpolation(T x, T x0, T x1, T y0, T y1)
-		{
-			return LinearInterpolation_private(x, x0, x1, y0, y1);
-		}
-		#endregion
-
-        #region Statistics
-
-        #region Factorial
-        /// <summary>Computes: [ N! ].</summary>
-		public static Compute<T>.Delegates.Factorial Factorial_private = (T value) =>
-		{
-			Compute<T>.Factorial_private =
-	Meta.Compile<Compute<T>.Delegates.Factorial>(
-		string.Concat(
-@"(", Meta.ConvertTypeToCsharpSource(typeof(T)), @" N) =>
-{
-	if (N % 1 != 0)
-		throw new System.Exception(", "\"invalid factorial: N must be a whole number.\"", @");
-	if (N < 0)
-		throw new System.Exception(", "\"invalid factorial: [ N < 0 ] (N = \\\" + N + \\\").\"", @");
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" result = 1;
-	for (; N > 1; N--)
-		result *= N;
-	return result;
-}"));
-
-			return Compute<T>.Factorial_private(value);
-		};
-
-		public static T Factorial(T value)
-		{
-			return Factorial_private(value);
-		}
-		#endregion
-
-		#region Combinations
-		/// <summary>Computes: [ N! / (n[0]! + n[1]! + n[3]! ...) ].</summary>
-		public static Compute<T>.Delegates.Combinations Combinations_private = (T N, T[] n) =>
-		{
-			Compute<T>.Combinations_private =
-	Meta.Compile<Compute<T>.Delegates.Combinations>(
-		string.Concat(
-@"(", Meta.ConvertTypeToCsharpSource(typeof(T)), " _N, ", Meta.ConvertTypeToCsharpSource(typeof(T)), @"[] _n) =>
-{
-	if (_N % 1 != 0)
-		throw new System.Exception(", "\"invalid combination: N must be a whole number.\"", @");
-	for (int i = 0; i < _n.Length; i++)
-		if (_n[i] % 1 != 0)
-			throw new System.Exception(", "\"invalid combination: n[\\\" + i + \\\"] must be a whole number.\"", @");
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), " result = Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Factorial(_N);
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" sum = 0;
-	for (int i = 0; i < _n.Length; i++)
-	{
-		result /= Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Factorial(_n[i]);
-		sum += _n[i];
-	}
-	if (sum > _N)
-		throw new System.Exception(", "\"invalid combination: [ N < Sum(n) ].\"", @");
-	return result;
-}"));
-
-			return Compute<T>.Combinations_private(N, n);
-		};
-
-		public static T Combinations(T N, T[] n)
-		{
-			return Combinations_private(N, n);
-		}
-		#endregion
-
-		#region Choose
-		/// <summary>Computes: [ N! / (N - n)! ]</summary>
-		public static Compute<T>.Delegates.Choose Choose_private = (T N, T n) =>
-		{
-			Compute<T>.Choose_private =
-	Meta.Compile<Compute<T>.Delegates.Choose>(
-		string.Concat(
-@"(", Meta.ConvertTypeToCsharpSource(typeof(T)), " _N, ", Meta.ConvertTypeToCsharpSource(typeof(T)), @" _n) =>
-{
-	if (_N % 1 != 0)
-		throw new System.Exception(", "\"invalid chose: N must be a whole number.\"", @");
-	if (_n % 1 != 0)
-		throw new System.Exception(", "\"invalid combination: n must be a whole number.\"", @");
-	if (!(_N <= _n || _N >= 0))
-		throw new System.Exception(", "\"invalid choose: [ !(N <= n || N >= 0) ].\"", @");
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), " factorial_N = Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Factorial(_N);
-	return Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), ">.Factorial(_N) / (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), ">.Factorial(_n) * Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Factorial(_N - _n));
-}"));
-
-			return Compute<T>.Choose_private(N, n);
-		};
-
-		public static T Choose(T N, T n)
-		{
-			return Choose_private(N, n);
-		}
-		#endregion
-
-		#region Mode
-		/// <summary>Finds the number of occurences for each item and sorts them into a heap.</summary>
-		internal static Compute<T>.Delegates.Mode Mode_private = (Stepper<T> stepper) =>
-		{
-			string heap_type = typeof(HeapArray<Link<T, int>>).ToCsharpSource();
-			string link_type = typeof(Link<T, int>).ToCsharpSource();
-			Compute<T>.Mode_private =
-	Meta.Compile<Compute<T>.Delegates.Mode>(
-		string.Concat(
-@"(Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> stepper) =>
-{
-	", heap_type, @" heap =
-		new ", heap_type, @"(
-			(Link<", Meta.ConvertTypeToCsharpSource(typeof(T)), ", int> left, Link<", Meta.ConvertTypeToCsharpSource(typeof(T)), @", int> right) =>
-			{
-				return Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Compare(left._1, right._1);
-			});
-	stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" step) =>
-	{
-		bool contains = false;
-		heap.Stepper((", link_type, @" nested_step) =>
-		{
-			if (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Equate(nested_step._1, step))
-			{
-				contains = true;
-				nested_step._2++;
-				heap.Requeue(nested_step);
-				return StepStatus.Break;
-			}
-			else
-				return StepStatus.Continue;
-		});
-		if (!contains)
-			heap.Enqueue(new ", link_type, @"(step, 1));
-	});
-	return heap;
-}"));
-
-			return Compute<T>.Mode_private(stepper);
-		};
-
-		public static Heap<Link<T, int>> Mode(Stepper<T> stepper)
-		{
-			return Mode_private(stepper);
-		}
-		#endregion
-
-		#region Mean
-		/// <summary>Computes the mean (or average) between multiple values.</summary>
-		internal static Compute<T>.Delegates.Mean Mean_private = (Stepper<T> stepper) =>
-		{
-			Compute<T>.Mean_private =
-	Meta.Compile<Compute<T>.Delegates.Mean>(
-		string.Concat(
-@"(Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> stepper) =>
-{
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i = 0;
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" sum = 0;
-	stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" step) => { i++; sum += step; });
-	return sum / i;
-}"));
-
-			return Compute<T>.Mean_private(stepper);
-		};
-
-		public static T Mean(Stepper<T> stepper)
-		{
-			return Mean_private(stepper);
-		}
-
-		/// <summary>Computes the mean (or average) between multiple values.</summary>
-		internal static Compute<T>.Delegates.Mean2 Mean2_private = (T a, T b) =>
-		{
-			Mean2_private = Meta.BinaryOperationHelper<Compute<T>.Delegates.Mean2, T, T, T>(
-					(Expression left, Expression right, LabelTarget returnLabel) =>
-					{
-						return Expression.Return(returnLabel, Expression.Divide(Expression.Add(left, right), Expression.Constant(Compute<T>.FromInt32(2))), typeof(T));
-					});
-
-			return Compute<T>.Mean2_private(a, b);
-		};
-
-		public static T Mean(T a, T b)
-		{
-			return Mean2_private(a, b);
-		}
-		#endregion
-
-		#region Median
-		/// <summary>Computes the median of a set of values.</summary>
-		internal static Compute<T>.Delegates.Median Median_private = (Stepper<T> stepper) =>
-		{
-			Compute<T>.Median_private =
-				Meta.Compile<Compute<T>.Delegates.Median>(
-					string.Concat(
-@"(Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> _stepper) =>
-{
-	long count =	0;
-	_stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" step) => { count++; });
-	long half = count / 2;
-	if (count % 1 == 0)
-	{
-		", Meta.ConvertTypeToCsharpSource(typeof(T)), " left = default(", Meta.ConvertTypeToCsharpSource(typeof(T)), @");
-		", Meta.ConvertTypeToCsharpSource(typeof(T)), " right = default(", Meta.ConvertTypeToCsharpSource(typeof(T)), @");
-		count = 0;
-		_stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" step) =>
-		{
-			if (count == half)
-				left = step;
-			else if (count == half + 1)
-				right = step;
-			count++;
-		});
-		return (left + right) / (", Meta.ConvertTypeToCsharpSource(typeof(T)), @")2;
-	}
-	else
-	{
-		", Meta.ConvertTypeToCsharpSource(typeof(T)), " median = default(", Meta.ConvertTypeToCsharpSource(typeof(T)), @");
-		_stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) =>
-		{
-			count = 0;
-			_stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" step) =>
-			{
-				if (count == half)
-					median = step;
-				count++;
-			});
-		});
-		return median;
-	}
-}"));
-
-			return Compute<T>.Median_private(stepper);
-		};
-
-		public static T Median(Stepper<T> stepper)
-		{
-			return Median_private(stepper);
-		}
-
-		public static T Median(params T[] values)
-		{
-			return Median(values.Stepper());
-		}
-		#endregion
-
-		#region GeometricMean
-		/// <summary>Computes the median of a set of values.</summary>
-		internal static Compute<T>.Delegates.GeometricMean GeometricMean_private = (Stepper<T> stepper) =>
-		{
-			Compute<T>.GeometricMean_private =
-				Meta.Compile<Compute<T>.Delegates.GeometricMean>(
-					string.Concat(
-@"(Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> _stepper) =>
-{
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" multiple = 1;
-	int count = 0;
-	_stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" current) =>
-	{
-		count++;
-		multiple *= current;
-	});
-	return Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), ">.Root(multiple, (", Meta.ConvertTypeToCsharpSource(typeof(T)), @")count);
-}"));
-
-			return Compute<T>.GeometricMean_private(stepper);
-		};
-
-		public static T GeometricMean(Stepper<T> stepper)
-		{
-			return GeometricMean_private(stepper);
-		}
-		#endregion
-
-		#region Variance
-		/// <summary>Computes the variance of a set of values.</summary>
-		internal static Compute<T>.Delegates.Variance Variance_private = (Stepper<T> stepper) =>
-		{
-			Compute<T>.Variance_private =
-				Meta.Compile<Compute<T>.Delegates.Variance>(
-					"(Stepper<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + "> _stepper) =>" +
-					"{" +
- "	if (_stepper == null)" +
-					"		throw new System.Exception(\"null reference: _stepper\");" +
- "	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " mean = Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Mean(_stepper);" +
-					"	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " variance = 0;" +
-					"	int count = 0;" +
-					"	_stepper((" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " i) =>" +
-					"		{" +
-					"			" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " i_minus_mean = i - mean;" +
-					"			variance += i_minus_mean * i_minus_mean;" +
-					"			count++;" +
-					"		});" +
-					"	return variance / (" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ")count;" +
-					"}");
-
-			return Compute<T>.Variance_private(stepper);
-		};
-
-		public static T Variance(Stepper<T> stepper)
-		{
-			return Variance_private(stepper);
-		}
-		#endregion
-
-		#region StandardDeviation
-		/// <summary>Computes the standard deviation of a set of values.</summary>
-		internal static Compute<T>.Delegates.StandardDeviation StandardDeviation_private = (Stepper<T> stepper) =>
-		{
-			Compute<T>.StandardDeviation_private =
-	Meta.Compile<Compute<T>.Delegates.StandardDeviation>(
-		string.Concat(
-@"(Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> _stepper) =>
-{",
-@"	if (_stepper == null)
-		throw new System.Exception(", "\"null reference: _stepper\");",
-@"	return Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), ">.SquareRoot(Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Variance(_stepper));
-}"));
-
-			return Compute<T>.StandardDeviation_private(stepper);
-		};
-
-		public static T StandardDeviation(Stepper<T> stepper)
-		{
-			return StandardDeviation_private(stepper);
-		}
-		#endregion
-
-		#region MeanDeviation
-		/// <summary>Computes the mean deviation of a set of values.</summary>
-		/// <see cref="Theta.Mathematics.Logic<T>.abs"/>
-		/// <see cref="Theta.Mathematics.Compute<T>.Mean"/>
-		public static Compute<T>.Delegates.MeanDeviation MeanDeviation_private = (Stepper<T> stepper) =>
-		{
-			Compute<T>.MeanDeviation_private =
-	Meta.Compile<Compute<T>.Delegates.MeanDeviation>(
-		string.Concat(
-@"(Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> _stepper) =>
-{
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), " mean = Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Mean(_stepper);
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" temp = 0;
-	int count = 0;
-	_stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) =>
-	{
-		temp += Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.AbsoluteValue(i - mean);
-		count++;
-	});
-	return temp / (", Meta.ConvertTypeToCsharpSource(typeof(T)), @")count;
-}"));
-
-			return Compute<T>.MeanDeviation_private(stepper);
-		};
-
-		public static T MeanDeviation(Stepper<T> stepper)
-		{
-			return MeanDeviation_private(stepper);
-		}
-		#endregion
-
-		#region Range
-		/// <summary>Computes the standard deviation of a set of values.</summary>
-		internal static Compute<T>.Delegates.Range Range_private = (Stepper<T> stepper) =>
-		{
-			Compute<T>.Range_private =
-				Meta.Compile<Compute<T>.Delegates.Range>(
-					string.Concat(
-@"(Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> _stepper) =>
-{
-	bool set = false;
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" temp_min = 0;
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" temp_max = 0;
-	_stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) =>
-	{
-		if (!set)
-		{
-			temp_min = i;
-			temp_max = i;
-			set = true;
-		}
-		else
-		{
-			temp_min = i < temp_min ? i : temp_min;
-			temp_max = i > temp_max ? i : temp_max;
-		}
-	});
-	return new Range<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">(temp_min, temp_max);
-}"));
-
-			return Compute<T>.Range_private(stepper);
-		};
-
-		public static Range<T> Range(Stepper<T> stepper)
-		{
-			return Range_private(stepper);
-		}
-		#endregion
-
-		#region Quantiles
-		/// <summary>Computes the quantiles of a set of values.</summary>
-		internal static Compute<T>.Delegates.Quantiles Quantiles_private = (int quantiles, Stepper<T> stepper) =>
-{
-	Compute<T>.Quantiles_private =
-Meta.Compile<Compute<T>.Delegates.Quantiles>(
-string.Concat(
-@"(int _quantiles, Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> _stepper) =>
-{",
-@"	if (_stepper == null)
-		throw new System.Exception(", "\"null reference: _stepper\"", @");
-	if (_quantiles < 1)
-		throw new System.Exception(", "\"invalid numer of dimensions on Quantile division\");",
-@"	int count = 0;
-	_stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) => { count++; });
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), "[] ordered = new ", Meta.ConvertTypeToCsharpSource(typeof(T)), @"[count];
-	int a = 0;
-	_stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) => { ordered[a++] = i; });
-	Algorithms.Sort.Quick<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + @">(Logic.compare, ordered);
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), "[] __quantiles = new ", Meta.ConvertTypeToCsharpSource(typeof(T)), @"[_quantiles + 1];
-	__quantiles[0] = ordered[0];
-	__quantiles[__quantiles.Length - 1] = ordered[ordered.Length - 1];
-	for (int i = 1; i < _quantiles; i++)
-	{
-		", Meta.ConvertTypeToCsharpSource(typeof(T)), " temp = (ordered.Length / (", Meta.ConvertTypeToCsharpSource(typeof(T)), @")(_quantiles + 1)) * i;
-		if (temp % 1 == 0)
-			__quantiles[i] = ordered[(int)temp];
-		else
-			__quantiles[i] = (ordered[(int)temp] + ordered[(int)temp + 1]) / (", Meta.ConvertTypeToCsharpSource(typeof(T)), @")2;
-	}
-	return __quantiles;
-}"));
-
-	return Compute<T>.Quantiles_private(quantiles, stepper);
-};
-
-		public static T[] Quantiles(int quantiles, Stepper<T> stepper)
-		{
-			return Quantiles_private(quantiles, stepper);
-		}
-		#endregion
-
-		#region Correlation
-		/// <summary>Computes the median of a set of values.</summary>
-		internal static Compute<T>.Delegates.Correlation Correlation_private = (Stepper<T> a, Stepper<T> b) =>
-{
-	throw new System.NotImplementedException("I introduced an error here when I removed the stepref off of structure. will fix soon - seven");
-
-	Compute<T>.Correlation_private =
-Meta.Compile<Compute<T>.Delegates.Correlation>(
-string.Concat(
-@"(Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), "> _a, Stepper<", Meta.ConvertTypeToCsharpSource(typeof(T)), @"> _b) =>
-{
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), " a_mean = Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Mean(_a);
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), " b_mean = Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Mean(_b);
-	List<", Meta.ConvertTypeToCsharpSource(typeof(T)), "> a_temp = new List_Linked<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">();
-	_a((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) => { a_temp.Add(i - b_mean); });
-	List<", Meta.ConvertTypeToCsharpSource(typeof(T)), "> b_temp = new List_Linked<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">();
-	_b((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) => { b_temp.Add(i - a_mean); });
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), "[] a_cross_b = new ", Meta.ConvertTypeToCsharpSource(typeof(T)), @"[a_temp.Count * b_temp.Count];
-	int count = 0;
-	a_temp.Stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i_a) =>
-	{
-		b_temp.Stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i_b) =>
-		{
-			a_cross_b[count++] = i_a * i_b;
-		});
-	});
-	a_temp.Stepper((ref ", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) => { i *= i; });
-	b_temp.Stepper((ref ", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) => { i *= i; });
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" sum_a_cross_b = 0;
-	foreach (", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i in a_cross_b)
-		sum_a_cross_b += i;
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" sum_a_temp = 0;
-	a_temp.Stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) => { sum_a_temp += i; });
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" sum_b_temp = 0;
-	b_temp.Stepper((", Meta.ConvertTypeToCsharpSource(typeof(T)), @" i) => { sum_b_temp += i; });
-	return sum_a_cross_b / Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.sqrt(sum_a_temp * sum_b_temp);
-}"));
-
-	return Compute<T>.Correlation_private(a, b);
-};
-
-		public static T Correlation(Stepper<T> a, Stepper<T> b)
-		{
-			return Correlation_private(a, b);
-		}
-		#endregion
-
-        #endregion
-
-        #region Common Defined Functions
-
-        #region Exponential
-        /// <summary>Computes: [ e ^ x ].</summary>
-        internal static Compute<T>.Delegates.Exponential Exponential_private = (T value) =>
-        {
-            Compute<T>.Exponential_private =
-    Meta.Compile<Compute<T>.Delegates.Exponential>(
-        string.Concat("(", Meta.ConvertTypeToCsharpSource(typeof(T)), " _value) => { return (", Meta.ConvertTypeToCsharpSource(typeof(T)), ")System.Math.Sqrt((double)_value); }"));
-
-            return Compute<T>.Exponential_private(value);
+            Compute<T>.FactorPrimes_private(value, step);
         };
 
-        public static T Exponential(T value)
+        public static void FactorPrimes(T value, Step<T> step)
         {
-            return Exponential_private(value);
+            FactorPrimes_private(value, step);
         }
-        #endregion
-
-        #region Natural Logarithm
-        /// <summary>Computes (natrual log): [ ln(n) ].</summary>
-        internal static Compute<T>.Delegates.NaturalLogarithm NaturalLogarithm_private = (T value) =>
-        {
-            Compute<T>.NaturalLogarithm_private =
-    Meta.Compile<Compute<T>.Delegates.NaturalLogarithm>(
-        string.Concat("(", Meta.ConvertTypeToCsharpSource(typeof(T)), " _value) => { throw new System.Exception(\"not yet implemented\"); }"));
-
-            return Compute<T>.NaturalLogarithm_private(value);
-        };
-
-        public static T NaturalLogarithm(T value)
-        {
-            return NaturalLogarithm_private(value);
-        }
-        #endregion
-
-        #region Trigonometric functions
-
-        #region Sine
-        /// <summary>Computes the ratio [length of the side opposite to the angle / hypotenuse] in a right triangle.</summary>
-		internal static Compute<T>.Delegates.Sine Sine_private = (Angle<T> angle) =>
-				{
-					#region Optimizations
-					if (typeof(T) == typeof(double)) // double optimization
-					{
-						Compute<double>.Sine_private = (Angle<double> _angle) => { return System.Math.Sin(_angle.Radians); };
-                        return Compute<T>.Sine(angle);
-                    }
-					if (typeof(T) == typeof(float)) // float optimization
-					{
-						Compute<float>.Sine_private = (Angle<float> _angle) => { return (float)System.Math.Sin(_angle.Radians); };
-                        return Compute<T>.Sine(angle);
-                    }
-					#endregion
-					// Series: sin(x) = x - x^3/3! + x^5/5! - x^7/7! ...
-					// more terms in computation inproves accuracy
-
-					Compute<T>.Sine_private =
-							Meta.Compile<Compute<T>.Delegates.Sine>(
-									string.Concat(
-@"(", Meta.ConvertTypeToCsharpSource(typeof(T)), @" _angle) =>
-{
-	// get the angle into the positive unit circle
-	_angle = _angle % (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi * 2);
-	if (_angle < 0)
-		_angle = (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi * 2) + _angle;
-	if (_angle <= Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi / 2)
-		goto QuandrantSkip;
-	else if (_angle <= Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi)
-		_angle = (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), ">.Pi / 2) - (_angle % (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi / 2));
-	else if (_angle <= (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi * 3) / 2)
-		_angle = _angle % Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi;
-	else
-		_angle = (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), ">.Pi / 2) - (_angle % (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi / 2));
-QuandrantSkip:
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" three_factorial = 6;
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" five_factorial = 120;
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" seven_factorial = 5040;
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" angleCubed = _angle * _angle * _angle;
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" angleToTheFifth = angleCubed * _angle * _angle;
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" angleToTheSeventh = angleToTheFifth * _angle * _angle;
-	return -(_angle
-		- (angleCubed / three_factorial)
-		+ (angleToTheFifth / five_factorial)
-		- (angleToTheSeventh / seven_factorial));
-}"));
-
-					return Compute<T>.Sine(angle);
-				};
-
-		public static T Sine(Angle<T> angle)
-		{
-			return Sine_private(angle);
-		}
-		#endregion
-
-		#region Cosine
-		/// <summary>Computes the ratio [length of the side adjacent to the angle / hypotenuse] in a right triangle.</summary>
-		internal static Compute<T>.Delegates.Cosine Cosine_private = (Angle<T> angle) =>
-{
-	// rather than computing cos, you could do a phase shift and use sin
-	// return Sin(angle + (Pi / 2));
-
-	if (typeof(T) == typeof(double)) // double optimization
-		Compute<double>.Cosine_private = (Angle<double> _angle) => { return System.Math.Cos(_angle.Radians); };
-	else if (typeof(T) == typeof(float)) // float optimization
-		Compute<float>.Cosine_private = (Angle<float> _angle) => { return (float)System.Math.Cos(_angle.Radians); };
-	else
-	{
-		// Series: cos(x) = 1 - x^2/2! + x^4/4! - x^6/6! ...
-		// more terms in computation inproves accuracy
-
-		Compute<T>.Cosine_private =
-Meta.Compile<Compute<T>.Delegates.Cosine>(
-string.Concat(
-@"(", Meta.ConvertTypeToCsharpSource(typeof(T)), @" _angle) =>
-{
-	// get the angle into the positive unit circle
-	_angle = _angle % (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi * 2);
-	if (_angle < 0)
-		_angle = (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi * 2) + _angle;
-	if (_angle <= Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi / 2)
-		goto QuandrantSkip;
-	else if (_angle <= Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi)
-		_angle = (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), ">.Pi / 2) - (_angle % (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi / 2));
-	else if (_angle <= (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi * 3) / 2)
-		_angle = _angle % Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi;
-	else
-		_angle = (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), ">.Pi / 2) - (_angle % (Compute<", Meta.ConvertTypeToCsharpSource(typeof(T)), @">.Pi / 2));
-QuandrantSkip:
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" one = 1;
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" two_factorial = 2;
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" four_factorial = 24;
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" six_factorial = 720;
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" angleSquared = _angle * _angle;
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" angleToTheFourth = angleSquared * _angle * _angle;
-	", Meta.ConvertTypeToCsharpSource(typeof(T)), @" angleToTheSixth = angleToTheFourth * _angle * _angle;
-	return one
-		- (angleSquared / two_factorial)
-		+ (angleToTheFourth / four_factorial)
-		- (angleToTheSixth / six_factorial);
-}"));
-	}
-
-	return Compute<T>.Cosine(angle);
-};
-
-		public static T Cosine(Angle<T> angle)
-		{
-			return Cosine_private(angle);
-		}
-		#endregion
-
-		#region Tangent
-		/// <summary>Computes the ratio [length of the side opposite to the angle / length of the side adjacent to the angle] in a right triangle.</summary>
-		public static Compute<T>.Delegates.Tangent Tangent_private = (Angle<T> angle) =>
-		{
-			if (typeof(T) == typeof(double)) // double optimization
-				Compute<double>.Tangent_private = (Angle<double> _angle) => { return System.Math.Tan(_angle.Radians); };
-			else if (typeof(T) == typeof(float)) // float optimization
-				Compute<float>.Tangent_private = (Angle<float> _angle) => { return (float)System.Math.Tan(_angle.Radians); };
-			else
-			{
-				// Series: tan(x) = x + x^3/3 + 2x^5/15 + 17x^7/315 ...
-				// more terms in computation inproves accuracy
-
-				Compute<T>.Tangent_private =
-	Meta.Compile<Compute<T>.Delegates.Tangent>(
-		"(" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " _angle) =>" +
-		"{" +
-		"	// get the angle into the positive unit circle" +
-		"	_angle = _angle % (Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi * 2);" +
-		"	if (_angle < 0)" +
-		"		_angle = (Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi * 2) + _angle;" +
-		"	if (_angle <= Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi / 2) // quadrant 1" +
-		"		goto QuandrantSkip;" +
-		"	else if (_angle <= Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi) // quadrant 2" +
-		"		_angle = (Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi / 2) - (_angle % (Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi / 2));" +
-		"	else if (_angle <= (Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi * 3) / 2) // quadrant 3" +
-		"		_angle = _angle % Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi;" +
-		"	else // quadrant 4" +
-		"		_angle = (Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi / 2) - (_angle % (Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Pi / 2));" +
-		"QuandrantSkip:" +
-		"	// do the computation" +
-		"	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " two = 2;" +
-		"	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " three = 3;" +
-		"	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " fifteen = 15;" +
-		"	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " seventeen = 17;" +
-		"	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " threehundredfifteen = 315;" +
-		"	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " angleCubed = _angle * _angle * _angle; // angle ^ 3" +
-		"	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " angleToTheFifth = angleCubed * _angle * _angle; // angle ^ 5" +
-		"	" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " angleToTheSeventh = angleToTheFifth * _angle * _angle;  // angle ^ 7" +
-		"	return angle" +
-		"		+ (angleCubed / three)" +
-		"		+ (two * angleToTheFifth / fifteen)" +
-		"		+ (seventeen * angleToTheSeventh / threehundredfifteen);" +
-		"}");
-			}
-
-			return Compute<T>.Tangent_private(angle);
-		};
-
-		public static T Tangent(Angle<T> angle)
-		{
-			return Tangent_private(angle);
-		}
-		#endregion
-
-		#region Cosecant
-		/// <summary>Computes the ratio [hypotenuse / length of the side opposite to the angle] in a right triangle.</summary>
-		public static Compute<T>.Delegates.Cosecant Cosecant = (Angle<T> angle) =>
-		{
-			// Series: csc(x) = x^-1 + x/6 + 7x^3/360 + 31x^5/15120 ...
-			// more terms in computation inproves accuracy
-
-			Compute<T>.Cosecant =
-				Meta.Compile<Compute<T>.Delegates.Cosecant>(
-					"(" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " _angle) =>" +
-					"{" +
-					"	return (" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ")1 / Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Sine(_angle);" +
-					"}");
-
-			return Compute<T>.Cosecant(angle);
-		};
-		#endregion
-
-		#region Secant
-		/// <summary>Computes the ratio [hypotenuse / length of the side adjacent to the angle] in a right triangle.</summary>
-		public static Compute<T>.Delegates.Secant Secant = (Angle<T> angle) =>
-		{
-			// Series: sec(x) = ...
-			// more terms in computation inproves accuracy
-
-			Compute<T>.Secant =
-				Meta.Compile<Compute<T>.Delegates.Secant>(
-					"(" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " _angle) =>" +
-					"{" +
-					"	return (" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ")1 / Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Cosine(_angle);" +
-					"}");
-
-			return Compute<T>.Secant(angle);
-		};
-		#endregion
-
-		#region Cotangent
-		/// <summary>Computes the ratio [length of the side adjacent to the angle / length of the side opposite to the angle] in a right triangle.</summary>
-		public static Compute<T>.Delegates.Cotangent Cotangent = (Angle<T> angle) =>
-		{
-			// Series: cot(x) = ...
-			// more terms in computation inproves accuracy
-
-			Compute<T>.Cotangent =
-				Meta.Compile<Compute<T>.Delegates.Cotangent>(
-					"(" + Meta.ConvertTypeToCsharpSource(typeof(T)) + " _angle) =>" +
-					"{" +
-					"	return (" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ")1 / Compute<" + Meta.ConvertTypeToCsharpSource(typeof(T)) + ">.Tangent(_angle);" +
-					"}");
-
-			return Compute<T>.Cotangent(angle);
-		};
-		#endregion
-
-		#region InverseSine
-		public static Compute<T>.Delegates.InverseSine InverseSine = (T ratio) =>
-		{
-			if (typeof(T) == typeof(double))
-				Compute<double>.InverseSine = (double _ratio) => { return Angle<double>.Factory_Radians(System.Math.Asin(_ratio)); };
-			else if (typeof(T) == typeof(float))
-				Compute<float>.InverseSine = (float _ratio) => { return Angle<float>.Factory_Radians((float)System.Math.Asin(_ratio)); };
-			else
-				throw new System.NotImplementedException("unsupported parameter type for Cot function");
-
-			return Compute<T>.InverseSine(ratio);
-		};
-		#endregion
-
-		#region InverseCosine
-		public static Compute<T>.Delegates.InverseCosine InverseCosine = (T ratio) =>
-		{
-			if (typeof(T) == typeof(double))
-				Compute<double>.InverseCosine = (double _ratio) => { return Angle<double>.Factory_Radians(System.Math.Acos(_ratio)); };
-			else if (typeof(T) == typeof(float))
-				Compute<float>.InverseCosine = (float _ratio) => { return Angle<float>.Factory_Radians((float)System.Math.Acos(_ratio)); };
-			else
-				throw new System.NotImplementedException("unsupported parameter type for Cot function");
-
-			return Compute<T>.InverseCosine(ratio);
-		};
-		#endregion
-
-		#region InverseTangent
-		public static Compute<T>.Delegates.InverseTangent InverseTangent = (T ratio) =>
-		{
-			if (typeof(T) == typeof(double))
-				Compute<double>.InverseTangent = (double _ratio) => { return Angle<double>.Factory_Radians(System.Math.Atan(_ratio)); };
-			else if (typeof(T) == typeof(float))
-				Compute<float>.InverseTangent = (float _ratio) => { return Angle<float>.Factory_Radians((float)System.Math.Atan(_ratio)); };
-			else
-				throw new System.NotImplementedException("unsupported parameter type for Cot function");
-
-			return Compute<T>.InverseTangent(ratio);
-		};
-		#endregion
-
-		#region InverseCosecant
-		public static Compute<T>.Delegates.InverseCosecant InverseCosecant = (T ratio) =>
-		{
-			if (typeof(T) == typeof(double))
-				Compute<double>.InverseCosecant = (double _ratio) => { return Angle<double>.Factory_Radians(System.Math.Asin(1d / _ratio)); };
-			else if (typeof(T) == typeof(float))
-				Compute<float>.InverseCosecant = (float _ratio) => { return Angle<float>.Factory_Radians((float)System.Math.Asin(1f / _ratio)); };
-			else
-				throw new System.NotImplementedException("unsupported parameter type for Cot function");
-
-			return Compute<T>.InverseCosecant(ratio);
-		};
-		#endregion
-
-		#region InverseSecant
-		public static Compute<T>.Delegates.InverseSecant InverseSecant = (T ratio) =>
-		{
-			if (typeof(T) == typeof(double))
-				Compute<double>.InverseSecant = (double _ratio) => { return Angle<double>.Factory_Radians(System.Math.Acos(1d / _ratio)); };
-			else if (typeof(T) == typeof(float))
-				Compute<float>.InverseSecant = (float _ratio) => { return Angle<float>.Factory_Radians((float)System.Math.Acos(1f / _ratio)); };
-			else
-				throw new System.NotImplementedException("unsupported parameter type for Cot function");
-
-			return Compute<T>.InverseSecant(ratio);
-		};
-		#endregion
-
-		#region InverseCotangent
-		public static Compute<T>.Delegates.InverseCotangent InverseCotangent = (T ratio) =>
-		{
-			if (typeof(T) == typeof(double))
-				Compute<double>.InverseCotangent = (double _ratio) => { return Angle<double>.Factory_Radians(System.Math.Atan(1d / _ratio)); };
-			else if (typeof(T) == typeof(float))
-				Compute<float>.InverseCotangent = (float _ratio) => { return Angle<float>.Factory_Radians((float)System.Math.Atan(1f / _ratio)); };
-			else
-				throw new System.NotImplementedException("unsupported parameter type for Cot function");
-
-			return Compute<T>.InverseCotangent(ratio);
-		};
-		#endregion
-
-		#region HyperbolicSine
-		public static Compute<T>.Delegates.HyperbolicSine HyperbolicSine = (Angle<T> angle) =>
-		{
-			if (typeof(T) == typeof(double))
-				Compute<double>.HyperbolicSine = (Angle<double> _angle) => { return System.Math.Sinh(_angle.Radians); };
-			else if (typeof(T) == typeof(float))
-				Compute<float>.HyperbolicSine = (Angle<float> _angle) => { return (float)System.Math.Sinh(_angle.Radians); };
-			else
-				throw new System.NotImplementedException("unsupported parameter type for Cot function");
-
-			return Compute<T>.HyperbolicSine(angle);
-		};
-		#endregion
-
-		#region HyperbolicCosine
-		public static Compute<T>.Delegates.HyperbolicCosine HyperbolicCosine = (Angle<T> angle) =>
-		{
-			if (typeof(T) == typeof(double))
-				Compute<double>.HyperbolicCosine = (Angle<double> _angle) => { return System.Math.Cosh(_angle.Radians); };
-			else if (typeof(T) == typeof(float))
-				Compute<float>.HyperbolicCosine = (Angle<float> _angle) => { return (float)System.Math.Cosh(_angle.Radians); };
-			else
-				throw new System.NotImplementedException("unsupported parameter type for Cot function");
-
-			return Compute<T>.HyperbolicCosine(angle);
-		};
-		#endregion
-
-		#region HyperbolicTangent
-		public static Compute<T>.Delegates.HyperbolicTangent HyperbolicTangent = (Angle<T> angle) =>
-		{
-			if (typeof(T) == typeof(double))
-				Compute<double>.HyperbolicTangent = (Angle<double> _angle) => { return System.Math.Tanh(_angle.Radians); };
-			else if (typeof(T) == typeof(float))
-				Compute<float>.HyperbolicTangent = (Angle<float> _angle) => { return (float)System.Math.Tanh(_angle.Radians); };
-			else
-				throw new System.NotImplementedException("unsupported parameter type for Cot function");
-
-			return Compute<T>.HyperbolicTangent(angle);
-		};
-		#endregion
-
-		#region HyperbolicSecant
-		public static Compute<T>.Delegates.HyperbolicSecant HyperbolicSecant = (Angle<T> angle) =>
-		{
-			if (typeof(T) == typeof(double))
-				Compute<double>.HyperbolicSecant = (Angle<double> _angle) => { return 1d / System.Math.Cosh(_angle.Radians); };
-			else if (typeof(T) == typeof(float))
-				Compute<float>.HyperbolicSecant = (Angle<float> _angle) => { return 1f / (float)System.Math.Cosh(_angle.Radians); };
-			else
-				throw new System.NotImplementedException("unsupported parameter type for Cot function");
-
-			return Compute<T>.HyperbolicSecant(angle);
-		};
-		#endregion
-
-		#region HyperbolicCosecant
-		public static Compute<T>.Delegates.HyperbolicCosecant HyperbolicCosecant = (Angle<T> angle) =>
-		{
-			if (typeof(T) == typeof(double))
-				Compute<double>.HyperbolicCosecant = (Angle<double> _angle) => { return 1d / System.Math.Sinh(_angle.Radians); };
-			else if (typeof(T) == typeof(float))
-				Compute<float>.HyperbolicCosecant = (Angle<float> _angle) => { return 1f / (float)System.Math.Sinh(_angle.Radians); };
-			else
-				throw new System.NotImplementedException("unsupported parameter type for Cot function");
-
-			return Compute<T>.HyperbolicCosecant(angle);
-		};
-		#endregion
-
-		#region HyperbolicCotangent
-		public static Compute<T>.Delegates.HyperbolicCotangent HyperbolicCotangent = (Angle<T> angle) =>
-		{
-			if (typeof(T) == typeof(double))
-				Compute<double>.HyperbolicCotangent = (Angle<double> _angle) => { return 1d / System.Math.Tanh(_angle.Radians); };
-			else if (typeof(T) == typeof(float))
-				Compute<float>.HyperbolicCotangent = (Angle<float> _angle) => { return 1f / (float)System.Math.Tanh(_angle.Radians); };
-			else
-				throw new System.NotImplementedException("unsupported parameter type for Cot function");
-
-			return Compute<T>.HyperbolicCotangent(angle);
-		};
-		#endregion
-
-		#region InverseHyperbolicSine
-		public static Compute<T>.Delegates.InverseHyperbolicSine InverseHyperbolicSine = (T ratio) =>
-		{
-			throw new System.NotImplementedException();
-		};
-		#endregion
-
-		#region InverseHyperbolicCosine
-		public static Compute<T>.Delegates.InverseHyperbolicCosine InverseHyperbolicCosine = (T ratio) =>
-		{
-			throw new System.NotImplementedException();
-		};
-		#endregion
-
-		#region InverseHyperbolicTangent
-		public static Compute<T>.Delegates.InverseHyperbolicTangent InverseHyperbolicTangent = (T ratio) =>
-		{
-			throw new System.NotImplementedException();
-		};
-		#endregion
-
-		#region InverseHyperbolicCosecant
-		public static Compute<T>.Delegates.InverseHyperbolicCosecant InverseHyperbolicCosecant = (T ratio) =>
-		{
-			throw new System.NotImplementedException();
-		};
-		#endregion
-
-		#region InverseHyperbolicSecant
-		public static Compute<T>.Delegates.InverseHyperbolicSecant InverseHyperbolicSecant = (T ratio) =>
-		{
-			throw new System.NotImplementedException();
-		};
-		#endregion
-
-		#region InverseHyperbolicCotangent
-		public static Compute<T>.Delegates.InverseHyperbolicCotangent InverseHyperbolicCotangent = (T ratio) =>
-		{
-			throw new System.NotImplementedException();
-		};
-		#endregion
-
-        #endregion
-
         #endregion
     }
 }

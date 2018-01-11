@@ -750,7 +750,7 @@ namespace Theta.Mathematics
 		private static Matrix<T>.Delegates.Matrix_FactoryZero Matrix_FactoryZero = (int rows, int columns) =>
 		{
 			T zero = Compute<T>.FromInt32(0);
-			if (Compute<T>.Equate_private(default(T), zero))
+			if (Compute<T>.Equate(default(T), zero))
 			{
 				Matrix<T>.Matrix_FactoryZero = (int _rows, int _columns) =>
 				{
@@ -771,7 +771,7 @@ namespace Theta.Mathematics
 					if (_columns < 1)
 						throw new System.ArithmeticException("invalid dimenions on matrix construction");
 					Matrix<T> result = new Matrix<T>(_rows, _columns);
-					if (Compute<T>.Equate_private(default(T), zero))
+					if (Compute<T>.Equate(default(T), zero))
 						return result;
 					else
 					{
@@ -816,7 +816,7 @@ namespace Theta.Mathematics
 				if (_columns < 1)
 					throw new System.ArithmeticException("invalid dimenions on matrix construction");
 				Matrix<T> result = new Matrix<T>(_rows, _columns);
-				if (Compute<T>.Equate_private(default(T), one))
+				if (Compute<T>.Equate(default(T), one))
 					return result;
 				else
 				{
@@ -836,7 +836,7 @@ namespace Theta.Mathematics
 		{
 			T one = Compute<T>.FromInt32(1);
 			T zero = Compute<T>.FromInt32(0);
-			if (Compute<T>.Equate_private(default(T), zero))
+			if (Compute<T>.Equate(default(T), zero))
 			{
 				Matrix<T>.Matrix_FactoryIdentity = (int _rows, int _columns) =>
 				{

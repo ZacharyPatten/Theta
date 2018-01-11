@@ -301,12 +301,12 @@ namespace Theta.Mathematics
 			public override string ToString()
 			{
 				string left = this._left.ToString();
-				if (this._left is Multiplication || this._left is Division && left is Constant && Compute<T>.Compare_private(left as Constant, Compute<T>.Zero) == Comparison.Less)
+				if (this._left is Multiplication || this._left is Division && left is Constant && Compute<T>.Compare(left as Constant, Compute<T>.Zero) == Comparison.Less)
 					left = string.Concat("(", left, ")");
 				string right = this._right.ToString();
 				if (this._right is Addition || this._right is Subtraction || this._left is Multiplication || this._left is Division)
 					right = string.Concat("(", right, ")");
-				if (this._right is Constant && Compute<T>.Compare_private(this._right as Constant, Compute<T>.Zero) == Comparison.Less)
+				if (this._right is Constant && Compute<T>.Compare(this._right as Constant, Compute<T>.Zero) == Comparison.Less)
 					return string.Concat(left, " - ", Compute<T>.Multiply(this._right as Constant, Compute<T>.FromInt32(-1)));
 				return string.Concat(left, " + ", right);
 			}
@@ -1854,13 +1854,13 @@ namespace Theta.Mathematics
 						#endregion
 						#region Additive Identity Property
 						// Rule: [X + 0] => [X]
-						if (right is Constant && Compute<T>.Equate_private((right as Constant).Value, Compute<T>.Zero))
+						if (right is Constant && Compute<T>.Equate((right as Constant).Value, Compute<T>.Zero))
 						{
 							var X = left;
 							return X;
 						}
 						// Rule: [0 + X] => [X]
-						if (left is Constant && Compute<T>.Equate_private((left as Constant).Value, Compute<T>.Zero))
+						if (left is Constant && Compute<T>.Equate((left as Constant).Value, Compute<T>.Zero))
 						{
 							var X = right;
 							return X;
@@ -1957,13 +1957,13 @@ namespace Theta.Mathematics
 						#endregion
 						#region Identity Property
 						// Rule: [X - 0] => [X]
-						if (right is Constant && Compute<T>.Equate_private((right as Constant).Value, Compute<T>.Zero))
+						if (right is Constant && Compute<T>.Equate((right as Constant).Value, Compute<T>.Zero))
 						{
 							var X = left;
 							return X;
 						}
 						// Rule: [0 - X] => [-X]
-						if (left is Constant && Compute<T>.Equate_private((left as Constant).Value, Compute<T>.Zero))
+						if (left is Constant && Compute<T>.Equate((left as Constant).Value, Compute<T>.Zero))
 						{
 							var X = right;
 							return new Negate(X);
@@ -2060,25 +2060,25 @@ namespace Theta.Mathematics
 						#endregion
 						#region Zero Property
 						// Rule: [X * 0] => [0]
-						if (right is Constant && Compute<T>.Equate_private((right as Constant).Value, Compute<T>.Zero))
+						if (right is Constant && Compute<T>.Equate((right as Constant).Value, Compute<T>.Zero))
 						{
 							return Compute<T>.Zero;
 						}
 						// Rule: [0 * X] => [0]
-						if (left is Constant && Compute<T>.Equate_private((left as Constant).Value, Compute<T>.Zero))
+						if (left is Constant && Compute<T>.Equate((left as Constant).Value, Compute<T>.Zero))
 						{
 							return Compute<T>.Zero;
 						}
 						#endregion
 						#region Identity Property
 						// Rule: [X * 1] => [X]
-						if (right is Constant && Compute<T>.Equate_private((right as Constant).Value, Compute<T>.One))
+						if (right is Constant && Compute<T>.Equate((right as Constant).Value, Compute<T>.One))
 						{
 							var A = left;
 							return A;
 						}
 						// Rule: [1 * X] => [X]
-						if (left is Constant && Compute<T>.Equate_private((left as Constant).Value, Compute<T>.One))
+						if (left is Constant && Compute<T>.Equate((left as Constant).Value, Compute<T>.One))
 						{
 							var A = right;
 							return A;
@@ -2126,7 +2126,7 @@ namespace Theta.Mathematics
 						{
 							var A = (left as Division).Right as Constant;
 							var B = right as Constant;
-							var C = Compute<T>.Divide_private(B, A);
+							var C = Compute<T>.Divide(B, A);
 							var X = (right as Division).Left;
 							return new Multiplication(X, C);
 						}
@@ -2144,7 +2144,7 @@ namespace Theta.Mathematics
 						{
 							var A = (right as Division).Right as Constant;
 							var B = left as Constant;
-							var C = Compute<T>.Divide_private(B, A);
+							var C = Compute<T>.Divide(B, A);
 							var X = (right as Division).Left;
 							return new Multiplication(X, C);
 						}
@@ -2190,7 +2190,7 @@ namespace Theta.Mathematics
 					{
 						#region Error Handling
 						// Rule: [X / 0] => Error
-						if (right is Constant && Compute<T>.Equate_private((right as Constant).Value, Compute<T>.Zero))
+						if (right is Constant && Compute<T>.Equate((right as Constant).Value, Compute<T>.Zero))
 						{
 							throw new System.DivideByZeroException();
 						}
@@ -2201,20 +2201,20 @@ namespace Theta.Mathematics
 						{
 							var A = left as Constant;
 							var B = right as Constant;
-							var C = Compute<T>.Divide_private(A, B);
+							var C = Compute<T>.Divide(A, B);
 							return C;
 						}
 						#endregion
 						#region Zero Property
 						// Rule: [0 / X] => [0]
-						if (left is Constant && Compute<T>.Equate_private((left as Constant).Value, Compute<T>.Zero))
+						if (left is Constant && Compute<T>.Equate((left as Constant).Value, Compute<T>.Zero))
 						{
 							return left;
 						}
 						#endregion
 						#region Identity Property
 						// Rule: [X / 1] => [X]
-						if (right is Constant && Compute<T>.Equate_private((right as Constant).Value, Compute<T>.One))
+						if (right is Constant && Compute<T>.Equate((right as Constant).Value, Compute<T>.One))
 						{
 							return left;
 						}
@@ -2234,7 +2234,7 @@ namespace Theta.Mathematics
 						{
 							var A = (left as Division).Left as Constant;
 							var B = right as Constant;
-							var C = Compute<T>.Divide_private(A, B);
+							var C = Compute<T>.Divide(A, B);
 							var X = (left as Division).Right;
 							return new Division(C, X);
 						}
@@ -2243,7 +2243,7 @@ namespace Theta.Mathematics
 						{
 							var A = (right as Division).Right as Constant;
 							var B = left as Constant;
-							var C = Compute<T>.Divide_private(B, A);
+							var C = Compute<T>.Divide(B, A);
 							var X = (left as Division).Left;
 							return new Division(X, C);
 						}
@@ -2252,7 +2252,7 @@ namespace Theta.Mathematics
 						{
 							var A = (right as Division).Left as Constant;
 							var B = left as Constant;
-							var C = Compute<T>.Divide_private(B, A);
+							var C = Compute<T>.Divide(B, A);
 							var X = (right as Division).Right;
 							return new Division(C, X);
 						}
@@ -2261,7 +2261,7 @@ namespace Theta.Mathematics
 						{
 							var A = (left as Multiplication).Right as Constant;
 							var B = right as Constant;
-							var C = Compute<T>.Divide_private(A, B);
+							var C = Compute<T>.Divide(A, B);
 							var X = (right as Multiplication).Left;
 							return new Multiplication(X, C);
 						}
@@ -2270,7 +2270,7 @@ namespace Theta.Mathematics
 						{
 							var A = (left as Multiplication).Left as Constant;
 							var B = right as Constant;
-							var C = Compute<T>.Divide_private(A, B);
+							var C = Compute<T>.Divide(A, B);
 							var X = (left as Multiplication).Right;
 							return new Multiplication(X, C);
 						}
@@ -2288,7 +2288,7 @@ namespace Theta.Mathematics
 						{
 							var A = (right as Multiplication).Left as Constant;
 							var B = left as Constant;
-							var C = Compute<T>.Divide_private(B, A);
+							var C = Compute<T>.Divide(B, A);
 							var X = (right as Multiplication).Right;
 							return new Multiplication(X, C);
 						}
@@ -2310,14 +2310,14 @@ namespace Theta.Mathematics
 						#endregion
 						#region Zero Base
 						// Rule: [0 ^ X] => [0]
-						if (left is Constant && Compute<T>.Equate_private((left as Constant).Value, Compute<T>.Zero))
+						if (left is Constant && Compute<T>.Equate((left as Constant).Value, Compute<T>.Zero))
 						{
 							return Compute<T>.Zero;
 						}
 						#endregion
 						#region One Power
 						// Rule: [X ^ 1] => [X]
-						if (right is Constant && Compute<T>.Equate_private((right as Constant).Value, Compute<T>.One))
+						if (right is Constant && Compute<T>.Equate((right as Constant).Value, Compute<T>.One))
 						{
 							var A = left;
 							return A;
@@ -2325,7 +2325,7 @@ namespace Theta.Mathematics
 						#endregion
 						#region Zero Power
 						// Rule: [X ^ 0] => [1]
-						if (right is Constant && Compute<T>.Equate_private(right as Constant, Compute<T>.Zero))
+						if (right is Constant && Compute<T>.Equate(right as Constant, Compute<T>.Zero))
 						{
 							return new Constant(Compute<T>.One);
 						}

@@ -79,7 +79,7 @@ namespace Theta.Algorithms
 				// using a heap (aka priority queue) to store nodes based on their computed A* f(n) value
 				Heap<Astar_Node> fringe = new HeapArray<Astar_Node>(
 					// NOTE: Typical A* implementations prioritize smaller values
-					(Astar_Node left, Astar_Node right) => { return Compute<Math>.Compare_private(right.Priority, left.Priority); });
+					(Astar_Node left, Astar_Node right) => { return Compute<Math>.Compare(right.Priority, left.Priority); });
 
 				// using a map (aka dictionary) to store costs from start to current nodes
 				Map<Math, Astar_Node> computed_costs = new MapHashArray<Math, Astar_Node>();
@@ -287,7 +287,7 @@ namespace Theta.Algorithms
 				// using a heap (aka priority queue) to store nodes based on their computed heuristic value
 				Heap<Greedy_Node> fringe = new HeapArray<Greedy_Node>(
 					// NOTE: I just reversed the order of left and right because smaller values are higher priority
-					(Greedy_Node left, Greedy_Node right) => { return Compute<Math>.Compare_private(right.Priority, left.Priority); });
+					(Greedy_Node left, Greedy_Node right) => { return Compute<Math>.Compare(right.Priority, left.Priority); });
 
 				// push starting node
 				Greedy_Node start_node = new Greedy_Node(null, start, default(Math));
