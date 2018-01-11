@@ -707,15 +707,10 @@ namespace Testing
 		public static string ToExtension(Type type)
 		{
 			string cs_string = Meta.ConvertTypeToCsharpSource(type);
-			string truncated_namespaces = cs_string.Replace("Seven.Structures.", string.Empty).Replace("System.", string.Empty);
+			string truncated_namespaces = cs_string.Replace("Theta.Structures.", string.Empty).Replace("System.", string.Empty);
 			string formatted = truncated_namespaces.Replace('<', '(').Replace('>', ')').Replace(",", string.Empty).Replace(' ', '+');
 			string lower = formatted.ToLower();
 			return formatted;
-		}
-
-		public static Get<double> Locate3D(int i)
-		{
-			return Accessor.Get(new double[] { i, i, i });
 		}
 
 		#endregion

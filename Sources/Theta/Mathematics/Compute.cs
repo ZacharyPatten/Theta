@@ -1,9 +1,4 @@
-﻿// Theta
-// https://github.com/53V3N1X/SevenFramework
-// LISCENSE: See "LISCENSE.md" in th root project directory.
-// SUPPORT: See "SUPPORT.md" in the root project directory.
-
-using Theta;
+﻿using Theta;
 using Theta.Structures;
 using Theta.Measurements;
 
@@ -12,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace Theta.Mathematics
 {
-	/// <summary>Primary class for generic mathematics in the SevenFramework.</summary>
+	/// <summary>Primary class for generic mathematics in the Theta Framework.</summary>
 	/// <typeparam name="T">The generic type to perform mathematics on (expected to be numeric).</typeparam>
 	public static class Compute<T>
 	{

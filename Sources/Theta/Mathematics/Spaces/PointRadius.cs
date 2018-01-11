@@ -1,9 +1,4 @@
-﻿// Theta
-// https://github.com/53V3N1X/SevenFramework
-// LISCENSE: See "LISCENSE.md" in th root project directory.
-// SUPPORT: See "SUPPORT.md" in the root project directory.
-
-namespace Theta.Mathematics.Spaces
+﻿namespace Theta.Mathematics.Spaces
 {
 	/// <summary>Represents a point in N-D space and a radius.</summary>
 	/// <typeparam name="T">The generic numeric type for computations.</typeparam>

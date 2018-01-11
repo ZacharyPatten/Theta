@@ -1,9 +1,4 @@
-﻿// Theta
-// https://github.com/53V3N1X/SevenFramework
-// LISCENSE: See "LISCENSE.md" in th root project directory.
-// SUPPORT: See "SUPPORT.md" in the root project directory.
-
-namespace Theta.Structures
+﻿namespace Theta.Structures
 {
 	/// <summary>A self-sorting binary tree based on grouping nodes together at the same height.</summary>
 	/// <typeparam name="T">The generic type of this data structure.</typeparam>

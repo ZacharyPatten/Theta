@@ -1,9 +1,4 @@
-﻿// Theta
-// https://github.com/53V3N1X/SevenFramework
-// LISCENSE: See "LISCENSE.md" in th root project directory.
-// SUPPORT: See "SUPPORT.md" in the root project directory.
-
-namespace Theta.Structures
+﻿namespace Theta.Structures
 {
 	/// <summary>Polymorphism base for all data structures in the Theta framework.</summary>
 	/// <typeparam name="T">The type of the instances to store in this data structure.</typeparam>

@@ -1,9 +1,4 @@
-﻿// Theta
-// https://github.com/53V3N1X/SevenFramework
-// LISCENSE: See "LISCENSE.md" in th root project directory.
-// SUPPORT: See "SUPPORT.md" in the root project directory.
-
-namespace Theta.Structures
+﻿namespace Theta.Structures
 {
 	/// <summary>Implements a First-In-Last-Out stack data structure.</summary>
 	/// <typeparam name="T">The generic type within the structure.</typeparam>

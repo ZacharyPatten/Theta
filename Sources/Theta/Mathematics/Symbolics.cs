@@ -1,9 +1,4 @@
-﻿// Theta
-// https://github.com/53V3N1X/SevenFramework
-// LISCENSE: See "LISCENSE.md" in th root project directory.
-// SUPPORT: See "SUPPORT.md" in the root project directory.
-
-using System;
+﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
 using Theta.Structures;
@@ -735,7 +730,7 @@ namespace Theta.Mathematics
 			}
 			catch (System.ArithmeticException exception_specific)
 			{
-				throw new System.ArithmeticException("failed to parse expression into SevenFramework mathematical syntax: " + e, exception_specific);
+				throw new System.ArithmeticException("failed to parse expression into Theta Framework mathematical syntax: " + e, exception_specific);
 			}
 		}
 

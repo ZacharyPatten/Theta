@@ -154,12 +154,12 @@
     </Compile>
     <Compile Include="Structures\Map.cs" />
     <Compile Include="Structures\Heap.cs" />
-    <Compile Include="Structures\OmnitreePoints.cs">
+    <Compile Include="Structures\Omnitree_ND.cs" />
+    <Compile Include="Structures\Omnitree.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>OmnitreePoints.tt</DependentUpon>
+      <DependentUpon>Omnitree.tt</DependentUpon>
     </Compile>
-    <Compile Include="Structures\OmnitreePoints_ND.cs" />
     <Compile Include="Structures\Order.cs" />
     <Compile Include="Structures\RedBlackTree.cs" />
     <Compile Include="Structures\Set.cs" />
@@ -187,9 +187,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Link.cs</LastGenOutput>
     </None>
-    <None Include="Structures\OmnitreePoints.tt">
+    <None Include="Structures\Omnitree.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>OmnitreePoints.cs</LastGenOutput>
+      <LastGenOutput>Omnitree.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

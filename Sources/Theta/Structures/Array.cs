@@ -1,9 +1,4 @@
-﻿// Theta
-// https://github.com/53V3N1X/SevenFramework
-// LISCENSE: See "LISCENSE.md" in th root project directory.
-// SUPPORT: See "SUPPORT.md" in the root project directory.
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -88,9 +83,9 @@ namespace Theta.Structures
 
 		#region Operators
 
-		/// <summary>Implicitly converts a C# System array into a Seven array.</summary>
-		/// <param name="array">The array to be represented as a Seven array.</param>
-		/// <returns>The array wrapped in a Seven array.</returns>
+		/// <summary>Implicitly converts a C# System array into a Theta array.</summary>
+		/// <param name="array">The array to be represented as a Theta array.</param>
+		/// <returns>The array wrapped in a Theta array.</returns>
 		public static implicit operator ArrayArray<T>(T[] array)
 		{
 			return new ArrayArray<T>(array);

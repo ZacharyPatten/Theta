@@ -1,4 +1,4 @@
-﻿### Zachary Patten
+﻿### Theta Framework
 ===========
 
 >Latest Source Code: https://github.com/ZacharyPatten/Theta

@@ -6,21 +6,7 @@ using Theta.Structures;
 
 namespace Validation
 {
-	public class TestObject
-	{
-		public int Id { get; set; }
-		public double X { get; set; }
-		public double Y { get; set; }
-		public double Z { get; set; }
-
-		public TestObject(int id, double x, double y, double z)
-		{
-			this.Id = id;
-			this.X = x;
-			this.Y = y;
-			this.Z = z;
-		}
-	}
+	// This is jsut a crappy little playground for me to test stuff
 
 	class Program
 	{
@@ -48,9 +34,26 @@ namespace Validation
             //Console.WriteLine();
             //TestOmnitree2();
             //Console.WriteLine();
+
 			Console.WriteLine("Press Enter To Exit...");
 			Console.ReadLine();
 		}
+
+        public class TestObject
+        {
+            public int Id { get; set; }
+            public double X { get; set; }
+            public double Y { get; set; }
+            public double Z { get; set; }
+
+            public TestObject(int id, double x, double y, double z)
+            {
+                this.Id = id;
+                this.X = x;
+                this.Y = y;
+                this.Z = z;
+            }
+        }
 
 		public static void TestMath()
 		{
@@ -184,14 +187,14 @@ namespace Validation
 
 			#region Updating
 
-			Console.WriteLine("Updating Tree Positions...");
-			//// Update Method #1
-			omnitree.Update();
+            Console.WriteLine("Updating Tree Positions...");
+            //// Update Method #1
+            omnitree.Update();
 
-			//// Update Method #2
-			//omnitree.Update(omnitree.Min, omnitree.Max);
+            //// Update Method #2
+            //omnitree.Update(omnitree.Min, omnitree.Max);
 
-			Console.WriteLine("Tree Positions Updated.");
+            Console.WriteLine("Tree Positions Updated.");
 
 			#endregion
 
@@ -200,8 +203,10 @@ namespace Validation
 			Console.WriteLine("Removing Values: ");
 			for (int i = 0; i < count; i++)
 			{
-				//// Removal Method #1
-				omnitree.Remove(records[i]);
+                int tempCount = omnitree.Count;
+
+                // Removal Method #1
+                omnitree.Remove(records[i]);
 
 				//// Removal Method #2
 				//omnitree.Remove(locate(records[i]), locate(records[i]));

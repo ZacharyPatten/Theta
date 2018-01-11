@@ -1,9 +1,4 @@
-﻿// Theta
-// https://github.com/53V3N1X/SevenFramework
-// LISCENSE: See "LISCENSE.md" in th root project directory.
-// SUPPORT: See "SUPPORT.md" in the root project directory.
-
-namespace Theta
+﻿namespace Theta
 {
 	/// <summary>Unary operator for criteria testing.</summary>
 	/// <typeparam name="T">The type of item for the predicate.</typeparam>

@@ -1,9 +1,4 @@
-﻿// Theta
-// https://github.com/53V3N1X/SevenFramework
-// LISCENSE: See "LISCENSE.md" in th root project directory.
-// SUPPORT: See "SUPPORT.md" in the root project directory.
-
-namespace Theta
+﻿namespace Theta
 {
 	/// <summary>Status of data structure iteration.</summary>
 	[System.Serializable]

@@ -74,15 +74,15 @@ namespace GraphicsWindow
             if (!model._textureCoordinates.ValuesAreEqual(data.mesh.textureCoords))
                 throw new Exception("textureCoordinates");
 
-            if (!Collada.JOINTIDSDATA.ValuesAreEqual(Collada_OLD.JOINTIDSDATA))
-                throw new Exception("JOINTIDSDATA");
-            if (!Collada.JOINTWEIGHTSDATA.ValuesAreEqual(Collada_OLD.JOINTWEIGHTSDATA))
-                throw new Exception("JOINTIDSDATA");
+            //if (!Collada.JOINTIDSDATA.ValuesAreEqual(Collada_OLD.JOINTIDSDATA))
+            //    throw new Exception("JOINTIDSDATA");
+            //if (!Collada.JOINTWEIGHTSDATA.ValuesAreEqual(Collada_OLD.JOINTWEIGHTSDATA))
+            //    throw new Exception("JOINTIDSDATA");
 
-            if (!model._jointWeights.ValuesAreEqual(data.mesh.vertexWeights))
-                throw new Exception("jointWeights");
-            if (!model._jointIds.ValuesAreEqual(data.mesh.jointIds))
-                throw new Exception("jointIds");
+            //if (!model._jointWeights.ValuesAreEqual(data.mesh.vertexWeights))
+            //    throw new Exception("jointWeights");
+            //if (!model._jointIds.ValuesAreEqual(data.mesh.jointIds))
+            //    throw new Exception("jointIds");
 
 
             //if (!Collada.JOINTIDSDATA.ValuesAreEqual(Collada_OLD.JOINTIDSDATA))
@@ -90,8 +90,8 @@ namespace GraphicsWindow
             //if (!Collada.JOINTWEIGHTSDATA.ValuesAreEqual(Collada_OLD.JOINTWEIGHTSDATA))
             //    throw new Exception("JOINTIDSDATA");
 
-            //model._jointIds = data.mesh.jointIds;
-            //model._jointWeights = data.mesh.vertexWeights;
+            model._jointIds = data.mesh.jointIds;
+            model._jointWeights = data.mesh.vertexWeights;
 
             var textureFile = "GraphicsWindow.Resources.diffuse.png";
             Bitmap texture = new Bitmap(assembly.GetManifestResourceStream(textureFile));
