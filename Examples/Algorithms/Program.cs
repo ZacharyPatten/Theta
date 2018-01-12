@@ -414,9 +414,7 @@ namespace Algorithms
 
             // Notice that that the A* algorithm produces a less costly path than the Greedy, 
             // meaning that it is faster.
-
-            System.Diagnostics.Debugger.Break();
-
+            
             #endregion
 
             #region Random Generation
