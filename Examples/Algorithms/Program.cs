@@ -376,6 +376,10 @@ namespace Algorithms
                 costFunction,
                 goalFunction);
 
+            // NOTE:
+            // if the "Astar" function returns "null" there is no value path. (in this example there
+            // are valid paths, so I didn't add a nul check)
+
             // Here is the path converted to an array (easier to read while debugging)
             Vector<float>[] aStarPath_array = aStarPath.ToArray();
 
