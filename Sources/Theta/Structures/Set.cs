@@ -395,7 +395,8 @@
 		#endregion
 		#region public SetHashArray(int expectedCount)
 		public SetHashArray(int expectedCount) : this(Theta.Equate.Default, Theta.Hash.Default) { }
-		#endregion
+        #endregion
+        #region private SetHashArray(SetHashArray<T> setHashArray)
         private SetHashArray(SetHashArray<T> setHashArray)
         {
             this._equate = setHashArray._equate;
@@ -406,10 +407,11 @@
             this._lastIndex = setHashArray._lastIndex;
             this._freeList = setHashArray._freeList;
         }
-		#region public Set_Hash(Equate<T> equate, Hash<T> hash)
-		/// <summary>Constructs a new hash table instance.</summary>
-		/// <remarks>Runtime: O(1).</remarks>
-		public SetHashArray(Equate<T> equate, Hash<T> hash)
+        #endregion
+        #region public Set_Hash(Equate<T> equate, Hash<T> hash)
+        /// <summary>Constructs a new hash table instance.</summary>
+        /// <remarks>Runtime: O(1).</remarks>
+        public SetHashArray(Equate<T> equate, Hash<T> hash)
 		{
 			this._nodes = new Node[Theta.Hash.TableSizes[0]];
 			this._table = new int[Theta.Hash.TableSizes[0]];
@@ -728,12 +730,14 @@
 			this._table = numArray;
 			this._freeList = -1;
 		}
-		#endregion
+        #endregion
+        #region public SetHashArray<T> Clone()
         public SetHashArray<T> Clone()
         {
             return new SetHashArray<T>(this);
         }
-	}
+        #endregion
+    }
 
 	/// <summary>An unsorted structure of unique items.</summary>
 	/// <typeparam name="T">The generic type of the structure.</typeparam>
