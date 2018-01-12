@@ -123,7 +123,7 @@ namespace Theta.Structures
             }
         }
         
-        public delegate A MedianOverride<T, A, BoundsType>(BoundsType bounds, Stepper<T> values);
+        public delegate A SubdivisionOverride<T, A, BoundsType>(BoundsType bounds, Stepper<T> values);
 
         #endregion
 
@@ -1323,8 +1323,8 @@ namespace Theta.Structures
         private Compare<Axis1> _compare1;
 
 
-        // allows median overriding for custom optimizations
-        private Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1>> _medianOverride1;
+        // allows median overriding for custom optimizations (USE AT YOUR OWN RISK)
+        private Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1>> _subdivisionOverride1;
 
         #region Nested Types
 
@@ -1543,7 +1543,7 @@ namespace Theta.Structures
             this._defaultCompare1 = omnitree._defaultCompare1;
             this._compare1 = omnitree._compare1;
 
-            this._medianOverride1 = omnitree._medianOverride1;
+            this._subdivisionOverride1 = omnitree._subdivisionOverride1;
         }
 
         private OmnitreePointsLinked(
@@ -1558,7 +1558,7 @@ namespace Theta.Structures
             bool defaultCompare1,
             Compare<Axis1> compare1,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1>> medianOverride1)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1>> subdivisionOverride1)
         {
             Code.AssertArgNonNull(locate, "locate");
             Code.AssertArgNonNull(equate, "equate");
@@ -1577,7 +1577,7 @@ namespace Theta.Structures
             this._defaultCompare1 = defaultCompare1;
             this._compare1 = compare1;
 
-            this._medianOverride1 = medianOverride1;
+            this._subdivisionOverride1 = subdivisionOverride1;
 
             this._top = new Leaf(Omnitree.Bounds<Axis1>.None, null, -1);
             ComputeLoads(0);
@@ -1591,7 +1591,7 @@ namespace Theta.Structures
 
             Compare<Axis1> compare1,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1>> medianOverride1)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1>> subdivisionOverride1)
             : this(
             locate,
 
@@ -1604,7 +1604,7 @@ namespace Theta.Structures
             false,
             compare1,
 
-            medianOverride1)
+            subdivisionOverride1)
         { }
 
         public OmnitreePointsLinked(
@@ -1658,7 +1658,7 @@ namespace Theta.Structures
 
             Compare<Axis1> compare1,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1>> medianOverride1)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1>> subdivisionOverride1)
             : this(
                 locate,
 
@@ -1671,7 +1671,7 @@ namespace Theta.Structures
                 false,
                 compare1,
 
-                medianOverride1)
+                subdivisionOverride1)
         { }
 
         public OmnitreePointsLinked(
@@ -1697,7 +1697,7 @@ namespace Theta.Structures
 
             Compare<Axis1> compare1,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1>> medianOverride1)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1>> subdivisionOverride1)
             : this(
                 locate,
 
@@ -1710,7 +1710,7 @@ namespace Theta.Structures
                 false,
                 compare1,
 
-                medianOverride1)
+                subdivisionOverride1)
         { }
 
         public OmnitreePointsLinked(
@@ -1734,7 +1734,7 @@ namespace Theta.Structures
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1> locate,
             Equate<T> equate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1>> medianOverride1)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1>> subdivisionOverride1)
             : this(
                 locate,
 
@@ -1747,7 +1747,7 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1)
+                subdivisionOverride1)
         { }
 
         public OmnitreePointsLinked(
@@ -1769,7 +1769,7 @@ namespace Theta.Structures
 
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1> locate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1>> medianOverride1)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1>> subdivisionOverride1)
             : this(
                 locate,
 
@@ -1782,7 +1782,7 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1)
+                subdivisionOverride1)
         { }
 
         #endregion
@@ -1940,7 +1940,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -1961,7 +1961,7 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
 
@@ -1994,7 +1994,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -2015,7 +2015,7 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
 
@@ -2032,11 +2032,11 @@ namespace Theta.Structures
             Axis1 pointOfDivision1;
 
             int median_axis1 = -1;
-            if (this._medianOverride1 == null)
+            if (this._subdivisionOverride1 == null)
                 GetMedianIndexes(initial_count, child, depth, prevmed1, out median_axis1);
 
-            if (this._medianOverride1 != null)
-                pointOfDivision1 = this._medianOverride1(parent.Bounds, additions);
+            if (this._subdivisionOverride1 != null)
+                pointOfDivision1 = this._subdivisionOverride1(parent.Bounds, additions);
             else
                 pointOfDivision1 = values1(median_axis1);
 
@@ -3388,9 +3388,9 @@ namespace Theta.Structures
         private Compare<Axis2> _compare2;
 
 
-        // allows median overriding for custom optimizations
-        private Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2>> _medianOverride1;
-        private Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2>> _medianOverride2;
+        // allows median overriding for custom optimizations (USE AT YOUR OWN RISK)
+        private Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2>> _subdivisionOverride1;
+        private Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2>> _subdivisionOverride2;
 
         #region Nested Types
 
@@ -3613,8 +3613,8 @@ namespace Theta.Structures
             this._defaultCompare2 = omnitree._defaultCompare2;
             this._compare2 = omnitree._compare2;
 
-            this._medianOverride1 = omnitree._medianOverride1;
-            this._medianOverride2 = omnitree._medianOverride2;
+            this._subdivisionOverride1 = omnitree._subdivisionOverride1;
+            this._subdivisionOverride2 = omnitree._subdivisionOverride2;
         }
 
         private OmnitreePointsLinked(
@@ -3633,8 +3633,8 @@ namespace Theta.Structures
             bool defaultCompare2,
             Compare<Axis2> compare2,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2>> medianOverride2)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2>> subdivisionOverride2)
         {
             Code.AssertArgNonNull(locate, "locate");
             Code.AssertArgNonNull(equate, "equate");
@@ -3659,8 +3659,8 @@ namespace Theta.Structures
             this._defaultCompare2 = defaultCompare2;
             this._compare2 = compare2;
 
-            this._medianOverride1 = medianOverride1;
-            this._medianOverride2 = medianOverride2;
+            this._subdivisionOverride1 = subdivisionOverride1;
+            this._subdivisionOverride2 = subdivisionOverride2;
 
             this._top = new Leaf(Omnitree.Bounds<Axis1, Axis2>.None, null, -1);
             ComputeLoads(0);
@@ -3676,8 +3676,8 @@ namespace Theta.Structures
             Compare<Axis1> compare1,
             Compare<Axis2> compare2,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2>> medianOverride2)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2>> subdivisionOverride2)
             : this(
             locate,
 
@@ -3694,8 +3694,8 @@ namespace Theta.Structures
             false,
             compare2,
 
-            medianOverride1,
-            medianOverride2)
+            subdivisionOverride1,
+            subdivisionOverride2)
         { }
 
         public OmnitreePointsLinked(
@@ -3763,8 +3763,8 @@ namespace Theta.Structures
             Compare<Axis1> compare1,
             Compare<Axis2> compare2,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2>> medianOverride2)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2>> subdivisionOverride2)
             : this(
                 locate,
 
@@ -3781,8 +3781,8 @@ namespace Theta.Structures
                 false,
                 compare2,
 
-                medianOverride1,
-                medianOverride2)
+                subdivisionOverride1,
+                subdivisionOverride2)
         { }
 
         public OmnitreePointsLinked(
@@ -3815,8 +3815,8 @@ namespace Theta.Structures
             Compare<Axis1> compare1,
             Compare<Axis2> compare2,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2>> medianOverride2)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2>> subdivisionOverride2)
             : this(
                 locate,
 
@@ -3833,8 +3833,8 @@ namespace Theta.Structures
                 false,
                 compare2,
 
-                medianOverride1,
-                medianOverride2)
+                subdivisionOverride1,
+                subdivisionOverride2)
         { }
 
         public OmnitreePointsLinked(
@@ -3863,8 +3863,8 @@ namespace Theta.Structures
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1, Axis2> locate,
             Equate<T> equate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2>> medianOverride2)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2>> subdivisionOverride2)
             : this(
                 locate,
 
@@ -3881,8 +3881,8 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1,
-                medianOverride2)
+                subdivisionOverride1,
+                subdivisionOverride2)
         { }
 
         public OmnitreePointsLinked(
@@ -3909,8 +3909,8 @@ namespace Theta.Structures
 
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1, Axis2> locate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2>> medianOverride2)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2>> subdivisionOverride2)
             : this(
                 locate,
 
@@ -3927,8 +3927,8 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1,
-                medianOverride2)
+                subdivisionOverride1,
+                subdivisionOverride2)
         { }
 
         #endregion
@@ -4091,7 +4091,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -4113,7 +4113,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis2> values2;
                 IAsyncResult result2 = null;
-                if (this._medianOverride2 != null)
+                if (this._subdivisionOverride2 != null)
                     values2 = null;
                 else
                 {
@@ -4134,10 +4134,10 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride2 == null && allowMultithreading)
+                if (this._subdivisionOverride2 == null && allowMultithreading)
                     result2.AsyncWaitHandle.WaitOne();
 
 
@@ -4170,7 +4170,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -4192,7 +4192,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis2> values2;
                 IAsyncResult result2 = null;
-                if (this._medianOverride2 != null)
+                if (this._subdivisionOverride2 != null)
                     values2 = null;
                 else
                 {
@@ -4213,10 +4213,10 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride2 == null && allowMultithreading)
+                if (this._subdivisionOverride2 == null && allowMultithreading)
                     result2.AsyncWaitHandle.WaitOne();
 
 
@@ -4235,16 +4235,16 @@ namespace Theta.Structures
 
             int median_axis1 = -1;
             int median_axis2 = -1;
-            if (this._medianOverride1 == null || this._medianOverride2 == null)
+            if (this._subdivisionOverride1 == null || this._subdivisionOverride2 == null)
                 GetMedianIndexes(initial_count, child, depth, prevmed1, prevmed2, out median_axis1, out median_axis2);
 
-            if (this._medianOverride1 != null)
-                pointOfDivision1 = this._medianOverride1(parent.Bounds, additions);
+            if (this._subdivisionOverride1 != null)
+                pointOfDivision1 = this._subdivisionOverride1(parent.Bounds, additions);
             else
                 pointOfDivision1 = values1(median_axis1);
 
-            if (this._medianOverride2 != null)
-                pointOfDivision2 = this._medianOverride2(parent.Bounds, additions);
+            if (this._subdivisionOverride2 != null)
+                pointOfDivision2 = this._subdivisionOverride2(parent.Bounds, additions);
             else
                 pointOfDivision2 = values2(median_axis2);
 
@@ -5709,10 +5709,10 @@ namespace Theta.Structures
         private Compare<Axis3> _compare3;
 
 
-        // allows median overriding for custom optimizations
-        private Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3>> _medianOverride1;
-        private Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3>> _medianOverride2;
-        private Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3>> _medianOverride3;
+        // allows median overriding for custom optimizations (USE AT YOUR OWN RISK)
+        private Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3>> _subdivisionOverride1;
+        private Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3>> _subdivisionOverride2;
+        private Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3>> _subdivisionOverride3;
 
         #region Nested Types
 
@@ -5939,9 +5939,9 @@ namespace Theta.Structures
             this._defaultCompare3 = omnitree._defaultCompare3;
             this._compare3 = omnitree._compare3;
 
-            this._medianOverride1 = omnitree._medianOverride1;
-            this._medianOverride2 = omnitree._medianOverride2;
-            this._medianOverride3 = omnitree._medianOverride3;
+            this._subdivisionOverride1 = omnitree._subdivisionOverride1;
+            this._subdivisionOverride2 = omnitree._subdivisionOverride2;
+            this._subdivisionOverride3 = omnitree._subdivisionOverride3;
         }
 
         private OmnitreePointsLinked(
@@ -5964,9 +5964,9 @@ namespace Theta.Structures
             bool defaultCompare3,
             Compare<Axis3> compare3,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3>> medianOverride3)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3>> subdivisionOverride3)
         {
             Code.AssertArgNonNull(locate, "locate");
             Code.AssertArgNonNull(equate, "equate");
@@ -5997,9 +5997,9 @@ namespace Theta.Structures
             this._defaultCompare3 = defaultCompare3;
             this._compare3 = compare3;
 
-            this._medianOverride1 = medianOverride1;
-            this._medianOverride2 = medianOverride2;
-            this._medianOverride3 = medianOverride3;
+            this._subdivisionOverride1 = subdivisionOverride1;
+            this._subdivisionOverride2 = subdivisionOverride2;
+            this._subdivisionOverride3 = subdivisionOverride3;
 
             this._top = new Leaf(Omnitree.Bounds<Axis1, Axis2, Axis3>.None, null, -1);
             ComputeLoads(0);
@@ -6017,9 +6017,9 @@ namespace Theta.Structures
             Compare<Axis2> compare2,
             Compare<Axis3> compare3,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3>> medianOverride3)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3>> subdivisionOverride3)
             : this(
             locate,
 
@@ -6040,9 +6040,9 @@ namespace Theta.Structures
             false,
             compare3,
 
-            medianOverride1,
-            medianOverride2,
-            medianOverride3)
+            subdivisionOverride1,
+            subdivisionOverride2,
+            subdivisionOverride3)
         { }
 
         public OmnitreePointsLinked(
@@ -6124,9 +6124,9 @@ namespace Theta.Structures
             Compare<Axis2> compare2,
             Compare<Axis3> compare3,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3>> medianOverride3)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3>> subdivisionOverride3)
             : this(
                 locate,
 
@@ -6147,9 +6147,9 @@ namespace Theta.Structures
                 false,
                 compare3,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3)
         { }
 
         public OmnitreePointsLinked(
@@ -6189,9 +6189,9 @@ namespace Theta.Structures
             Compare<Axis2> compare2,
             Compare<Axis3> compare3,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3>> medianOverride3)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3>> subdivisionOverride3)
             : this(
                 locate,
 
@@ -6212,9 +6212,9 @@ namespace Theta.Structures
                 false,
                 compare3,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3)
         { }
 
         public OmnitreePointsLinked(
@@ -6248,9 +6248,9 @@ namespace Theta.Structures
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1, Axis2, Axis3> locate,
             Equate<T> equate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3>> medianOverride3)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3>> subdivisionOverride3)
             : this(
                 locate,
 
@@ -6271,9 +6271,9 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3)
         { }
 
         public OmnitreePointsLinked(
@@ -6305,9 +6305,9 @@ namespace Theta.Structures
 
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1, Axis2, Axis3> locate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3>> medianOverride3)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3>> subdivisionOverride3)
             : this(
                 locate,
 
@@ -6328,9 +6328,9 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3)
         { }
 
         #endregion
@@ -6498,7 +6498,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -6520,7 +6520,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis2> values2;
                 IAsyncResult result2 = null;
-                if (this._medianOverride2 != null)
+                if (this._subdivisionOverride2 != null)
                     values2 = null;
                 else
                 {
@@ -6542,7 +6542,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis3> values3;
                 IAsyncResult result3 = null;
-                if (this._medianOverride3 != null)
+                if (this._subdivisionOverride3 != null)
                     values3 = null;
                 else
                 {
@@ -6563,13 +6563,13 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride2 == null && allowMultithreading)
+                if (this._subdivisionOverride2 == null && allowMultithreading)
                     result2.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride3 == null && allowMultithreading)
+                if (this._subdivisionOverride3 == null && allowMultithreading)
                     result3.AsyncWaitHandle.WaitOne();
 
 
@@ -6602,7 +6602,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -6624,7 +6624,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis2> values2;
                 IAsyncResult result2 = null;
-                if (this._medianOverride2 != null)
+                if (this._subdivisionOverride2 != null)
                     values2 = null;
                 else
                 {
@@ -6646,7 +6646,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis3> values3;
                 IAsyncResult result3 = null;
-                if (this._medianOverride3 != null)
+                if (this._subdivisionOverride3 != null)
                     values3 = null;
                 else
                 {
@@ -6667,13 +6667,13 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride2 == null && allowMultithreading)
+                if (this._subdivisionOverride2 == null && allowMultithreading)
                     result2.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride3 == null && allowMultithreading)
+                if (this._subdivisionOverride3 == null && allowMultithreading)
                     result3.AsyncWaitHandle.WaitOne();
 
 
@@ -6694,21 +6694,21 @@ namespace Theta.Structures
             int median_axis1 = -1;
             int median_axis2 = -1;
             int median_axis3 = -1;
-            if (this._medianOverride1 == null || this._medianOverride2 == null || this._medianOverride3 == null)
+            if (this._subdivisionOverride1 == null || this._subdivisionOverride2 == null || this._subdivisionOverride3 == null)
                 GetMedianIndexes(initial_count, child, depth, prevmed1, prevmed2, prevmed3, out median_axis1, out median_axis2, out median_axis3);
 
-            if (this._medianOverride1 != null)
-                pointOfDivision1 = this._medianOverride1(parent.Bounds, additions);
+            if (this._subdivisionOverride1 != null)
+                pointOfDivision1 = this._subdivisionOverride1(parent.Bounds, additions);
             else
                 pointOfDivision1 = values1(median_axis1);
 
-            if (this._medianOverride2 != null)
-                pointOfDivision2 = this._medianOverride2(parent.Bounds, additions);
+            if (this._subdivisionOverride2 != null)
+                pointOfDivision2 = this._subdivisionOverride2(parent.Bounds, additions);
             else
                 pointOfDivision2 = values2(median_axis2);
 
-            if (this._medianOverride3 != null)
-                pointOfDivision3 = this._medianOverride3(parent.Bounds, additions);
+            if (this._subdivisionOverride3 != null)
+                pointOfDivision3 = this._subdivisionOverride3(parent.Bounds, additions);
             else
                 pointOfDivision3 = values3(median_axis3);
 
@@ -8286,11 +8286,11 @@ namespace Theta.Structures
         private Compare<Axis4> _compare4;
 
 
-        // allows median overriding for custom optimizations
-        private Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> _medianOverride1;
-        private Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> _medianOverride2;
-        private Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> _medianOverride3;
-        private Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> _medianOverride4;
+        // allows median overriding for custom optimizations (USE AT YOUR OWN RISK)
+        private Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> _subdivisionOverride1;
+        private Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> _subdivisionOverride2;
+        private Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> _subdivisionOverride3;
+        private Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> _subdivisionOverride4;
 
         #region Nested Types
 
@@ -8521,10 +8521,10 @@ namespace Theta.Structures
             this._defaultCompare4 = omnitree._defaultCompare4;
             this._compare4 = omnitree._compare4;
 
-            this._medianOverride1 = omnitree._medianOverride1;
-            this._medianOverride2 = omnitree._medianOverride2;
-            this._medianOverride3 = omnitree._medianOverride3;
-            this._medianOverride4 = omnitree._medianOverride4;
+            this._subdivisionOverride1 = omnitree._subdivisionOverride1;
+            this._subdivisionOverride2 = omnitree._subdivisionOverride2;
+            this._subdivisionOverride3 = omnitree._subdivisionOverride3;
+            this._subdivisionOverride4 = omnitree._subdivisionOverride4;
         }
 
         private OmnitreePointsLinked(
@@ -8551,10 +8551,10 @@ namespace Theta.Structures
             bool defaultCompare4,
             Compare<Axis4> compare4,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride4)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride4)
         {
             Code.AssertArgNonNull(locate, "locate");
             Code.AssertArgNonNull(equate, "equate");
@@ -8591,10 +8591,10 @@ namespace Theta.Structures
             this._defaultCompare4 = defaultCompare4;
             this._compare4 = compare4;
 
-            this._medianOverride1 = medianOverride1;
-            this._medianOverride2 = medianOverride2;
-            this._medianOverride3 = medianOverride3;
-            this._medianOverride4 = medianOverride4;
+            this._subdivisionOverride1 = subdivisionOverride1;
+            this._subdivisionOverride2 = subdivisionOverride2;
+            this._subdivisionOverride3 = subdivisionOverride3;
+            this._subdivisionOverride4 = subdivisionOverride4;
 
             this._top = new Leaf(Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>.None, null, -1);
             ComputeLoads(0);
@@ -8614,10 +8614,10 @@ namespace Theta.Structures
             Compare<Axis3> compare3,
             Compare<Axis4> compare4,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride4)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride4)
             : this(
             locate,
 
@@ -8642,10 +8642,10 @@ namespace Theta.Structures
             false,
             compare4,
 
-            medianOverride1,
-            medianOverride2,
-            medianOverride3,
-            medianOverride4)
+            subdivisionOverride1,
+            subdivisionOverride2,
+            subdivisionOverride3,
+            subdivisionOverride4)
         { }
 
         public OmnitreePointsLinked(
@@ -8741,10 +8741,10 @@ namespace Theta.Structures
             Compare<Axis3> compare3,
             Compare<Axis4> compare4,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride4)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride4)
             : this(
                 locate,
 
@@ -8769,10 +8769,10 @@ namespace Theta.Structures
                 false,
                 compare4,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4)
         { }
 
         public OmnitreePointsLinked(
@@ -8819,10 +8819,10 @@ namespace Theta.Structures
             Compare<Axis3> compare3,
             Compare<Axis4> compare4,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride4)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride4)
             : this(
                 locate,
 
@@ -8847,10 +8847,10 @@ namespace Theta.Structures
                 false,
                 compare4,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4)
         { }
 
         public OmnitreePointsLinked(
@@ -8889,10 +8889,10 @@ namespace Theta.Structures
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1, Axis2, Axis3, Axis4> locate,
             Equate<T> equate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride4)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride4)
             : this(
                 locate,
 
@@ -8917,10 +8917,10 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4)
         { }
 
         public OmnitreePointsLinked(
@@ -8957,10 +8957,10 @@ namespace Theta.Structures
 
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1, Axis2, Axis3, Axis4> locate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> medianOverride4)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4>> subdivisionOverride4)
             : this(
                 locate,
 
@@ -8985,10 +8985,10 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4)
         { }
 
         #endregion
@@ -9161,7 +9161,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -9183,7 +9183,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis2> values2;
                 IAsyncResult result2 = null;
-                if (this._medianOverride2 != null)
+                if (this._subdivisionOverride2 != null)
                     values2 = null;
                 else
                 {
@@ -9205,7 +9205,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis3> values3;
                 IAsyncResult result3 = null;
-                if (this._medianOverride3 != null)
+                if (this._subdivisionOverride3 != null)
                     values3 = null;
                 else
                 {
@@ -9227,7 +9227,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis4> values4;
                 IAsyncResult result4 = null;
-                if (this._medianOverride4 != null)
+                if (this._subdivisionOverride4 != null)
                     values4 = null;
                 else
                 {
@@ -9248,16 +9248,16 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride2 == null && allowMultithreading)
+                if (this._subdivisionOverride2 == null && allowMultithreading)
                     result2.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride3 == null && allowMultithreading)
+                if (this._subdivisionOverride3 == null && allowMultithreading)
                     result3.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride4 == null && allowMultithreading)
+                if (this._subdivisionOverride4 == null && allowMultithreading)
                     result4.AsyncWaitHandle.WaitOne();
 
 
@@ -9290,7 +9290,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -9312,7 +9312,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis2> values2;
                 IAsyncResult result2 = null;
-                if (this._medianOverride2 != null)
+                if (this._subdivisionOverride2 != null)
                     values2 = null;
                 else
                 {
@@ -9334,7 +9334,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis3> values3;
                 IAsyncResult result3 = null;
-                if (this._medianOverride3 != null)
+                if (this._subdivisionOverride3 != null)
                     values3 = null;
                 else
                 {
@@ -9356,7 +9356,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis4> values4;
                 IAsyncResult result4 = null;
-                if (this._medianOverride4 != null)
+                if (this._subdivisionOverride4 != null)
                     values4 = null;
                 else
                 {
@@ -9377,16 +9377,16 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride2 == null && allowMultithreading)
+                if (this._subdivisionOverride2 == null && allowMultithreading)
                     result2.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride3 == null && allowMultithreading)
+                if (this._subdivisionOverride3 == null && allowMultithreading)
                     result3.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride4 == null && allowMultithreading)
+                if (this._subdivisionOverride4 == null && allowMultithreading)
                     result4.AsyncWaitHandle.WaitOne();
 
 
@@ -9409,26 +9409,26 @@ namespace Theta.Structures
             int median_axis2 = -1;
             int median_axis3 = -1;
             int median_axis4 = -1;
-            if (this._medianOverride1 == null || this._medianOverride2 == null || this._medianOverride3 == null || this._medianOverride4 == null)
+            if (this._subdivisionOverride1 == null || this._subdivisionOverride2 == null || this._subdivisionOverride3 == null || this._subdivisionOverride4 == null)
                 GetMedianIndexes(initial_count, child, depth, prevmed1, prevmed2, prevmed3, prevmed4, out median_axis1, out median_axis2, out median_axis3, out median_axis4);
 
-            if (this._medianOverride1 != null)
-                pointOfDivision1 = this._medianOverride1(parent.Bounds, additions);
+            if (this._subdivisionOverride1 != null)
+                pointOfDivision1 = this._subdivisionOverride1(parent.Bounds, additions);
             else
                 pointOfDivision1 = values1(median_axis1);
 
-            if (this._medianOverride2 != null)
-                pointOfDivision2 = this._medianOverride2(parent.Bounds, additions);
+            if (this._subdivisionOverride2 != null)
+                pointOfDivision2 = this._subdivisionOverride2(parent.Bounds, additions);
             else
                 pointOfDivision2 = values2(median_axis2);
 
-            if (this._medianOverride3 != null)
-                pointOfDivision3 = this._medianOverride3(parent.Bounds, additions);
+            if (this._subdivisionOverride3 != null)
+                pointOfDivision3 = this._subdivisionOverride3(parent.Bounds, additions);
             else
                 pointOfDivision3 = values3(median_axis3);
 
-            if (this._medianOverride4 != null)
-                pointOfDivision4 = this._medianOverride4(parent.Bounds, additions);
+            if (this._subdivisionOverride4 != null)
+                pointOfDivision4 = this._subdivisionOverride4(parent.Bounds, additions);
             else
                 pointOfDivision4 = values4(median_axis4);
 
@@ -11119,12 +11119,12 @@ namespace Theta.Structures
         private Compare<Axis5> _compare5;
 
 
-        // allows median overriding for custom optimizations
-        private Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> _medianOverride1;
-        private Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> _medianOverride2;
-        private Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> _medianOverride3;
-        private Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> _medianOverride4;
-        private Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> _medianOverride5;
+        // allows median overriding for custom optimizations (USE AT YOUR OWN RISK)
+        private Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> _subdivisionOverride1;
+        private Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> _subdivisionOverride2;
+        private Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> _subdivisionOverride3;
+        private Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> _subdivisionOverride4;
+        private Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> _subdivisionOverride5;
 
         #region Nested Types
 
@@ -11359,11 +11359,11 @@ namespace Theta.Structures
             this._defaultCompare5 = omnitree._defaultCompare5;
             this._compare5 = omnitree._compare5;
 
-            this._medianOverride1 = omnitree._medianOverride1;
-            this._medianOverride2 = omnitree._medianOverride2;
-            this._medianOverride3 = omnitree._medianOverride3;
-            this._medianOverride4 = omnitree._medianOverride4;
-            this._medianOverride5 = omnitree._medianOverride5;
+            this._subdivisionOverride1 = omnitree._subdivisionOverride1;
+            this._subdivisionOverride2 = omnitree._subdivisionOverride2;
+            this._subdivisionOverride3 = omnitree._subdivisionOverride3;
+            this._subdivisionOverride4 = omnitree._subdivisionOverride4;
+            this._subdivisionOverride5 = omnitree._subdivisionOverride5;
         }
 
         private OmnitreePointsLinked(
@@ -11394,11 +11394,11 @@ namespace Theta.Structures
             bool defaultCompare5,
             Compare<Axis5> compare5,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride5)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride5)
         {
             Code.AssertArgNonNull(locate, "locate");
             Code.AssertArgNonNull(equate, "equate");
@@ -11441,11 +11441,11 @@ namespace Theta.Structures
             this._defaultCompare5 = defaultCompare5;
             this._compare5 = compare5;
 
-            this._medianOverride1 = medianOverride1;
-            this._medianOverride2 = medianOverride2;
-            this._medianOverride3 = medianOverride3;
-            this._medianOverride4 = medianOverride4;
-            this._medianOverride5 = medianOverride5;
+            this._subdivisionOverride1 = subdivisionOverride1;
+            this._subdivisionOverride2 = subdivisionOverride2;
+            this._subdivisionOverride3 = subdivisionOverride3;
+            this._subdivisionOverride4 = subdivisionOverride4;
+            this._subdivisionOverride5 = subdivisionOverride5;
 
             this._top = new Leaf(Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>.None, null, -1);
             ComputeLoads(0);
@@ -11467,11 +11467,11 @@ namespace Theta.Structures
             Compare<Axis4> compare4,
             Compare<Axis5> compare5,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride5)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride5)
             : this(
             locate,
 
@@ -11500,11 +11500,11 @@ namespace Theta.Structures
             false,
             compare5,
 
-            medianOverride1,
-            medianOverride2,
-            medianOverride3,
-            medianOverride4,
-            medianOverride5)
+            subdivisionOverride1,
+            subdivisionOverride2,
+            subdivisionOverride3,
+            subdivisionOverride4,
+            subdivisionOverride5)
         { }
 
         public OmnitreePointsLinked(
@@ -11614,11 +11614,11 @@ namespace Theta.Structures
             Compare<Axis4> compare4,
             Compare<Axis5> compare5,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride5)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride5)
             : this(
                 locate,
 
@@ -11647,11 +11647,11 @@ namespace Theta.Structures
                 false,
                 compare5,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5)
         { }
 
         public OmnitreePointsLinked(
@@ -11705,11 +11705,11 @@ namespace Theta.Structures
             Compare<Axis4> compare4,
             Compare<Axis5> compare5,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride5)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride5)
             : this(
                 locate,
 
@@ -11738,11 +11738,11 @@ namespace Theta.Structures
                 false,
                 compare5,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5)
         { }
 
         public OmnitreePointsLinked(
@@ -11786,11 +11786,11 @@ namespace Theta.Structures
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1, Axis2, Axis3, Axis4, Axis5> locate,
             Equate<T> equate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride5)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride5)
             : this(
                 locate,
 
@@ -11819,11 +11819,11 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5)
         { }
 
         public OmnitreePointsLinked(
@@ -11865,11 +11865,11 @@ namespace Theta.Structures
 
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1, Axis2, Axis3, Axis4, Axis5> locate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> medianOverride5)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5>> subdivisionOverride5)
             : this(
                 locate,
 
@@ -11898,11 +11898,11 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5)
         { }
 
         #endregion
@@ -12080,7 +12080,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -12102,7 +12102,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis2> values2;
                 IAsyncResult result2 = null;
-                if (this._medianOverride2 != null)
+                if (this._subdivisionOverride2 != null)
                     values2 = null;
                 else
                 {
@@ -12124,7 +12124,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis3> values3;
                 IAsyncResult result3 = null;
-                if (this._medianOverride3 != null)
+                if (this._subdivisionOverride3 != null)
                     values3 = null;
                 else
                 {
@@ -12146,7 +12146,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis4> values4;
                 IAsyncResult result4 = null;
-                if (this._medianOverride4 != null)
+                if (this._subdivisionOverride4 != null)
                     values4 = null;
                 else
                 {
@@ -12168,7 +12168,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis5> values5;
                 IAsyncResult result5 = null;
-                if (this._medianOverride5 != null)
+                if (this._subdivisionOverride5 != null)
                     values5 = null;
                 else
                 {
@@ -12189,19 +12189,19 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride2 == null && allowMultithreading)
+                if (this._subdivisionOverride2 == null && allowMultithreading)
                     result2.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride3 == null && allowMultithreading)
+                if (this._subdivisionOverride3 == null && allowMultithreading)
                     result3.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride4 == null && allowMultithreading)
+                if (this._subdivisionOverride4 == null && allowMultithreading)
                     result4.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride5 == null && allowMultithreading)
+                if (this._subdivisionOverride5 == null && allowMultithreading)
                     result5.AsyncWaitHandle.WaitOne();
 
 
@@ -12234,7 +12234,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -12256,7 +12256,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis2> values2;
                 IAsyncResult result2 = null;
-                if (this._medianOverride2 != null)
+                if (this._subdivisionOverride2 != null)
                     values2 = null;
                 else
                 {
@@ -12278,7 +12278,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis3> values3;
                 IAsyncResult result3 = null;
-                if (this._medianOverride3 != null)
+                if (this._subdivisionOverride3 != null)
                     values3 = null;
                 else
                 {
@@ -12300,7 +12300,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis4> values4;
                 IAsyncResult result4 = null;
-                if (this._medianOverride4 != null)
+                if (this._subdivisionOverride4 != null)
                     values4 = null;
                 else
                 {
@@ -12322,7 +12322,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis5> values5;
                 IAsyncResult result5 = null;
-                if (this._medianOverride5 != null)
+                if (this._subdivisionOverride5 != null)
                     values5 = null;
                 else
                 {
@@ -12343,19 +12343,19 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride2 == null && allowMultithreading)
+                if (this._subdivisionOverride2 == null && allowMultithreading)
                     result2.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride3 == null && allowMultithreading)
+                if (this._subdivisionOverride3 == null && allowMultithreading)
                     result3.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride4 == null && allowMultithreading)
+                if (this._subdivisionOverride4 == null && allowMultithreading)
                     result4.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride5 == null && allowMultithreading)
+                if (this._subdivisionOverride5 == null && allowMultithreading)
                     result5.AsyncWaitHandle.WaitOne();
 
 
@@ -12380,31 +12380,31 @@ namespace Theta.Structures
             int median_axis3 = -1;
             int median_axis4 = -1;
             int median_axis5 = -1;
-            if (this._medianOverride1 == null || this._medianOverride2 == null || this._medianOverride3 == null || this._medianOverride4 == null || this._medianOverride5 == null)
+            if (this._subdivisionOverride1 == null || this._subdivisionOverride2 == null || this._subdivisionOverride3 == null || this._subdivisionOverride4 == null || this._subdivisionOverride5 == null)
                 GetMedianIndexes(initial_count, child, depth, prevmed1, prevmed2, prevmed3, prevmed4, prevmed5, out median_axis1, out median_axis2, out median_axis3, out median_axis4, out median_axis5);
 
-            if (this._medianOverride1 != null)
-                pointOfDivision1 = this._medianOverride1(parent.Bounds, additions);
+            if (this._subdivisionOverride1 != null)
+                pointOfDivision1 = this._subdivisionOverride1(parent.Bounds, additions);
             else
                 pointOfDivision1 = values1(median_axis1);
 
-            if (this._medianOverride2 != null)
-                pointOfDivision2 = this._medianOverride2(parent.Bounds, additions);
+            if (this._subdivisionOverride2 != null)
+                pointOfDivision2 = this._subdivisionOverride2(parent.Bounds, additions);
             else
                 pointOfDivision2 = values2(median_axis2);
 
-            if (this._medianOverride3 != null)
-                pointOfDivision3 = this._medianOverride3(parent.Bounds, additions);
+            if (this._subdivisionOverride3 != null)
+                pointOfDivision3 = this._subdivisionOverride3(parent.Bounds, additions);
             else
                 pointOfDivision3 = values3(median_axis3);
 
-            if (this._medianOverride4 != null)
-                pointOfDivision4 = this._medianOverride4(parent.Bounds, additions);
+            if (this._subdivisionOverride4 != null)
+                pointOfDivision4 = this._subdivisionOverride4(parent.Bounds, additions);
             else
                 pointOfDivision4 = values4(median_axis4);
 
-            if (this._medianOverride5 != null)
-                pointOfDivision5 = this._medianOverride5(parent.Bounds, additions);
+            if (this._subdivisionOverride5 != null)
+                pointOfDivision5 = this._subdivisionOverride5(parent.Bounds, additions);
             else
                 pointOfDivision5 = values5(median_axis5);
 
@@ -14208,13 +14208,13 @@ namespace Theta.Structures
         private Compare<Axis6> _compare6;
 
 
-        // allows median overriding for custom optimizations
-        private Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> _medianOverride1;
-        private Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> _medianOverride2;
-        private Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> _medianOverride3;
-        private Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> _medianOverride4;
-        private Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> _medianOverride5;
-        private Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> _medianOverride6;
+        // allows median overriding for custom optimizations (USE AT YOUR OWN RISK)
+        private Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> _subdivisionOverride1;
+        private Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> _subdivisionOverride2;
+        private Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> _subdivisionOverride3;
+        private Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> _subdivisionOverride4;
+        private Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> _subdivisionOverride5;
+        private Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> _subdivisionOverride6;
 
         #region Nested Types
 
@@ -14453,12 +14453,12 @@ namespace Theta.Structures
             this._defaultCompare6 = omnitree._defaultCompare6;
             this._compare6 = omnitree._compare6;
 
-            this._medianOverride1 = omnitree._medianOverride1;
-            this._medianOverride2 = omnitree._medianOverride2;
-            this._medianOverride3 = omnitree._medianOverride3;
-            this._medianOverride4 = omnitree._medianOverride4;
-            this._medianOverride5 = omnitree._medianOverride5;
-            this._medianOverride6 = omnitree._medianOverride6;
+            this._subdivisionOverride1 = omnitree._subdivisionOverride1;
+            this._subdivisionOverride2 = omnitree._subdivisionOverride2;
+            this._subdivisionOverride3 = omnitree._subdivisionOverride3;
+            this._subdivisionOverride4 = omnitree._subdivisionOverride4;
+            this._subdivisionOverride5 = omnitree._subdivisionOverride5;
+            this._subdivisionOverride6 = omnitree._subdivisionOverride6;
         }
 
         private OmnitreePointsLinked(
@@ -14493,12 +14493,12 @@ namespace Theta.Structures
             bool defaultCompare6,
             Compare<Axis6> compare6,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride6)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride6)
         {
             Code.AssertArgNonNull(locate, "locate");
             Code.AssertArgNonNull(equate, "equate");
@@ -14547,12 +14547,12 @@ namespace Theta.Structures
             this._defaultCompare6 = defaultCompare6;
             this._compare6 = compare6;
 
-            this._medianOverride1 = medianOverride1;
-            this._medianOverride2 = medianOverride2;
-            this._medianOverride3 = medianOverride3;
-            this._medianOverride4 = medianOverride4;
-            this._medianOverride5 = medianOverride5;
-            this._medianOverride6 = medianOverride6;
+            this._subdivisionOverride1 = subdivisionOverride1;
+            this._subdivisionOverride2 = subdivisionOverride2;
+            this._subdivisionOverride3 = subdivisionOverride3;
+            this._subdivisionOverride4 = subdivisionOverride4;
+            this._subdivisionOverride5 = subdivisionOverride5;
+            this._subdivisionOverride6 = subdivisionOverride6;
 
             this._top = new Leaf(Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>.None, null, -1);
             ComputeLoads(0);
@@ -14576,12 +14576,12 @@ namespace Theta.Structures
             Compare<Axis5> compare5,
             Compare<Axis6> compare6,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride6)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride6)
             : this(
             locate,
 
@@ -14614,12 +14614,12 @@ namespace Theta.Structures
             false,
             compare6,
 
-            medianOverride1,
-            medianOverride2,
-            medianOverride3,
-            medianOverride4,
-            medianOverride5,
-            medianOverride6)
+            subdivisionOverride1,
+            subdivisionOverride2,
+            subdivisionOverride3,
+            subdivisionOverride4,
+            subdivisionOverride5,
+            subdivisionOverride6)
         { }
 
         public OmnitreePointsLinked(
@@ -14743,12 +14743,12 @@ namespace Theta.Structures
             Compare<Axis5> compare5,
             Compare<Axis6> compare6,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride6)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride6)
             : this(
                 locate,
 
@@ -14781,12 +14781,12 @@ namespace Theta.Structures
                 false,
                 compare6,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6)
         { }
 
         public OmnitreePointsLinked(
@@ -14847,12 +14847,12 @@ namespace Theta.Structures
             Compare<Axis5> compare5,
             Compare<Axis6> compare6,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride6)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride6)
             : this(
                 locate,
 
@@ -14885,12 +14885,12 @@ namespace Theta.Structures
                 false,
                 compare6,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6)
         { }
 
         public OmnitreePointsLinked(
@@ -14939,12 +14939,12 @@ namespace Theta.Structures
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1, Axis2, Axis3, Axis4, Axis5, Axis6> locate,
             Equate<T> equate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride6)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride6)
             : this(
                 locate,
 
@@ -14977,12 +14977,12 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6)
         { }
 
         public OmnitreePointsLinked(
@@ -15029,12 +15029,12 @@ namespace Theta.Structures
 
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1, Axis2, Axis3, Axis4, Axis5, Axis6> locate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> medianOverride6)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6>> subdivisionOverride6)
             : this(
                 locate,
 
@@ -15067,12 +15067,12 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6)
         { }
 
         #endregion
@@ -15255,7 +15255,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -15277,7 +15277,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis2> values2;
                 IAsyncResult result2 = null;
-                if (this._medianOverride2 != null)
+                if (this._subdivisionOverride2 != null)
                     values2 = null;
                 else
                 {
@@ -15299,7 +15299,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis3> values3;
                 IAsyncResult result3 = null;
-                if (this._medianOverride3 != null)
+                if (this._subdivisionOverride3 != null)
                     values3 = null;
                 else
                 {
@@ -15321,7 +15321,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis4> values4;
                 IAsyncResult result4 = null;
-                if (this._medianOverride4 != null)
+                if (this._subdivisionOverride4 != null)
                     values4 = null;
                 else
                 {
@@ -15343,7 +15343,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis5> values5;
                 IAsyncResult result5 = null;
-                if (this._medianOverride5 != null)
+                if (this._subdivisionOverride5 != null)
                     values5 = null;
                 else
                 {
@@ -15365,7 +15365,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis6> values6;
                 IAsyncResult result6 = null;
-                if (this._medianOverride6 != null)
+                if (this._subdivisionOverride6 != null)
                     values6 = null;
                 else
                 {
@@ -15386,22 +15386,22 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride2 == null && allowMultithreading)
+                if (this._subdivisionOverride2 == null && allowMultithreading)
                     result2.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride3 == null && allowMultithreading)
+                if (this._subdivisionOverride3 == null && allowMultithreading)
                     result3.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride4 == null && allowMultithreading)
+                if (this._subdivisionOverride4 == null && allowMultithreading)
                     result4.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride5 == null && allowMultithreading)
+                if (this._subdivisionOverride5 == null && allowMultithreading)
                     result5.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride6 == null && allowMultithreading)
+                if (this._subdivisionOverride6 == null && allowMultithreading)
                     result6.AsyncWaitHandle.WaitOne();
 
 
@@ -15434,7 +15434,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -15456,7 +15456,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis2> values2;
                 IAsyncResult result2 = null;
-                if (this._medianOverride2 != null)
+                if (this._subdivisionOverride2 != null)
                     values2 = null;
                 else
                 {
@@ -15478,7 +15478,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis3> values3;
                 IAsyncResult result3 = null;
-                if (this._medianOverride3 != null)
+                if (this._subdivisionOverride3 != null)
                     values3 = null;
                 else
                 {
@@ -15500,7 +15500,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis4> values4;
                 IAsyncResult result4 = null;
-                if (this._medianOverride4 != null)
+                if (this._subdivisionOverride4 != null)
                     values4 = null;
                 else
                 {
@@ -15522,7 +15522,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis5> values5;
                 IAsyncResult result5 = null;
-                if (this._medianOverride5 != null)
+                if (this._subdivisionOverride5 != null)
                     values5 = null;
                 else
                 {
@@ -15544,7 +15544,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis6> values6;
                 IAsyncResult result6 = null;
-                if (this._medianOverride6 != null)
+                if (this._subdivisionOverride6 != null)
                     values6 = null;
                 else
                 {
@@ -15565,22 +15565,22 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride2 == null && allowMultithreading)
+                if (this._subdivisionOverride2 == null && allowMultithreading)
                     result2.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride3 == null && allowMultithreading)
+                if (this._subdivisionOverride3 == null && allowMultithreading)
                     result3.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride4 == null && allowMultithreading)
+                if (this._subdivisionOverride4 == null && allowMultithreading)
                     result4.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride5 == null && allowMultithreading)
+                if (this._subdivisionOverride5 == null && allowMultithreading)
                     result5.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride6 == null && allowMultithreading)
+                if (this._subdivisionOverride6 == null && allowMultithreading)
                     result6.AsyncWaitHandle.WaitOne();
 
 
@@ -15607,36 +15607,36 @@ namespace Theta.Structures
             int median_axis4 = -1;
             int median_axis5 = -1;
             int median_axis6 = -1;
-            if (this._medianOverride1 == null || this._medianOverride2 == null || this._medianOverride3 == null || this._medianOverride4 == null || this._medianOverride5 == null || this._medianOverride6 == null)
+            if (this._subdivisionOverride1 == null || this._subdivisionOverride2 == null || this._subdivisionOverride3 == null || this._subdivisionOverride4 == null || this._subdivisionOverride5 == null || this._subdivisionOverride6 == null)
                 GetMedianIndexes(initial_count, child, depth, prevmed1, prevmed2, prevmed3, prevmed4, prevmed5, prevmed6, out median_axis1, out median_axis2, out median_axis3, out median_axis4, out median_axis5, out median_axis6);
 
-            if (this._medianOverride1 != null)
-                pointOfDivision1 = this._medianOverride1(parent.Bounds, additions);
+            if (this._subdivisionOverride1 != null)
+                pointOfDivision1 = this._subdivisionOverride1(parent.Bounds, additions);
             else
                 pointOfDivision1 = values1(median_axis1);
 
-            if (this._medianOverride2 != null)
-                pointOfDivision2 = this._medianOverride2(parent.Bounds, additions);
+            if (this._subdivisionOverride2 != null)
+                pointOfDivision2 = this._subdivisionOverride2(parent.Bounds, additions);
             else
                 pointOfDivision2 = values2(median_axis2);
 
-            if (this._medianOverride3 != null)
-                pointOfDivision3 = this._medianOverride3(parent.Bounds, additions);
+            if (this._subdivisionOverride3 != null)
+                pointOfDivision3 = this._subdivisionOverride3(parent.Bounds, additions);
             else
                 pointOfDivision3 = values3(median_axis3);
 
-            if (this._medianOverride4 != null)
-                pointOfDivision4 = this._medianOverride4(parent.Bounds, additions);
+            if (this._subdivisionOverride4 != null)
+                pointOfDivision4 = this._subdivisionOverride4(parent.Bounds, additions);
             else
                 pointOfDivision4 = values4(median_axis4);
 
-            if (this._medianOverride5 != null)
-                pointOfDivision5 = this._medianOverride5(parent.Bounds, additions);
+            if (this._subdivisionOverride5 != null)
+                pointOfDivision5 = this._subdivisionOverride5(parent.Bounds, additions);
             else
                 pointOfDivision5 = values5(median_axis5);
 
-            if (this._medianOverride6 != null)
-                pointOfDivision6 = this._medianOverride6(parent.Bounds, additions);
+            if (this._subdivisionOverride6 != null)
+                pointOfDivision6 = this._subdivisionOverride6(parent.Bounds, additions);
             else
                 pointOfDivision6 = values6(median_axis6);
 
@@ -17553,14 +17553,14 @@ namespace Theta.Structures
         private Compare<Axis7> _compare7;
 
 
-        // allows median overriding for custom optimizations
-        private Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> _medianOverride1;
-        private Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> _medianOverride2;
-        private Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> _medianOverride3;
-        private Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> _medianOverride4;
-        private Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> _medianOverride5;
-        private Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> _medianOverride6;
-        private Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> _medianOverride7;
+        // allows median overriding for custom optimizations (USE AT YOUR OWN RISK)
+        private Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> _subdivisionOverride1;
+        private Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> _subdivisionOverride2;
+        private Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> _subdivisionOverride3;
+        private Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> _subdivisionOverride4;
+        private Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> _subdivisionOverride5;
+        private Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> _subdivisionOverride6;
+        private Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> _subdivisionOverride7;
 
         #region Nested Types
 
@@ -17803,13 +17803,13 @@ namespace Theta.Structures
             this._defaultCompare7 = omnitree._defaultCompare7;
             this._compare7 = omnitree._compare7;
 
-            this._medianOverride1 = omnitree._medianOverride1;
-            this._medianOverride2 = omnitree._medianOverride2;
-            this._medianOverride3 = omnitree._medianOverride3;
-            this._medianOverride4 = omnitree._medianOverride4;
-            this._medianOverride5 = omnitree._medianOverride5;
-            this._medianOverride6 = omnitree._medianOverride6;
-            this._medianOverride7 = omnitree._medianOverride7;
+            this._subdivisionOverride1 = omnitree._subdivisionOverride1;
+            this._subdivisionOverride2 = omnitree._subdivisionOverride2;
+            this._subdivisionOverride3 = omnitree._subdivisionOverride3;
+            this._subdivisionOverride4 = omnitree._subdivisionOverride4;
+            this._subdivisionOverride5 = omnitree._subdivisionOverride5;
+            this._subdivisionOverride6 = omnitree._subdivisionOverride6;
+            this._subdivisionOverride7 = omnitree._subdivisionOverride7;
         }
 
         private OmnitreePointsLinked(
@@ -17848,13 +17848,13 @@ namespace Theta.Structures
             bool defaultCompare7,
             Compare<Axis7> compare7,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride7)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride7)
         {
             Code.AssertArgNonNull(locate, "locate");
             Code.AssertArgNonNull(equate, "equate");
@@ -17909,13 +17909,13 @@ namespace Theta.Structures
             this._defaultCompare7 = defaultCompare7;
             this._compare7 = compare7;
 
-            this._medianOverride1 = medianOverride1;
-            this._medianOverride2 = medianOverride2;
-            this._medianOverride3 = medianOverride3;
-            this._medianOverride4 = medianOverride4;
-            this._medianOverride5 = medianOverride5;
-            this._medianOverride6 = medianOverride6;
-            this._medianOverride7 = medianOverride7;
+            this._subdivisionOverride1 = subdivisionOverride1;
+            this._subdivisionOverride2 = subdivisionOverride2;
+            this._subdivisionOverride3 = subdivisionOverride3;
+            this._subdivisionOverride4 = subdivisionOverride4;
+            this._subdivisionOverride5 = subdivisionOverride5;
+            this._subdivisionOverride6 = subdivisionOverride6;
+            this._subdivisionOverride7 = subdivisionOverride7;
 
             this._top = new Leaf(Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>.None, null, -1);
             ComputeLoads(0);
@@ -17941,13 +17941,13 @@ namespace Theta.Structures
             Compare<Axis6> compare6,
             Compare<Axis7> compare7,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride7)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride7)
             : this(
             locate,
 
@@ -17984,13 +17984,13 @@ namespace Theta.Structures
             false,
             compare7,
 
-            medianOverride1,
-            medianOverride2,
-            medianOverride3,
-            medianOverride4,
-            medianOverride5,
-            medianOverride6,
-            medianOverride7)
+            subdivisionOverride1,
+            subdivisionOverride2,
+            subdivisionOverride3,
+            subdivisionOverride4,
+            subdivisionOverride5,
+            subdivisionOverride6,
+            subdivisionOverride7)
         { }
 
         public OmnitreePointsLinked(
@@ -18128,13 +18128,13 @@ namespace Theta.Structures
             Compare<Axis6> compare6,
             Compare<Axis7> compare7,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride7)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride7)
             : this(
                 locate,
 
@@ -18171,13 +18171,13 @@ namespace Theta.Structures
                 false,
                 compare7,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6,
-                medianOverride7)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6,
+                subdivisionOverride7)
         { }
 
         public OmnitreePointsLinked(
@@ -18245,13 +18245,13 @@ namespace Theta.Structures
             Compare<Axis6> compare6,
             Compare<Axis7> compare7,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride7)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride7)
             : this(
                 locate,
 
@@ -18288,13 +18288,13 @@ namespace Theta.Structures
                 false,
                 compare7,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6,
-                medianOverride7)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6,
+                subdivisionOverride7)
         { }
 
         public OmnitreePointsLinked(
@@ -18348,13 +18348,13 @@ namespace Theta.Structures
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7> locate,
             Equate<T> equate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride7)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride7)
             : this(
                 locate,
 
@@ -18391,13 +18391,13 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6,
-                medianOverride7)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6,
+                subdivisionOverride7)
         { }
 
         public OmnitreePointsLinked(
@@ -18449,13 +18449,13 @@ namespace Theta.Structures
 
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7> locate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> medianOverride7)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7>> subdivisionOverride7)
             : this(
                 locate,
 
@@ -18492,13 +18492,13 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6,
-                medianOverride7)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6,
+                subdivisionOverride7)
         { }
 
         #endregion
@@ -18686,7 +18686,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -18708,7 +18708,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis2> values2;
                 IAsyncResult result2 = null;
-                if (this._medianOverride2 != null)
+                if (this._subdivisionOverride2 != null)
                     values2 = null;
                 else
                 {
@@ -18730,7 +18730,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis3> values3;
                 IAsyncResult result3 = null;
-                if (this._medianOverride3 != null)
+                if (this._subdivisionOverride3 != null)
                     values3 = null;
                 else
                 {
@@ -18752,7 +18752,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis4> values4;
                 IAsyncResult result4 = null;
-                if (this._medianOverride4 != null)
+                if (this._subdivisionOverride4 != null)
                     values4 = null;
                 else
                 {
@@ -18774,7 +18774,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis5> values5;
                 IAsyncResult result5 = null;
-                if (this._medianOverride5 != null)
+                if (this._subdivisionOverride5 != null)
                     values5 = null;
                 else
                 {
@@ -18796,7 +18796,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis6> values6;
                 IAsyncResult result6 = null;
-                if (this._medianOverride6 != null)
+                if (this._subdivisionOverride6 != null)
                     values6 = null;
                 else
                 {
@@ -18818,7 +18818,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis7> values7;
                 IAsyncResult result7 = null;
-                if (this._medianOverride7 != null)
+                if (this._subdivisionOverride7 != null)
                     values7 = null;
                 else
                 {
@@ -18839,25 +18839,25 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride2 == null && allowMultithreading)
+                if (this._subdivisionOverride2 == null && allowMultithreading)
                     result2.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride3 == null && allowMultithreading)
+                if (this._subdivisionOverride3 == null && allowMultithreading)
                     result3.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride4 == null && allowMultithreading)
+                if (this._subdivisionOverride4 == null && allowMultithreading)
                     result4.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride5 == null && allowMultithreading)
+                if (this._subdivisionOverride5 == null && allowMultithreading)
                     result5.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride6 == null && allowMultithreading)
+                if (this._subdivisionOverride6 == null && allowMultithreading)
                     result6.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride7 == null && allowMultithreading)
+                if (this._subdivisionOverride7 == null && allowMultithreading)
                     result7.AsyncWaitHandle.WaitOne();
 
 
@@ -18890,7 +18890,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -18912,7 +18912,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis2> values2;
                 IAsyncResult result2 = null;
-                if (this._medianOverride2 != null)
+                if (this._subdivisionOverride2 != null)
                     values2 = null;
                 else
                 {
@@ -18934,7 +18934,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis3> values3;
                 IAsyncResult result3 = null;
-                if (this._medianOverride3 != null)
+                if (this._subdivisionOverride3 != null)
                     values3 = null;
                 else
                 {
@@ -18956,7 +18956,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis4> values4;
                 IAsyncResult result4 = null;
-                if (this._medianOverride4 != null)
+                if (this._subdivisionOverride4 != null)
                     values4 = null;
                 else
                 {
@@ -18978,7 +18978,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis5> values5;
                 IAsyncResult result5 = null;
-                if (this._medianOverride5 != null)
+                if (this._subdivisionOverride5 != null)
                     values5 = null;
                 else
                 {
@@ -19000,7 +19000,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis6> values6;
                 IAsyncResult result6 = null;
-                if (this._medianOverride6 != null)
+                if (this._subdivisionOverride6 != null)
                     values6 = null;
                 else
                 {
@@ -19022,7 +19022,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis7> values7;
                 IAsyncResult result7 = null;
-                if (this._medianOverride7 != null)
+                if (this._subdivisionOverride7 != null)
                     values7 = null;
                 else
                 {
@@ -19043,25 +19043,25 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride2 == null && allowMultithreading)
+                if (this._subdivisionOverride2 == null && allowMultithreading)
                     result2.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride3 == null && allowMultithreading)
+                if (this._subdivisionOverride3 == null && allowMultithreading)
                     result3.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride4 == null && allowMultithreading)
+                if (this._subdivisionOverride4 == null && allowMultithreading)
                     result4.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride5 == null && allowMultithreading)
+                if (this._subdivisionOverride5 == null && allowMultithreading)
                     result5.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride6 == null && allowMultithreading)
+                if (this._subdivisionOverride6 == null && allowMultithreading)
                     result6.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride7 == null && allowMultithreading)
+                if (this._subdivisionOverride7 == null && allowMultithreading)
                     result7.AsyncWaitHandle.WaitOne();
 
 
@@ -19090,41 +19090,41 @@ namespace Theta.Structures
             int median_axis5 = -1;
             int median_axis6 = -1;
             int median_axis7 = -1;
-            if (this._medianOverride1 == null || this._medianOverride2 == null || this._medianOverride3 == null || this._medianOverride4 == null || this._medianOverride5 == null || this._medianOverride6 == null || this._medianOverride7 == null)
+            if (this._subdivisionOverride1 == null || this._subdivisionOverride2 == null || this._subdivisionOverride3 == null || this._subdivisionOverride4 == null || this._subdivisionOverride5 == null || this._subdivisionOverride6 == null || this._subdivisionOverride7 == null)
                 GetMedianIndexes(initial_count, child, depth, prevmed1, prevmed2, prevmed3, prevmed4, prevmed5, prevmed6, prevmed7, out median_axis1, out median_axis2, out median_axis3, out median_axis4, out median_axis5, out median_axis6, out median_axis7);
 
-            if (this._medianOverride1 != null)
-                pointOfDivision1 = this._medianOverride1(parent.Bounds, additions);
+            if (this._subdivisionOverride1 != null)
+                pointOfDivision1 = this._subdivisionOverride1(parent.Bounds, additions);
             else
                 pointOfDivision1 = values1(median_axis1);
 
-            if (this._medianOverride2 != null)
-                pointOfDivision2 = this._medianOverride2(parent.Bounds, additions);
+            if (this._subdivisionOverride2 != null)
+                pointOfDivision2 = this._subdivisionOverride2(parent.Bounds, additions);
             else
                 pointOfDivision2 = values2(median_axis2);
 
-            if (this._medianOverride3 != null)
-                pointOfDivision3 = this._medianOverride3(parent.Bounds, additions);
+            if (this._subdivisionOverride3 != null)
+                pointOfDivision3 = this._subdivisionOverride3(parent.Bounds, additions);
             else
                 pointOfDivision3 = values3(median_axis3);
 
-            if (this._medianOverride4 != null)
-                pointOfDivision4 = this._medianOverride4(parent.Bounds, additions);
+            if (this._subdivisionOverride4 != null)
+                pointOfDivision4 = this._subdivisionOverride4(parent.Bounds, additions);
             else
                 pointOfDivision4 = values4(median_axis4);
 
-            if (this._medianOverride5 != null)
-                pointOfDivision5 = this._medianOverride5(parent.Bounds, additions);
+            if (this._subdivisionOverride5 != null)
+                pointOfDivision5 = this._subdivisionOverride5(parent.Bounds, additions);
             else
                 pointOfDivision5 = values5(median_axis5);
 
-            if (this._medianOverride6 != null)
-                pointOfDivision6 = this._medianOverride6(parent.Bounds, additions);
+            if (this._subdivisionOverride6 != null)
+                pointOfDivision6 = this._subdivisionOverride6(parent.Bounds, additions);
             else
                 pointOfDivision6 = values6(median_axis6);
 
-            if (this._medianOverride7 != null)
-                pointOfDivision7 = this._medianOverride7(parent.Bounds, additions);
+            if (this._subdivisionOverride7 != null)
+                pointOfDivision7 = this._subdivisionOverride7(parent.Bounds, additions);
             else
                 pointOfDivision7 = values7(median_axis7);
 
@@ -21154,15 +21154,15 @@ namespace Theta.Structures
         private Compare<Axis8> _compare8;
 
 
-        // allows median overriding for custom optimizations
-        private Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> _medianOverride1;
-        private Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> _medianOverride2;
-        private Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> _medianOverride3;
-        private Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> _medianOverride4;
-        private Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> _medianOverride5;
-        private Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> _medianOverride6;
-        private Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> _medianOverride7;
-        private Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> _medianOverride8;
+        // allows median overriding for custom optimizations (USE AT YOUR OWN RISK)
+        private Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> _subdivisionOverride1;
+        private Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> _subdivisionOverride2;
+        private Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> _subdivisionOverride3;
+        private Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> _subdivisionOverride4;
+        private Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> _subdivisionOverride5;
+        private Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> _subdivisionOverride6;
+        private Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> _subdivisionOverride7;
+        private Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> _subdivisionOverride8;
 
         #region Nested Types
 
@@ -21409,14 +21409,14 @@ namespace Theta.Structures
             this._defaultCompare8 = omnitree._defaultCompare8;
             this._compare8 = omnitree._compare8;
 
-            this._medianOverride1 = omnitree._medianOverride1;
-            this._medianOverride2 = omnitree._medianOverride2;
-            this._medianOverride3 = omnitree._medianOverride3;
-            this._medianOverride4 = omnitree._medianOverride4;
-            this._medianOverride5 = omnitree._medianOverride5;
-            this._medianOverride6 = omnitree._medianOverride6;
-            this._medianOverride7 = omnitree._medianOverride7;
-            this._medianOverride8 = omnitree._medianOverride8;
+            this._subdivisionOverride1 = omnitree._subdivisionOverride1;
+            this._subdivisionOverride2 = omnitree._subdivisionOverride2;
+            this._subdivisionOverride3 = omnitree._subdivisionOverride3;
+            this._subdivisionOverride4 = omnitree._subdivisionOverride4;
+            this._subdivisionOverride5 = omnitree._subdivisionOverride5;
+            this._subdivisionOverride6 = omnitree._subdivisionOverride6;
+            this._subdivisionOverride7 = omnitree._subdivisionOverride7;
+            this._subdivisionOverride8 = omnitree._subdivisionOverride8;
         }
 
         private OmnitreePointsLinked(
@@ -21459,14 +21459,14 @@ namespace Theta.Structures
             bool defaultCompare8,
             Compare<Axis8> compare8,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride7,
-            Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride8)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride7,
+            Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride8)
         {
             Code.AssertArgNonNull(locate, "locate");
             Code.AssertArgNonNull(equate, "equate");
@@ -21527,14 +21527,14 @@ namespace Theta.Structures
             this._defaultCompare8 = defaultCompare8;
             this._compare8 = compare8;
 
-            this._medianOverride1 = medianOverride1;
-            this._medianOverride2 = medianOverride2;
-            this._medianOverride3 = medianOverride3;
-            this._medianOverride4 = medianOverride4;
-            this._medianOverride5 = medianOverride5;
-            this._medianOverride6 = medianOverride6;
-            this._medianOverride7 = medianOverride7;
-            this._medianOverride8 = medianOverride8;
+            this._subdivisionOverride1 = subdivisionOverride1;
+            this._subdivisionOverride2 = subdivisionOverride2;
+            this._subdivisionOverride3 = subdivisionOverride3;
+            this._subdivisionOverride4 = subdivisionOverride4;
+            this._subdivisionOverride5 = subdivisionOverride5;
+            this._subdivisionOverride6 = subdivisionOverride6;
+            this._subdivisionOverride7 = subdivisionOverride7;
+            this._subdivisionOverride8 = subdivisionOverride8;
 
             this._top = new Leaf(Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>.None, null, -1);
             ComputeLoads(0);
@@ -21562,14 +21562,14 @@ namespace Theta.Structures
             Compare<Axis7> compare7,
             Compare<Axis8> compare8,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride7,
-            Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride8)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride7,
+            Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride8)
             : this(
             locate,
 
@@ -21610,14 +21610,14 @@ namespace Theta.Structures
             false,
             compare8,
 
-            medianOverride1,
-            medianOverride2,
-            medianOverride3,
-            medianOverride4,
-            medianOverride5,
-            medianOverride6,
-            medianOverride7,
-            medianOverride8)
+            subdivisionOverride1,
+            subdivisionOverride2,
+            subdivisionOverride3,
+            subdivisionOverride4,
+            subdivisionOverride5,
+            subdivisionOverride6,
+            subdivisionOverride7,
+            subdivisionOverride8)
         { }
 
         public OmnitreePointsLinked(
@@ -21769,14 +21769,14 @@ namespace Theta.Structures
             Compare<Axis7> compare7,
             Compare<Axis8> compare8,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride7,
-            Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride8)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride7,
+            Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride8)
             : this(
                 locate,
 
@@ -21817,14 +21817,14 @@ namespace Theta.Structures
                 false,
                 compare8,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6,
-                medianOverride7,
-                medianOverride8)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6,
+                subdivisionOverride7,
+                subdivisionOverride8)
         { }
 
         public OmnitreePointsLinked(
@@ -21899,14 +21899,14 @@ namespace Theta.Structures
             Compare<Axis7> compare7,
             Compare<Axis8> compare8,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride7,
-            Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride8)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride7,
+            Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride8)
             : this(
                 locate,
 
@@ -21947,14 +21947,14 @@ namespace Theta.Structures
                 false,
                 compare8,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6,
-                medianOverride7,
-                medianOverride8)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6,
+                subdivisionOverride7,
+                subdivisionOverride8)
         { }
 
         public OmnitreePointsLinked(
@@ -22013,14 +22013,14 @@ namespace Theta.Structures
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8> locate,
             Equate<T> equate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride7,
-            Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride8)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride7,
+            Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride8)
             : this(
                 locate,
 
@@ -22061,14 +22061,14 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6,
-                medianOverride7,
-                medianOverride8)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6,
+                subdivisionOverride7,
+                subdivisionOverride8)
         { }
 
         public OmnitreePointsLinked(
@@ -22125,14 +22125,14 @@ namespace Theta.Structures
 
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8> locate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride7,
-            Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> medianOverride8)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride7,
+            Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8>> subdivisionOverride8)
             : this(
                 locate,
 
@@ -22173,14 +22173,14 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6,
-                medianOverride7,
-                medianOverride8)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6,
+                subdivisionOverride7,
+                subdivisionOverride8)
         { }
 
         #endregion
@@ -22373,7 +22373,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -22395,7 +22395,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis2> values2;
                 IAsyncResult result2 = null;
-                if (this._medianOverride2 != null)
+                if (this._subdivisionOverride2 != null)
                     values2 = null;
                 else
                 {
@@ -22417,7 +22417,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis3> values3;
                 IAsyncResult result3 = null;
-                if (this._medianOverride3 != null)
+                if (this._subdivisionOverride3 != null)
                     values3 = null;
                 else
                 {
@@ -22439,7 +22439,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis4> values4;
                 IAsyncResult result4 = null;
-                if (this._medianOverride4 != null)
+                if (this._subdivisionOverride4 != null)
                     values4 = null;
                 else
                 {
@@ -22461,7 +22461,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis5> values5;
                 IAsyncResult result5 = null;
-                if (this._medianOverride5 != null)
+                if (this._subdivisionOverride5 != null)
                     values5 = null;
                 else
                 {
@@ -22483,7 +22483,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis6> values6;
                 IAsyncResult result6 = null;
-                if (this._medianOverride6 != null)
+                if (this._subdivisionOverride6 != null)
                     values6 = null;
                 else
                 {
@@ -22505,7 +22505,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis7> values7;
                 IAsyncResult result7 = null;
-                if (this._medianOverride7 != null)
+                if (this._subdivisionOverride7 != null)
                     values7 = null;
                 else
                 {
@@ -22527,7 +22527,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis8> values8;
                 IAsyncResult result8 = null;
-                if (this._medianOverride8 != null)
+                if (this._subdivisionOverride8 != null)
                     values8 = null;
                 else
                 {
@@ -22548,28 +22548,28 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride2 == null && allowMultithreading)
+                if (this._subdivisionOverride2 == null && allowMultithreading)
                     result2.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride3 == null && allowMultithreading)
+                if (this._subdivisionOverride3 == null && allowMultithreading)
                     result3.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride4 == null && allowMultithreading)
+                if (this._subdivisionOverride4 == null && allowMultithreading)
                     result4.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride5 == null && allowMultithreading)
+                if (this._subdivisionOverride5 == null && allowMultithreading)
                     result5.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride6 == null && allowMultithreading)
+                if (this._subdivisionOverride6 == null && allowMultithreading)
                     result6.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride7 == null && allowMultithreading)
+                if (this._subdivisionOverride7 == null && allowMultithreading)
                     result7.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride8 == null && allowMultithreading)
+                if (this._subdivisionOverride8 == null && allowMultithreading)
                     result8.AsyncWaitHandle.WaitOne();
 
 
@@ -22602,7 +22602,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -22624,7 +22624,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis2> values2;
                 IAsyncResult result2 = null;
-                if (this._medianOverride2 != null)
+                if (this._subdivisionOverride2 != null)
                     values2 = null;
                 else
                 {
@@ -22646,7 +22646,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis3> values3;
                 IAsyncResult result3 = null;
-                if (this._medianOverride3 != null)
+                if (this._subdivisionOverride3 != null)
                     values3 = null;
                 else
                 {
@@ -22668,7 +22668,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis4> values4;
                 IAsyncResult result4 = null;
-                if (this._medianOverride4 != null)
+                if (this._subdivisionOverride4 != null)
                     values4 = null;
                 else
                 {
@@ -22690,7 +22690,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis5> values5;
                 IAsyncResult result5 = null;
-                if (this._medianOverride5 != null)
+                if (this._subdivisionOverride5 != null)
                     values5 = null;
                 else
                 {
@@ -22712,7 +22712,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis6> values6;
                 IAsyncResult result6 = null;
-                if (this._medianOverride6 != null)
+                if (this._subdivisionOverride6 != null)
                     values6 = null;
                 else
                 {
@@ -22734,7 +22734,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis7> values7;
                 IAsyncResult result7 = null;
-                if (this._medianOverride7 != null)
+                if (this._subdivisionOverride7 != null)
                     values7 = null;
                 else
                 {
@@ -22756,7 +22756,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis8> values8;
                 IAsyncResult result8 = null;
-                if (this._medianOverride8 != null)
+                if (this._subdivisionOverride8 != null)
                     values8 = null;
                 else
                 {
@@ -22777,28 +22777,28 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride2 == null && allowMultithreading)
+                if (this._subdivisionOverride2 == null && allowMultithreading)
                     result2.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride3 == null && allowMultithreading)
+                if (this._subdivisionOverride3 == null && allowMultithreading)
                     result3.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride4 == null && allowMultithreading)
+                if (this._subdivisionOverride4 == null && allowMultithreading)
                     result4.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride5 == null && allowMultithreading)
+                if (this._subdivisionOverride5 == null && allowMultithreading)
                     result5.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride6 == null && allowMultithreading)
+                if (this._subdivisionOverride6 == null && allowMultithreading)
                     result6.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride7 == null && allowMultithreading)
+                if (this._subdivisionOverride7 == null && allowMultithreading)
                     result7.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride8 == null && allowMultithreading)
+                if (this._subdivisionOverride8 == null && allowMultithreading)
                     result8.AsyncWaitHandle.WaitOne();
 
 
@@ -22829,46 +22829,46 @@ namespace Theta.Structures
             int median_axis6 = -1;
             int median_axis7 = -1;
             int median_axis8 = -1;
-            if (this._medianOverride1 == null || this._medianOverride2 == null || this._medianOverride3 == null || this._medianOverride4 == null || this._medianOverride5 == null || this._medianOverride6 == null || this._medianOverride7 == null || this._medianOverride8 == null)
+            if (this._subdivisionOverride1 == null || this._subdivisionOverride2 == null || this._subdivisionOverride3 == null || this._subdivisionOverride4 == null || this._subdivisionOverride5 == null || this._subdivisionOverride6 == null || this._subdivisionOverride7 == null || this._subdivisionOverride8 == null)
                 GetMedianIndexes(initial_count, child, depth, prevmed1, prevmed2, prevmed3, prevmed4, prevmed5, prevmed6, prevmed7, prevmed8, out median_axis1, out median_axis2, out median_axis3, out median_axis4, out median_axis5, out median_axis6, out median_axis7, out median_axis8);
 
-            if (this._medianOverride1 != null)
-                pointOfDivision1 = this._medianOverride1(parent.Bounds, additions);
+            if (this._subdivisionOverride1 != null)
+                pointOfDivision1 = this._subdivisionOverride1(parent.Bounds, additions);
             else
                 pointOfDivision1 = values1(median_axis1);
 
-            if (this._medianOverride2 != null)
-                pointOfDivision2 = this._medianOverride2(parent.Bounds, additions);
+            if (this._subdivisionOverride2 != null)
+                pointOfDivision2 = this._subdivisionOverride2(parent.Bounds, additions);
             else
                 pointOfDivision2 = values2(median_axis2);
 
-            if (this._medianOverride3 != null)
-                pointOfDivision3 = this._medianOverride3(parent.Bounds, additions);
+            if (this._subdivisionOverride3 != null)
+                pointOfDivision3 = this._subdivisionOverride3(parent.Bounds, additions);
             else
                 pointOfDivision3 = values3(median_axis3);
 
-            if (this._medianOverride4 != null)
-                pointOfDivision4 = this._medianOverride4(parent.Bounds, additions);
+            if (this._subdivisionOverride4 != null)
+                pointOfDivision4 = this._subdivisionOverride4(parent.Bounds, additions);
             else
                 pointOfDivision4 = values4(median_axis4);
 
-            if (this._medianOverride5 != null)
-                pointOfDivision5 = this._medianOverride5(parent.Bounds, additions);
+            if (this._subdivisionOverride5 != null)
+                pointOfDivision5 = this._subdivisionOverride5(parent.Bounds, additions);
             else
                 pointOfDivision5 = values5(median_axis5);
 
-            if (this._medianOverride6 != null)
-                pointOfDivision6 = this._medianOverride6(parent.Bounds, additions);
+            if (this._subdivisionOverride6 != null)
+                pointOfDivision6 = this._subdivisionOverride6(parent.Bounds, additions);
             else
                 pointOfDivision6 = values6(median_axis6);
 
-            if (this._medianOverride7 != null)
-                pointOfDivision7 = this._medianOverride7(parent.Bounds, additions);
+            if (this._subdivisionOverride7 != null)
+                pointOfDivision7 = this._subdivisionOverride7(parent.Bounds, additions);
             else
                 pointOfDivision7 = values7(median_axis7);
 
-            if (this._medianOverride8 != null)
-                pointOfDivision8 = this._medianOverride8(parent.Bounds, additions);
+            if (this._subdivisionOverride8 != null)
+                pointOfDivision8 = this._subdivisionOverride8(parent.Bounds, additions);
             else
                 pointOfDivision8 = values8(median_axis8);
 
@@ -25011,16 +25011,16 @@ namespace Theta.Structures
         private Compare<Axis9> _compare9;
 
 
-        // allows median overriding for custom optimizations
-        private Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> _medianOverride1;
-        private Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> _medianOverride2;
-        private Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> _medianOverride3;
-        private Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> _medianOverride4;
-        private Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> _medianOverride5;
-        private Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> _medianOverride6;
-        private Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> _medianOverride7;
-        private Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> _medianOverride8;
-        private Omnitree.MedianOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> _medianOverride9;
+        // allows median overriding for custom optimizations (USE AT YOUR OWN RISK)
+        private Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> _subdivisionOverride1;
+        private Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> _subdivisionOverride2;
+        private Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> _subdivisionOverride3;
+        private Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> _subdivisionOverride4;
+        private Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> _subdivisionOverride5;
+        private Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> _subdivisionOverride6;
+        private Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> _subdivisionOverride7;
+        private Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> _subdivisionOverride8;
+        private Omnitree.SubdivisionOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> _subdivisionOverride9;
 
         #region Nested Types
 
@@ -25271,15 +25271,15 @@ namespace Theta.Structures
             this._defaultCompare9 = omnitree._defaultCompare9;
             this._compare9 = omnitree._compare9;
 
-            this._medianOverride1 = omnitree._medianOverride1;
-            this._medianOverride2 = omnitree._medianOverride2;
-            this._medianOverride3 = omnitree._medianOverride3;
-            this._medianOverride4 = omnitree._medianOverride4;
-            this._medianOverride5 = omnitree._medianOverride5;
-            this._medianOverride6 = omnitree._medianOverride6;
-            this._medianOverride7 = omnitree._medianOverride7;
-            this._medianOverride8 = omnitree._medianOverride8;
-            this._medianOverride9 = omnitree._medianOverride9;
+            this._subdivisionOverride1 = omnitree._subdivisionOverride1;
+            this._subdivisionOverride2 = omnitree._subdivisionOverride2;
+            this._subdivisionOverride3 = omnitree._subdivisionOverride3;
+            this._subdivisionOverride4 = omnitree._subdivisionOverride4;
+            this._subdivisionOverride5 = omnitree._subdivisionOverride5;
+            this._subdivisionOverride6 = omnitree._subdivisionOverride6;
+            this._subdivisionOverride7 = omnitree._subdivisionOverride7;
+            this._subdivisionOverride8 = omnitree._subdivisionOverride8;
+            this._subdivisionOverride9 = omnitree._subdivisionOverride9;
         }
 
         private OmnitreePointsLinked(
@@ -25326,15 +25326,15 @@ namespace Theta.Structures
             bool defaultCompare9,
             Compare<Axis9> compare9,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride7,
-            Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride8,
-            Omnitree.MedianOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride9)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride7,
+            Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride8,
+            Omnitree.SubdivisionOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride9)
         {
             Code.AssertArgNonNull(locate, "locate");
             Code.AssertArgNonNull(equate, "equate");
@@ -25401,15 +25401,15 @@ namespace Theta.Structures
             this._defaultCompare9 = defaultCompare9;
             this._compare9 = compare9;
 
-            this._medianOverride1 = medianOverride1;
-            this._medianOverride2 = medianOverride2;
-            this._medianOverride3 = medianOverride3;
-            this._medianOverride4 = medianOverride4;
-            this._medianOverride5 = medianOverride5;
-            this._medianOverride6 = medianOverride6;
-            this._medianOverride7 = medianOverride7;
-            this._medianOverride8 = medianOverride8;
-            this._medianOverride9 = medianOverride9;
+            this._subdivisionOverride1 = subdivisionOverride1;
+            this._subdivisionOverride2 = subdivisionOverride2;
+            this._subdivisionOverride3 = subdivisionOverride3;
+            this._subdivisionOverride4 = subdivisionOverride4;
+            this._subdivisionOverride5 = subdivisionOverride5;
+            this._subdivisionOverride6 = subdivisionOverride6;
+            this._subdivisionOverride7 = subdivisionOverride7;
+            this._subdivisionOverride8 = subdivisionOverride8;
+            this._subdivisionOverride9 = subdivisionOverride9;
 
             this._top = new Leaf(Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>.None, null, -1);
             ComputeLoads(0);
@@ -25439,15 +25439,15 @@ namespace Theta.Structures
             Compare<Axis8> compare8,
             Compare<Axis9> compare9,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride7,
-            Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride8,
-            Omnitree.MedianOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride9)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride7,
+            Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride8,
+            Omnitree.SubdivisionOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride9)
             : this(
             locate,
 
@@ -25492,15 +25492,15 @@ namespace Theta.Structures
             false,
             compare9,
 
-            medianOverride1,
-            medianOverride2,
-            medianOverride3,
-            medianOverride4,
-            medianOverride5,
-            medianOverride6,
-            medianOverride7,
-            medianOverride8,
-            medianOverride9)
+            subdivisionOverride1,
+            subdivisionOverride2,
+            subdivisionOverride3,
+            subdivisionOverride4,
+            subdivisionOverride5,
+            subdivisionOverride6,
+            subdivisionOverride7,
+            subdivisionOverride8,
+            subdivisionOverride9)
         { }
 
         public OmnitreePointsLinked(
@@ -25666,15 +25666,15 @@ namespace Theta.Structures
             Compare<Axis8> compare8,
             Compare<Axis9> compare9,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride7,
-            Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride8,
-            Omnitree.MedianOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride9)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride7,
+            Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride8,
+            Omnitree.SubdivisionOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride9)
             : this(
                 locate,
 
@@ -25719,15 +25719,15 @@ namespace Theta.Structures
                 false,
                 compare9,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6,
-                medianOverride7,
-                medianOverride8,
-                medianOverride9)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6,
+                subdivisionOverride7,
+                subdivisionOverride8,
+                subdivisionOverride9)
         { }
 
         public OmnitreePointsLinked(
@@ -25809,15 +25809,15 @@ namespace Theta.Structures
             Compare<Axis8> compare8,
             Compare<Axis9> compare9,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride7,
-            Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride8,
-            Omnitree.MedianOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride9)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride7,
+            Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride8,
+            Omnitree.SubdivisionOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride9)
             : this(
                 locate,
 
@@ -25862,15 +25862,15 @@ namespace Theta.Structures
                 false,
                 compare9,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6,
-                medianOverride7,
-                medianOverride8,
-                medianOverride9)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6,
+                subdivisionOverride7,
+                subdivisionOverride8,
+                subdivisionOverride9)
         { }
 
         public OmnitreePointsLinked(
@@ -25934,15 +25934,15 @@ namespace Theta.Structures
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9> locate,
             Equate<T> equate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride7,
-            Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride8,
-            Omnitree.MedianOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride9)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride7,
+            Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride8,
+            Omnitree.SubdivisionOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride9)
             : this(
                 locate,
 
@@ -25987,15 +25987,15 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6,
-                medianOverride7,
-                medianOverride8,
-                medianOverride9)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6,
+                subdivisionOverride7,
+                subdivisionOverride8,
+                subdivisionOverride9)
         { }
 
         public OmnitreePointsLinked(
@@ -26057,15 +26057,15 @@ namespace Theta.Structures
 
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9> locate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride7,
-            Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride8,
-            Omnitree.MedianOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> medianOverride9)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride7,
+            Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride8,
+            Omnitree.SubdivisionOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9>> subdivisionOverride9)
             : this(
                 locate,
 
@@ -26110,15 +26110,15 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6,
-                medianOverride7,
-                medianOverride8,
-                medianOverride9)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6,
+                subdivisionOverride7,
+                subdivisionOverride8,
+                subdivisionOverride9)
         { }
 
         #endregion
@@ -26316,7 +26316,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -26338,7 +26338,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis2> values2;
                 IAsyncResult result2 = null;
-                if (this._medianOverride2 != null)
+                if (this._subdivisionOverride2 != null)
                     values2 = null;
                 else
                 {
@@ -26360,7 +26360,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis3> values3;
                 IAsyncResult result3 = null;
-                if (this._medianOverride3 != null)
+                if (this._subdivisionOverride3 != null)
                     values3 = null;
                 else
                 {
@@ -26382,7 +26382,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis4> values4;
                 IAsyncResult result4 = null;
-                if (this._medianOverride4 != null)
+                if (this._subdivisionOverride4 != null)
                     values4 = null;
                 else
                 {
@@ -26404,7 +26404,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis5> values5;
                 IAsyncResult result5 = null;
-                if (this._medianOverride5 != null)
+                if (this._subdivisionOverride5 != null)
                     values5 = null;
                 else
                 {
@@ -26426,7 +26426,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis6> values6;
                 IAsyncResult result6 = null;
-                if (this._medianOverride6 != null)
+                if (this._subdivisionOverride6 != null)
                     values6 = null;
                 else
                 {
@@ -26448,7 +26448,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis7> values7;
                 IAsyncResult result7 = null;
-                if (this._medianOverride7 != null)
+                if (this._subdivisionOverride7 != null)
                     values7 = null;
                 else
                 {
@@ -26470,7 +26470,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis8> values8;
                 IAsyncResult result8 = null;
-                if (this._medianOverride8 != null)
+                if (this._subdivisionOverride8 != null)
                     values8 = null;
                 else
                 {
@@ -26492,7 +26492,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis9> values9;
                 IAsyncResult result9 = null;
-                if (this._medianOverride9 != null)
+                if (this._subdivisionOverride9 != null)
                     values9 = null;
                 else
                 {
@@ -26513,31 +26513,31 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride2 == null && allowMultithreading)
+                if (this._subdivisionOverride2 == null && allowMultithreading)
                     result2.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride3 == null && allowMultithreading)
+                if (this._subdivisionOverride3 == null && allowMultithreading)
                     result3.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride4 == null && allowMultithreading)
+                if (this._subdivisionOverride4 == null && allowMultithreading)
                     result4.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride5 == null && allowMultithreading)
+                if (this._subdivisionOverride5 == null && allowMultithreading)
                     result5.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride6 == null && allowMultithreading)
+                if (this._subdivisionOverride6 == null && allowMultithreading)
                     result6.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride7 == null && allowMultithreading)
+                if (this._subdivisionOverride7 == null && allowMultithreading)
                     result7.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride8 == null && allowMultithreading)
+                if (this._subdivisionOverride8 == null && allowMultithreading)
                     result8.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride9 == null && allowMultithreading)
+                if (this._subdivisionOverride9 == null && allowMultithreading)
                     result9.AsyncWaitHandle.WaitOne();
 
 
@@ -26570,7 +26570,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -26592,7 +26592,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis2> values2;
                 IAsyncResult result2 = null;
-                if (this._medianOverride2 != null)
+                if (this._subdivisionOverride2 != null)
                     values2 = null;
                 else
                 {
@@ -26614,7 +26614,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis3> values3;
                 IAsyncResult result3 = null;
-                if (this._medianOverride3 != null)
+                if (this._subdivisionOverride3 != null)
                     values3 = null;
                 else
                 {
@@ -26636,7 +26636,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis4> values4;
                 IAsyncResult result4 = null;
-                if (this._medianOverride4 != null)
+                if (this._subdivisionOverride4 != null)
                     values4 = null;
                 else
                 {
@@ -26658,7 +26658,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis5> values5;
                 IAsyncResult result5 = null;
-                if (this._medianOverride5 != null)
+                if (this._subdivisionOverride5 != null)
                     values5 = null;
                 else
                 {
@@ -26680,7 +26680,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis6> values6;
                 IAsyncResult result6 = null;
-                if (this._medianOverride6 != null)
+                if (this._subdivisionOverride6 != null)
                     values6 = null;
                 else
                 {
@@ -26702,7 +26702,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis7> values7;
                 IAsyncResult result7 = null;
-                if (this._medianOverride7 != null)
+                if (this._subdivisionOverride7 != null)
                     values7 = null;
                 else
                 {
@@ -26724,7 +26724,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis8> values8;
                 IAsyncResult result8 = null;
-                if (this._medianOverride8 != null)
+                if (this._subdivisionOverride8 != null)
                     values8 = null;
                 else
                 {
@@ -26746,7 +26746,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis9> values9;
                 IAsyncResult result9 = null;
-                if (this._medianOverride9 != null)
+                if (this._subdivisionOverride9 != null)
                     values9 = null;
                 else
                 {
@@ -26767,31 +26767,31 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride2 == null && allowMultithreading)
+                if (this._subdivisionOverride2 == null && allowMultithreading)
                     result2.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride3 == null && allowMultithreading)
+                if (this._subdivisionOverride3 == null && allowMultithreading)
                     result3.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride4 == null && allowMultithreading)
+                if (this._subdivisionOverride4 == null && allowMultithreading)
                     result4.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride5 == null && allowMultithreading)
+                if (this._subdivisionOverride5 == null && allowMultithreading)
                     result5.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride6 == null && allowMultithreading)
+                if (this._subdivisionOverride6 == null && allowMultithreading)
                     result6.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride7 == null && allowMultithreading)
+                if (this._subdivisionOverride7 == null && allowMultithreading)
                     result7.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride8 == null && allowMultithreading)
+                if (this._subdivisionOverride8 == null && allowMultithreading)
                     result8.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride9 == null && allowMultithreading)
+                if (this._subdivisionOverride9 == null && allowMultithreading)
                     result9.AsyncWaitHandle.WaitOne();
 
 
@@ -26824,51 +26824,51 @@ namespace Theta.Structures
             int median_axis7 = -1;
             int median_axis8 = -1;
             int median_axis9 = -1;
-            if (this._medianOverride1 == null || this._medianOverride2 == null || this._medianOverride3 == null || this._medianOverride4 == null || this._medianOverride5 == null || this._medianOverride6 == null || this._medianOverride7 == null || this._medianOverride8 == null || this._medianOverride9 == null)
+            if (this._subdivisionOverride1 == null || this._subdivisionOverride2 == null || this._subdivisionOverride3 == null || this._subdivisionOverride4 == null || this._subdivisionOverride5 == null || this._subdivisionOverride6 == null || this._subdivisionOverride7 == null || this._subdivisionOverride8 == null || this._subdivisionOverride9 == null)
                 GetMedianIndexes(initial_count, child, depth, prevmed1, prevmed2, prevmed3, prevmed4, prevmed5, prevmed6, prevmed7, prevmed8, prevmed9, out median_axis1, out median_axis2, out median_axis3, out median_axis4, out median_axis5, out median_axis6, out median_axis7, out median_axis8, out median_axis9);
 
-            if (this._medianOverride1 != null)
-                pointOfDivision1 = this._medianOverride1(parent.Bounds, additions);
+            if (this._subdivisionOverride1 != null)
+                pointOfDivision1 = this._subdivisionOverride1(parent.Bounds, additions);
             else
                 pointOfDivision1 = values1(median_axis1);
 
-            if (this._medianOverride2 != null)
-                pointOfDivision2 = this._medianOverride2(parent.Bounds, additions);
+            if (this._subdivisionOverride2 != null)
+                pointOfDivision2 = this._subdivisionOverride2(parent.Bounds, additions);
             else
                 pointOfDivision2 = values2(median_axis2);
 
-            if (this._medianOverride3 != null)
-                pointOfDivision3 = this._medianOverride3(parent.Bounds, additions);
+            if (this._subdivisionOverride3 != null)
+                pointOfDivision3 = this._subdivisionOverride3(parent.Bounds, additions);
             else
                 pointOfDivision3 = values3(median_axis3);
 
-            if (this._medianOverride4 != null)
-                pointOfDivision4 = this._medianOverride4(parent.Bounds, additions);
+            if (this._subdivisionOverride4 != null)
+                pointOfDivision4 = this._subdivisionOverride4(parent.Bounds, additions);
             else
                 pointOfDivision4 = values4(median_axis4);
 
-            if (this._medianOverride5 != null)
-                pointOfDivision5 = this._medianOverride5(parent.Bounds, additions);
+            if (this._subdivisionOverride5 != null)
+                pointOfDivision5 = this._subdivisionOverride5(parent.Bounds, additions);
             else
                 pointOfDivision5 = values5(median_axis5);
 
-            if (this._medianOverride6 != null)
-                pointOfDivision6 = this._medianOverride6(parent.Bounds, additions);
+            if (this._subdivisionOverride6 != null)
+                pointOfDivision6 = this._subdivisionOverride6(parent.Bounds, additions);
             else
                 pointOfDivision6 = values6(median_axis6);
 
-            if (this._medianOverride7 != null)
-                pointOfDivision7 = this._medianOverride7(parent.Bounds, additions);
+            if (this._subdivisionOverride7 != null)
+                pointOfDivision7 = this._subdivisionOverride7(parent.Bounds, additions);
             else
                 pointOfDivision7 = values7(median_axis7);
 
-            if (this._medianOverride8 != null)
-                pointOfDivision8 = this._medianOverride8(parent.Bounds, additions);
+            if (this._subdivisionOverride8 != null)
+                pointOfDivision8 = this._subdivisionOverride8(parent.Bounds, additions);
             else
                 pointOfDivision8 = values8(median_axis8);
 
-            if (this._medianOverride9 != null)
-                pointOfDivision9 = this._medianOverride9(parent.Bounds, additions);
+            if (this._subdivisionOverride9 != null)
+                pointOfDivision9 = this._subdivisionOverride9(parent.Bounds, additions);
             else
                 pointOfDivision9 = values9(median_axis9);
 
@@ -29124,17 +29124,17 @@ namespace Theta.Structures
         private Compare<Axis10> _compare10;
 
 
-        // allows median overriding for custom optimizations
-        private Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _medianOverride1;
-        private Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _medianOverride2;
-        private Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _medianOverride3;
-        private Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _medianOverride4;
-        private Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _medianOverride5;
-        private Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _medianOverride6;
-        private Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _medianOverride7;
-        private Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _medianOverride8;
-        private Omnitree.MedianOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _medianOverride9;
-        private Omnitree.MedianOverride<T, Axis10, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _medianOverride10;
+        // allows median overriding for custom optimizations (USE AT YOUR OWN RISK)
+        private Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _subdivisionOverride1;
+        private Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _subdivisionOverride2;
+        private Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _subdivisionOverride3;
+        private Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _subdivisionOverride4;
+        private Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _subdivisionOverride5;
+        private Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _subdivisionOverride6;
+        private Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _subdivisionOverride7;
+        private Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _subdivisionOverride8;
+        private Omnitree.SubdivisionOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _subdivisionOverride9;
+        private Omnitree.SubdivisionOverride<T, Axis10, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> _subdivisionOverride10;
 
         #region Nested Types
 
@@ -29389,16 +29389,16 @@ namespace Theta.Structures
             this._defaultCompare10 = omnitree._defaultCompare10;
             this._compare10 = omnitree._compare10;
 
-            this._medianOverride1 = omnitree._medianOverride1;
-            this._medianOverride2 = omnitree._medianOverride2;
-            this._medianOverride3 = omnitree._medianOverride3;
-            this._medianOverride4 = omnitree._medianOverride4;
-            this._medianOverride5 = omnitree._medianOverride5;
-            this._medianOverride6 = omnitree._medianOverride6;
-            this._medianOverride7 = omnitree._medianOverride7;
-            this._medianOverride8 = omnitree._medianOverride8;
-            this._medianOverride9 = omnitree._medianOverride9;
-            this._medianOverride10 = omnitree._medianOverride10;
+            this._subdivisionOverride1 = omnitree._subdivisionOverride1;
+            this._subdivisionOverride2 = omnitree._subdivisionOverride2;
+            this._subdivisionOverride3 = omnitree._subdivisionOverride3;
+            this._subdivisionOverride4 = omnitree._subdivisionOverride4;
+            this._subdivisionOverride5 = omnitree._subdivisionOverride5;
+            this._subdivisionOverride6 = omnitree._subdivisionOverride6;
+            this._subdivisionOverride7 = omnitree._subdivisionOverride7;
+            this._subdivisionOverride8 = omnitree._subdivisionOverride8;
+            this._subdivisionOverride9 = omnitree._subdivisionOverride9;
+            this._subdivisionOverride10 = omnitree._subdivisionOverride10;
         }
 
         private OmnitreePointsLinked(
@@ -29449,16 +29449,16 @@ namespace Theta.Structures
             bool defaultCompare10,
             Compare<Axis10> compare10,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride7,
-            Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride8,
-            Omnitree.MedianOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride9,
-            Omnitree.MedianOverride<T, Axis10, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride10)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride7,
+            Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride8,
+            Omnitree.SubdivisionOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride9,
+            Omnitree.SubdivisionOverride<T, Axis10, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride10)
         {
             Code.AssertArgNonNull(locate, "locate");
             Code.AssertArgNonNull(equate, "equate");
@@ -29531,16 +29531,16 @@ namespace Theta.Structures
             this._defaultCompare10 = defaultCompare10;
             this._compare10 = compare10;
 
-            this._medianOverride1 = medianOverride1;
-            this._medianOverride2 = medianOverride2;
-            this._medianOverride3 = medianOverride3;
-            this._medianOverride4 = medianOverride4;
-            this._medianOverride5 = medianOverride5;
-            this._medianOverride6 = medianOverride6;
-            this._medianOverride7 = medianOverride7;
-            this._medianOverride8 = medianOverride8;
-            this._medianOverride9 = medianOverride9;
-            this._medianOverride10 = medianOverride10;
+            this._subdivisionOverride1 = subdivisionOverride1;
+            this._subdivisionOverride2 = subdivisionOverride2;
+            this._subdivisionOverride3 = subdivisionOverride3;
+            this._subdivisionOverride4 = subdivisionOverride4;
+            this._subdivisionOverride5 = subdivisionOverride5;
+            this._subdivisionOverride6 = subdivisionOverride6;
+            this._subdivisionOverride7 = subdivisionOverride7;
+            this._subdivisionOverride8 = subdivisionOverride8;
+            this._subdivisionOverride9 = subdivisionOverride9;
+            this._subdivisionOverride10 = subdivisionOverride10;
 
             this._top = new Leaf(Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>.None, null, -1);
             ComputeLoads(0);
@@ -29572,16 +29572,16 @@ namespace Theta.Structures
             Compare<Axis9> compare9,
             Compare<Axis10> compare10,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride7,
-            Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride8,
-            Omnitree.MedianOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride9,
-            Omnitree.MedianOverride<T, Axis10, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride10)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride7,
+            Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride8,
+            Omnitree.SubdivisionOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride9,
+            Omnitree.SubdivisionOverride<T, Axis10, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride10)
             : this(
             locate,
 
@@ -29630,16 +29630,16 @@ namespace Theta.Structures
             false,
             compare10,
 
-            medianOverride1,
-            medianOverride2,
-            medianOverride3,
-            medianOverride4,
-            medianOverride5,
-            medianOverride6,
-            medianOverride7,
-            medianOverride8,
-            medianOverride9,
-            medianOverride10)
+            subdivisionOverride1,
+            subdivisionOverride2,
+            subdivisionOverride3,
+            subdivisionOverride4,
+            subdivisionOverride5,
+            subdivisionOverride6,
+            subdivisionOverride7,
+            subdivisionOverride8,
+            subdivisionOverride9,
+            subdivisionOverride10)
         { }
 
         public OmnitreePointsLinked(
@@ -29819,16 +29819,16 @@ namespace Theta.Structures
             Compare<Axis9> compare9,
             Compare<Axis10> compare10,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride7,
-            Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride8,
-            Omnitree.MedianOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride9,
-            Omnitree.MedianOverride<T, Axis10, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride10)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride7,
+            Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride8,
+            Omnitree.SubdivisionOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride9,
+            Omnitree.SubdivisionOverride<T, Axis10, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride10)
             : this(
                 locate,
 
@@ -29877,16 +29877,16 @@ namespace Theta.Structures
                 false,
                 compare10,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6,
-                medianOverride7,
-                medianOverride8,
-                medianOverride9,
-                medianOverride10)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6,
+                subdivisionOverride7,
+                subdivisionOverride8,
+                subdivisionOverride9,
+                subdivisionOverride10)
         { }
 
         public OmnitreePointsLinked(
@@ -29975,16 +29975,16 @@ namespace Theta.Structures
             Compare<Axis9> compare9,
             Compare<Axis10> compare10,
 
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride7,
-            Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride8,
-            Omnitree.MedianOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride9,
-            Omnitree.MedianOverride<T, Axis10, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride10)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride7,
+            Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride8,
+            Omnitree.SubdivisionOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride9,
+            Omnitree.SubdivisionOverride<T, Axis10, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride10)
             : this(
                 locate,
 
@@ -30033,16 +30033,16 @@ namespace Theta.Structures
                 false,
                 compare10,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6,
-                medianOverride7,
-                medianOverride8,
-                medianOverride9,
-                medianOverride10)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6,
+                subdivisionOverride7,
+                subdivisionOverride8,
+                subdivisionOverride9,
+                subdivisionOverride10)
         { }
 
         public OmnitreePointsLinked(
@@ -30111,16 +30111,16 @@ namespace Theta.Structures
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10> locate,
             Equate<T> equate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride7,
-            Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride8,
-            Omnitree.MedianOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride9,
-            Omnitree.MedianOverride<T, Axis10, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride10)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride7,
+            Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride8,
+            Omnitree.SubdivisionOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride9,
+            Omnitree.SubdivisionOverride<T, Axis10, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride10)
             : this(
                 locate,
 
@@ -30169,16 +30169,16 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6,
-                medianOverride7,
-                medianOverride8,
-                medianOverride9,
-                medianOverride10)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6,
+                subdivisionOverride7,
+                subdivisionOverride8,
+                subdivisionOverride9,
+                subdivisionOverride10)
         { }
 
         public OmnitreePointsLinked(
@@ -30245,16 +30245,16 @@ namespace Theta.Structures
 
         public OmnitreePointsLinked(
             Omnitree.Location<T, Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10> locate,
-            Omnitree.MedianOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride1,
-            Omnitree.MedianOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride2,
-            Omnitree.MedianOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride3,
-            Omnitree.MedianOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride4,
-            Omnitree.MedianOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride5,
-            Omnitree.MedianOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride6,
-            Omnitree.MedianOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride7,
-            Omnitree.MedianOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride8,
-            Omnitree.MedianOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride9,
-            Omnitree.MedianOverride<T, Axis10, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> medianOverride10)
+            Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride1,
+            Omnitree.SubdivisionOverride<T, Axis2, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride2,
+            Omnitree.SubdivisionOverride<T, Axis3, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride3,
+            Omnitree.SubdivisionOverride<T, Axis4, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride4,
+            Omnitree.SubdivisionOverride<T, Axis5, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride5,
+            Omnitree.SubdivisionOverride<T, Axis6, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride6,
+            Omnitree.SubdivisionOverride<T, Axis7, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride7,
+            Omnitree.SubdivisionOverride<T, Axis8, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride8,
+            Omnitree.SubdivisionOverride<T, Axis9, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride9,
+            Omnitree.SubdivisionOverride<T, Axis10, Omnitree.Bounds<Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Axis7, Axis8, Axis9, Axis10>> subdivisionOverride10)
             : this(
                 locate,
 
@@ -30303,16 +30303,16 @@ namespace Theta.Structures
                 true,
                 Compare.Default,
 
-                medianOverride1,
-                medianOverride2,
-                medianOverride3,
-                medianOverride4,
-                medianOverride5,
-                medianOverride6,
-                medianOverride7,
-                medianOverride8,
-                medianOverride9,
-                medianOverride10)
+                subdivisionOverride1,
+                subdivisionOverride2,
+                subdivisionOverride3,
+                subdivisionOverride4,
+                subdivisionOverride5,
+                subdivisionOverride6,
+                subdivisionOverride7,
+                subdivisionOverride8,
+                subdivisionOverride9,
+                subdivisionOverride10)
         { }
 
         #endregion
@@ -30515,7 +30515,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -30537,7 +30537,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis2> values2;
                 IAsyncResult result2 = null;
-                if (this._medianOverride2 != null)
+                if (this._subdivisionOverride2 != null)
                     values2 = null;
                 else
                 {
@@ -30559,7 +30559,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis3> values3;
                 IAsyncResult result3 = null;
-                if (this._medianOverride3 != null)
+                if (this._subdivisionOverride3 != null)
                     values3 = null;
                 else
                 {
@@ -30581,7 +30581,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis4> values4;
                 IAsyncResult result4 = null;
-                if (this._medianOverride4 != null)
+                if (this._subdivisionOverride4 != null)
                     values4 = null;
                 else
                 {
@@ -30603,7 +30603,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis5> values5;
                 IAsyncResult result5 = null;
-                if (this._medianOverride5 != null)
+                if (this._subdivisionOverride5 != null)
                     values5 = null;
                 else
                 {
@@ -30625,7 +30625,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis6> values6;
                 IAsyncResult result6 = null;
-                if (this._medianOverride6 != null)
+                if (this._subdivisionOverride6 != null)
                     values6 = null;
                 else
                 {
@@ -30647,7 +30647,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis7> values7;
                 IAsyncResult result7 = null;
-                if (this._medianOverride7 != null)
+                if (this._subdivisionOverride7 != null)
                     values7 = null;
                 else
                 {
@@ -30669,7 +30669,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis8> values8;
                 IAsyncResult result8 = null;
-                if (this._medianOverride8 != null)
+                if (this._subdivisionOverride8 != null)
                     values8 = null;
                 else
                 {
@@ -30691,7 +30691,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis9> values9;
                 IAsyncResult result9 = null;
-                if (this._medianOverride9 != null)
+                if (this._subdivisionOverride9 != null)
                     values9 = null;
                 else
                 {
@@ -30713,7 +30713,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis10> values10;
                 IAsyncResult result10 = null;
-                if (this._medianOverride10 != null)
+                if (this._subdivisionOverride10 != null)
                     values10 = null;
                 else
                 {
@@ -30734,34 +30734,34 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride2 == null && allowMultithreading)
+                if (this._subdivisionOverride2 == null && allowMultithreading)
                     result2.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride3 == null && allowMultithreading)
+                if (this._subdivisionOverride3 == null && allowMultithreading)
                     result3.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride4 == null && allowMultithreading)
+                if (this._subdivisionOverride4 == null && allowMultithreading)
                     result4.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride5 == null && allowMultithreading)
+                if (this._subdivisionOverride5 == null && allowMultithreading)
                     result5.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride6 == null && allowMultithreading)
+                if (this._subdivisionOverride6 == null && allowMultithreading)
                     result6.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride7 == null && allowMultithreading)
+                if (this._subdivisionOverride7 == null && allowMultithreading)
                     result7.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride8 == null && allowMultithreading)
+                if (this._subdivisionOverride8 == null && allowMultithreading)
                     result8.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride9 == null && allowMultithreading)
+                if (this._subdivisionOverride9 == null && allowMultithreading)
                     result9.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride10 == null && allowMultithreading)
+                if (this._subdivisionOverride10 == null && allowMultithreading)
                     result10.AsyncWaitHandle.WaitOne();
 
 
@@ -30794,7 +30794,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis1> values1;
                 IAsyncResult result1 = null;
-                if (this._medianOverride1 != null)
+                if (this._subdivisionOverride1 != null)
                     values1 = null;
                 else
                 {
@@ -30816,7 +30816,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis2> values2;
                 IAsyncResult result2 = null;
-                if (this._medianOverride2 != null)
+                if (this._subdivisionOverride2 != null)
                     values2 = null;
                 else
                 {
@@ -30838,7 +30838,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis3> values3;
                 IAsyncResult result3 = null;
-                if (this._medianOverride3 != null)
+                if (this._subdivisionOverride3 != null)
                     values3 = null;
                 else
                 {
@@ -30860,7 +30860,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis4> values4;
                 IAsyncResult result4 = null;
-                if (this._medianOverride4 != null)
+                if (this._subdivisionOverride4 != null)
                     values4 = null;
                 else
                 {
@@ -30882,7 +30882,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis5> values5;
                 IAsyncResult result5 = null;
-                if (this._medianOverride5 != null)
+                if (this._subdivisionOverride5 != null)
                     values5 = null;
                 else
                 {
@@ -30904,7 +30904,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis6> values6;
                 IAsyncResult result6 = null;
-                if (this._medianOverride6 != null)
+                if (this._subdivisionOverride6 != null)
                     values6 = null;
                 else
                 {
@@ -30926,7 +30926,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis7> values7;
                 IAsyncResult result7 = null;
-                if (this._medianOverride7 != null)
+                if (this._subdivisionOverride7 != null)
                     values7 = null;
                 else
                 {
@@ -30948,7 +30948,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis8> values8;
                 IAsyncResult result8 = null;
-                if (this._medianOverride8 != null)
+                if (this._subdivisionOverride8 != null)
                     values8 = null;
                 else
                 {
@@ -30970,7 +30970,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis9> values9;
                 IAsyncResult result9 = null;
-                if (this._medianOverride9 != null)
+                if (this._subdivisionOverride9 != null)
                     values9 = null;
                 else
                 {
@@ -30992,7 +30992,7 @@ namespace Theta.Structures
                 // prepare data for median computations
                 BigArray<Axis10> values10;
                 IAsyncResult result10 = null;
-                if (this._medianOverride10 != null)
+                if (this._subdivisionOverride10 != null)
                     values10 = null;
                 else
                 {
@@ -31013,34 +31013,34 @@ namespace Theta.Structures
 
 
 
-                if (this._medianOverride1 == null && allowMultithreading)
+                if (this._subdivisionOverride1 == null && allowMultithreading)
                     result1.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride2 == null && allowMultithreading)
+                if (this._subdivisionOverride2 == null && allowMultithreading)
                     result2.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride3 == null && allowMultithreading)
+                if (this._subdivisionOverride3 == null && allowMultithreading)
                     result3.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride4 == null && allowMultithreading)
+                if (this._subdivisionOverride4 == null && allowMultithreading)
                     result4.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride5 == null && allowMultithreading)
+                if (this._subdivisionOverride5 == null && allowMultithreading)
                     result5.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride6 == null && allowMultithreading)
+                if (this._subdivisionOverride6 == null && allowMultithreading)
                     result6.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride7 == null && allowMultithreading)
+                if (this._subdivisionOverride7 == null && allowMultithreading)
                     result7.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride8 == null && allowMultithreading)
+                if (this._subdivisionOverride8 == null && allowMultithreading)
                     result8.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride9 == null && allowMultithreading)
+                if (this._subdivisionOverride9 == null && allowMultithreading)
                     result9.AsyncWaitHandle.WaitOne();
 
-                if (this._medianOverride10 == null && allowMultithreading)
+                if (this._subdivisionOverride10 == null && allowMultithreading)
                     result10.AsyncWaitHandle.WaitOne();
 
 
@@ -31075,56 +31075,56 @@ namespace Theta.Structures
             int median_axis8 = -1;
             int median_axis9 = -1;
             int median_axis10 = -1;
-            if (this._medianOverride1 == null || this._medianOverride2 == null || this._medianOverride3 == null || this._medianOverride4 == null || this._medianOverride5 == null || this._medianOverride6 == null || this._medianOverride7 == null || this._medianOverride8 == null || this._medianOverride9 == null || this._medianOverride10 == null)
+            if (this._subdivisionOverride1 == null || this._subdivisionOverride2 == null || this._subdivisionOverride3 == null || this._subdivisionOverride4 == null || this._subdivisionOverride5 == null || this._subdivisionOverride6 == null || this._subdivisionOverride7 == null || this._subdivisionOverride8 == null || this._subdivisionOverride9 == null || this._subdivisionOverride10 == null)
                 GetMedianIndexes(initial_count, child, depth, prevmed1, prevmed2, prevmed3, prevmed4, prevmed5, prevmed6, prevmed7, prevmed8, prevmed9, prevmed10, out median_axis1, out median_axis2, out median_axis3, out median_axis4, out median_axis5, out median_axis6, out median_axis7, out median_axis8, out median_axis9, out median_axis10);
 
-            if (this._medianOverride1 != null)
-                pointOfDivision1 = this._medianOverride1(parent.Bounds, additions);
+            if (this._subdivisionOverride1 != null)
+                pointOfDivision1 = this._subdivisionOverride1(parent.Bounds, additions);
             else
                 pointOfDivision1 = values1(median_axis1);
 
-            if (this._medianOverride2 != null)
-                pointOfDivision2 = this._medianOverride2(parent.Bounds, additions);
+            if (this._subdivisionOverride2 != null)
+                pointOfDivision2 = this._subdivisionOverride2(parent.Bounds, additions);
             else
                 pointOfDivision2 = values2(median_axis2);
 
-            if (this._medianOverride3 != null)
-                pointOfDivision3 = this._medianOverride3(parent.Bounds, additions);
+            if (this._subdivisionOverride3 != null)
+                pointOfDivision3 = this._subdivisionOverride3(parent.Bounds, additions);
             else
                 pointOfDivision3 = values3(median_axis3);
 
-            if (this._medianOverride4 != null)
-                pointOfDivision4 = this._medianOverride4(parent.Bounds, additions);
+            if (this._subdivisionOverride4 != null)
+                pointOfDivision4 = this._subdivisionOverride4(parent.Bounds, additions);
             else
                 pointOfDivision4 = values4(median_axis4);
 
-            if (this._medianOverride5 != null)
-                pointOfDivision5 = this._medianOverride5(parent.Bounds, additions);
+            if (this._subdivisionOverride5 != null)
+                pointOfDivision5 = this._subdivisionOverride5(parent.Bounds, additions);
             else
                 pointOfDivision5 = values5(median_axis5);
 
-            if (this._medianOverride6 != null)
-                pointOfDivision6 = this._medianOverride6(parent.Bounds, additions);
+            if (this._subdivisionOverride6 != null)
+                pointOfDivision6 = this._subdivisionOverride6(parent.Bounds, additions);
             else
                 pointOfDivision6 = values6(median_axis6);
 
-            if (this._medianOverride7 != null)
-                pointOfDivision7 = this._medianOverride7(parent.Bounds, additions);
+            if (this._subdivisionOverride7 != null)
+                pointOfDivision7 = this._subdivisionOverride7(parent.Bounds, additions);
             else
                 pointOfDivision7 = values7(median_axis7);
 
-            if (this._medianOverride8 != null)
-                pointOfDivision8 = this._medianOverride8(parent.Bounds, additions);
+            if (this._subdivisionOverride8 != null)
+                pointOfDivision8 = this._subdivisionOverride8(parent.Bounds, additions);
             else
                 pointOfDivision8 = values8(median_axis8);
 
-            if (this._medianOverride9 != null)
-                pointOfDivision9 = this._medianOverride9(parent.Bounds, additions);
+            if (this._subdivisionOverride9 != null)
+                pointOfDivision9 = this._subdivisionOverride9(parent.Bounds, additions);
             else
                 pointOfDivision9 = values9(median_axis9);
 
-            if (this._medianOverride10 != null)
-                pointOfDivision10 = this._medianOverride10(parent.Bounds, additions);
+            if (this._subdivisionOverride10 != null)
+                pointOfDivision10 = this._subdivisionOverride10(parent.Bounds, additions);
             else
                 pointOfDivision10 = values10(median_axis10);
 

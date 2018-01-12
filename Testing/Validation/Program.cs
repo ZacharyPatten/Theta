@@ -27,6 +27,7 @@ namespace Validation
 
             Console.WriteLine(Compute<float>.Pi);
             Console.WriteLine(Compute<double>.Pi);
+            Console.WriteLine(Compute<Fraction64>.Pi);
             Console.WriteLine(Compute<Fraction128>.Pi);
 
 
@@ -39,14 +40,14 @@ namespace Validation
 			Console.ReadLine();
 		}
 
-        public class TestObject
+        public class Object3D
         {
             public int Id { get; set; }
             public double X { get; set; }
             public double Y { get; set; }
             public double Z { get; set; }
 
-            public TestObject(int id, double x, double y, double z)
+            public Object3D(int id, double x, double y, double z)
             {
                 this.Id = id;
                 this.X = x;
@@ -81,7 +82,7 @@ namespace Validation
 		{
 			#region construction
 
-            Omnitree.Location<TestObject, double, double, double> locate = (TestObject record, out double a, out double b, out double c) =>
+            Omnitree.Location<Object3D, double, double, double> locate = (Object3D record, out double a, out double b, out double c) =>
 			{
                 a = record.X;
                 b = record.Y;
@@ -89,7 +90,7 @@ namespace Validation
 			};
 
 			Compute<double>.Compare(0, 0);
-            OmnitreePoints<TestObject, double, double, double> omnitree = new OmnitreePointsLinked<TestObject, double, double, double>(locate);
+            OmnitreePoints<Object3D, double, double, double> omnitree = new OmnitreePointsLinked<Object3D, double, double, double>(locate);
 
 			#endregion
 
@@ -99,9 +100,9 @@ namespace Validation
 
 			Random random = new Random(0);
 			int count = 100;
-			TestObject[] records = new TestObject[count];
+			Object3D[] records = new Object3D[count];
 			for (int i = 0; i < count; i++)
-				records[i] = new TestObject(i, random.NextDouble(), random.NextDouble(), random.NextDouble());
+				records[i] = new Object3D(i, random.NextDouble(), random.NextDouble(), random.NextDouble());
 
 			Console.WriteLine("Generated random data.");
 
@@ -122,21 +123,21 @@ namespace Validation
 			//Console.WriteLine("OmniTree._top.Count: " + (omnitree as OmnitreeLinked<TestObject, double>)._top.Count);
 
 			int test_count = 0;
-			omnitree.Stepper((TestObject record) => { test_count++; });
+			omnitree.Stepper((Object3D record) => { test_count++; });
 			Console.WriteLine("OmniTree Stepper Count: " + test_count);
 
 			#endregion
 
 			#region validation
 
-			SetHashArray<TestObject> setHash = new SetHashArray<TestObject>(
-				(TestObject a, TestObject b) => { return a.Id == b.Id; },
-				(TestObject a) => { return a.Id.GetHashCode(); });
+			SetHashArray<Object3D> setHash = new SetHashArray<Object3D>(
+				(Object3D a, Object3D b) => { return a.Id == b.Id; },
+				(Object3D a) => { return a.Id.GetHashCode(); });
 			for (int i = 0; i < count; i++)
 				setHash.Add(records[i]);
 
 			bool validated = true;
-			omnitree.Stepper((TestObject record) => { if (!setHash.Contains(record)) validated = false; });
+			omnitree.Stepper((Object3D record) => { if (!setHash.Contains(record)) validated = false; });
 			if (validated)
 				Console.WriteLine("Values Validated.");
 			else
@@ -154,7 +155,7 @@ namespace Validation
 				query_test = false;
                 double a, b, c;
                 locate(records[i], out a, out b, out c);
-				omnitree[a, b, c]((TestObject record) => { query_test = true; });
+				omnitree[a, b, c]((Object3D record) => { query_test = true; });
 				if (query_test == false)
 				{
 					Console.WriteLine("Querying INVALID on value: " + i);
@@ -174,7 +175,7 @@ namespace Validation
 
             Console.WriteLine("Moving randomized data...");
 
-            foreach (TestObject record in records)
+            foreach (Object3D record in records)
             {
                 record.X += Math.Max(0d, Math.Min(1d, (random.NextDouble() / 100D) - .5D));
                 record.Y += Math.Max(0d, Math.Min(1d, (random.NextDouble() / 100D) - .5D));
@@ -234,7 +235,7 @@ namespace Validation
 			//Console.WriteLine("OmniTree._top.Count: " + (omnitree as OmnitreeLinked<TestObject, double>)._top.Count);
 
 			test_count = 0;
-			omnitree.Stepper((TestObject record) => { test_count++; });
+			omnitree.Stepper((Object3D record) => { test_count++; });
 			Console.WriteLine("OmniTree Stepper Count: " + test_count);
 
 			#endregion
@@ -247,7 +248,7 @@ namespace Validation
 		{
 			#region construction
 
-			Omnitree.Location<TestObject, double, double, double, bool> Locate = (TestObject record, out double a, out double b, out double c, out bool d) =>
+			Omnitree.Location<Object3D, double, double, double, bool> Locate = (Object3D record, out double a, out double b, out double c, out bool d) =>
 			{
 				a = record.X;
 				b = record.Y;
@@ -276,7 +277,7 @@ namespace Validation
             };
 
             // NEEDS OPTIMIZATION (an overload for the constructor)
-            OmnitreePoints<TestObject, double, double, double, bool> omnitree = new OmnitreePointsLinked<TestObject, double, double, double, bool>(Locate);
+            OmnitreePoints<Object3D, double, double, double, bool> omnitree = new OmnitreePointsLinked<Object3D, double, double, double, bool>(Locate);
 
 			#endregion
 
@@ -286,9 +287,9 @@ namespace Validation
 
 			Random random = new Random(0);
 			int count = 100;
-			TestObject[] records = new TestObject[count];
+			Object3D[] records = new Object3D[count];
 			for (int i = 0; i < count; i++)
-				records[i] = new TestObject(i, random.NextDouble(), random.NextDouble(), random.NextDouble());
+				records[i] = new Object3D(i, random.NextDouble(), random.NextDouble(), random.NextDouble());
 
 			Console.WriteLine("Generated random data.");
 
@@ -311,21 +312,21 @@ namespace Validation
 			//Console.WriteLine("OmniTree._top.Count: " + (omnitree as OmnitreeLinked<TestObject, object>)._top.Count);
 
 			int test_count = 0;
-			omnitree.Stepper((TestObject record) => { test_count++; });
+			omnitree.Stepper((Object3D record) => { test_count++; });
 			Console.WriteLine("OmniTree Stepper Count: " + test_count);
 
 			#endregion
 
 			#region validation
 
-			SetHashArray<TestObject> setHash = new SetHashArray<TestObject>(
-				(TestObject a, TestObject b) => { return a.Id == b.Id; },
-				(TestObject a) => { return a.Id.GetHashCode(); });
+			SetHashArray<Object3D> setHash = new SetHashArray<Object3D>(
+				(Object3D a, Object3D b) => { return a.Id == b.Id; },
+				(Object3D a) => { return a.Id.GetHashCode(); });
 			for (int i = 0; i < count; i++)
 				setHash.Add(records[i]);
 
 			bool validated2 = true;
-			omnitree.Stepper((TestObject record) => { if (!setHash.Contains(record)) validated2 = false; });
+			omnitree.Stepper((Object3D record) => { if (!setHash.Contains(record)) validated2 = false; });
 			if (validated2)
 				Console.WriteLine("Values Validated.");
 			else
@@ -344,7 +345,7 @@ namespace Validation
                 double a, b, c;
                 bool d;
                 Locate(records[i], out a, out b, out c, out d);
-				omnitree[a, b, c, d]((TestObject record) => { query_test2 = true; });
+				omnitree[a, b, c, d]((Object3D record) => { query_test2 = true; });
 				if (query_test2 == false)
 				{
 					Console.WriteLine("Querying INVALID on value: " + i);
@@ -364,7 +365,7 @@ namespace Validation
 
             Console.WriteLine("Moving randomized data...");
 
-            foreach (TestObject record in records)
+            foreach (Object3D record in records)
             {
                 record.X += Math.Max(0d, Math.Min(1d, (random.NextDouble() / 100D) - .5D));
                 record.Y += Math.Max(0d, Math.Min(1d, (random.NextDouble() / 100D) - .5D));
@@ -422,7 +423,7 @@ namespace Validation
 			//Console.WriteLine("OmniTree._top.Count: " + (omnitree as OmnitreeLinked<TestObject, object>)._top.Count);
 
 			test_count = 0;
-			omnitree.Stepper((TestObject record) => { test_count++; });
+			omnitree.Stepper((Object3D record) => { test_count++; });
 			Console.WriteLine("OmniTree Stepper Count: " + test_count);
 
 			#endregion

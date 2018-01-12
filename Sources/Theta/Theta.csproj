@@ -154,6 +154,11 @@
     </Compile>
     <Compile Include="Structures\Map.cs" />
     <Compile Include="Structures\Heap.cs" />
+    <Compile Include="Structures\OmnitreeBounds.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OmnitreeBounds.tt</DependentUpon>
+    </Compile>
     <Compile Include="Structures\Omnitree_ND.cs" />
     <Compile Include="Structures\Omnitree.cs">
       <AutoGen>True</AutoGen>
@@ -190,6 +195,10 @@
     <None Include="Structures\Omnitree.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Omnitree.cs</LastGenOutput>
+    </None>
+    <None Include="Structures\OmnitreeBounds.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>OmnitreeBounds.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
