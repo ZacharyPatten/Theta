@@ -2334,6 +2334,19 @@ string.Concat(
         /// <summary>Computes (natrual log): [ ln(n) ].</summary>
         private static Compute<T>.Delegates.NaturalLogarithm NaturalLogarithm_private = (T value) =>
         {
+            #region Optimizations
+            if (typeof(T) == typeof(double)) // double optimization
+            {
+                Compute<double>.NaturalLogarithm_private = _value => { return System.Math.Log(_value); };
+                return Compute<T>.NaturalLogarithm_private(value);
+            }
+            if (typeof(T) == typeof(float)) // float optimization
+            {
+                Compute<float>.NaturalLogarithm_private = _value => { return (float)System.Math.Log(_value); };
+                return Compute<T>.NaturalLogarithm_private(value);
+            }
+            #endregion
+            
             Compute<T>.NaturalLogarithm_private =
     Meta.Compile<Compute<T>.Delegates.NaturalLogarithm>(
         string.Concat("(", Meta.ConvertTypeToCsharpSource(typeof(T)), " _value) => { throw new System.Exception(\"not yet implemented\"); }"));

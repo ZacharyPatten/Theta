@@ -861,8 +861,8 @@ namespace Theta.Structures
 
                     string serializedItem = serialize(this._list[i]);
                     string indentedSerializedItem = serializedItem.IndentLines(2);
-                    string xmlItem = string.Concat(Environment.NewLine, indentedSerializedItem, Environment.NewLine, "\t");
-                    xmlWriter.WriteRaw(xmlItem);
+                    //string xmlItem = string.Concat(Environment.NewLine, indentedSerializedItem, Environment.NewLine, "\t");
+                    xmlWriter.WriteRaw(serializedItem);
 
                     xmlWriter.WriteEndElement();
                 }

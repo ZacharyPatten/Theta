@@ -1,4 +1,6 @@
-﻿namespace Theta.Structures
+﻿using Theta.Mathematics;
+
+namespace Theta.Structures
 {
     #region Notes
 
@@ -81,6 +83,137 @@
     /// <summary>Contains the necessary type definitions for the various omnitree types.</summary>
     public static partial class Omnitree
     {
+        #region Spacial Types (Bound, Vector, Bounds) And Location/Bounding Functions
+        
+        public struct Bound<T>
+        {
+            private bool _exists;
+            private T _value;
+
+            public bool Exists { get { return this._exists; } }
+            public T Value { get { return this._value; } }
+
+            public Bound(T value)
+            {
+                this._exists = true;
+                this._value = value;
+            }
+
+            internal Bound(bool exists, T value)
+            {
+                this._exists = exists;
+                this._value = value;
+            }
+
+            public static Bound<T> None { get { return new Bound<T>(false, default(T)); } }
+
+            public static implicit operator Bound<T>(T value)
+            {
+                return new Bound<T>(value);
+            }
+
+            public static Compare<Bound<T>> Compare(Compare<T> compare)
+            {
+                return (Bound<T> a, Bound<T> b) =>
+                {
+                    if (a.Exists && b.Exists)
+                    {
+                        return compare(a.Value, b.Value);
+                    }
+                    else if (!b.Exists)
+                    {
+                        return Comparison.Equal;
+                    }
+                    else
+                    {
+                        return Comparison.Greater;
+                    }
+                };
+            }
+        }
+
+        public delegate A SubdivisionOverride<T, A, BoundsType>(BoundsType bounds, Stepper<T> values);
+        
+        internal static T SubDivide<T>(Bound<T>[] bounds, Compare<T> compare)
+        {
+            // make sure a bound exists (not all objects are infinitely bound)
+            bool exists = false;
+            foreach (Bound<T> bound in bounds)
+            {
+                if (bound.Exists)
+                {
+                    exists = true;
+                    break;
+                }
+            }
+
+            // if they have only inserted infinite bound objects it doesn't really matter what the
+            // point of division is, because the objects will never go down the tree
+            if (!exists)
+                return default(T);
+            
+            System.Array.Sort(bounds, Compare.ToSystemComparison(Bound<T>.Compare(compare)));
+
+            // after sorting, we need to find the middle-most value that exists
+            int medianIndex = bounds.Length / 2;
+            for (int i = 0; i < bounds.Length; i++)
+            {
+                int adjuster = i / 2;
+                if (i % 2 == 0)
+                    adjuster = -adjuster;
+
+                int adjustedMedianIndex = medianIndex + adjuster;
+
+                if (bounds[adjustedMedianIndex].Exists)
+                    return bounds[adjustedMedianIndex].Value;
+            }
+
+            // This exception should never be reached
+            throw new System.Exception("There is a bug in the Theta Framwork [SubDivide]");
+        }
+        
+        internal static T SubDivide<T>(BigArray<Bound<T>> bounds, Compare<T> compare)
+        {
+            // make sure a bound exists (not all objects are infinitely bound)
+            bool exists = false;
+            foreach (Bound<T> bound in bounds)
+            {
+                if (bound.Exists)
+                {
+                    exists = true;
+                    break;
+                }
+            }
+
+            // if they have only inserted infinite bound objects it doesn't really matter what the
+            // point of division is, because the objects will never go down the tree
+            if (!exists)
+                return default(T);
+
+            Theta.Algorithms.Sort<Bound<T>>.Merge(Bound<T>.Compare(compare), index => bounds[index], (index, value) => { bounds[index] = value; }, 0, (int)bounds.Length);
+            
+            // after sorting, we need to find the middle-most value that exists
+            ulong medianIndex = bounds.Length / 2;
+            for (ulong i = 0; i < bounds.Length; i++)
+            {
+                ulong adjustedMedianIndex = medianIndex;
+
+                ulong adjuster = i / 2;
+                if (i % 2 == 0)
+                    adjustedMedianIndex -= adjuster;
+                else
+                    adjustedMedianIndex += adjuster;
+                
+                if (bounds[adjustedMedianIndex].Exists)
+                    return bounds[adjustedMedianIndex].Value;
+            }
+
+            // This exception should never be reached
+            throw new System.Exception("There is a bug in the Theta Framwork [SubDivide]");
+        }
+
+        internal delegate bool SpatialCheck<T1, T2>(T1 space1, T2 space2);
+
         #region N Dimensional
 
         public struct Vector
@@ -135,6 +268,8 @@
         //public delegate void Location<T, out object[]>();
 
         //public delegate void GetBounds<T, out object[], out object[]>();
+
+        #endregion
 
         #endregion
     }

@@ -420,7 +420,7 @@ namespace Algorithms
             // meaning that it is faster. The Greedy path went through the mud, but the A* path
             // took the longer route around the other side of the rock, which ended up being faster
             // than running through the mud.
-            
+
             #endregion
 
             #region Random Generation

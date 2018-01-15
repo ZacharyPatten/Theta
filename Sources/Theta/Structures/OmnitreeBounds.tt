@@ -88,7 +88,7 @@ namespace Theta.Structures
 
     #endregion
 
-    /*
+	/*
 
     #region OmnitreeBounds
     
@@ -120,10 +120,6 @@ namespace Theta.Structures
     {
         #region Properties
 
-        /// <summary>Steps through the values at a given location.</summary>
-        <#= documentation_AxisX_axisX #>
-        /// <returns>A Stepper of the items at the given coordinates.</returns>
-        Stepper<T> this[<#= chain_AxisX_axisX #>] { get; }
         /// <summary>The number of dimensions in this tree.</summary>
         int Dimensions { get; }
 
@@ -131,10 +127,15 @@ namespace Theta.Structures
 
         #region Methods
 
-        /// <summary>Counts the number of items in a sub space.</summary>
+        /// <summary>Counts the number of items encapsulated by a sub space.</summary>
         <#= documentation_AxisX_minX_AxisX_maxX #>
         /// <returns>The number of items in the provided sub space.</returns>
-        int CountSubSpace(<#= chain_AxisX_minX_AxisX_maxX #>);
+        int CountSubSpaceEncapsulated(<#= chain_AxisX_minX_AxisX_maxX #>);
+
+		/// <summary>Counts the number of items overlapped by a sub space.</summary>
+        <#= documentation_AxisX_minX_AxisX_maxX #>
+        /// <returns>The number of items in the provided sub space.</returns>
+        int CountSubSpaceOverlapped(<#= chain_AxisX_minX_AxisX_maxX #>);
 
         /// <summary>Iterates through the entire tree and ensures each item is in the proper leaf.</summary>
         void Update();
@@ -143,36 +144,54 @@ namespace Theta.Structures
         void Update(<#= chain_AxisX_minX_AxisX_maxX #>);
 
         /// <summary>Removes all the items in a given space.</summary>
-        <#= documentation_AxisX_axisX #>
-        void Remove(<#= chain_AxisX_axisX #>);
-        /// <summary>Removes all the items in a given space.</summary>
         <#= documentation_AxisX_minX_AxisX_maxX #>
-        void Remove(<#= chain_AxisX_minX_AxisX_maxX #>);
-        /// <summary>Removes all the items in a given space where equality is met.</summary>
-        <#= documentation_AxisX_axisX #>
-        /// <param name="where">The equality constraint of the removal.</param>
-        void Remove(<#= chain_AxisX_axisX #>, Predicate<T> where);
+        void RemoveEncapsulated(<#= chain_AxisX_minX_AxisX_maxX #>);
         /// <summary>Removes all the items in a given space where predicate is met.</summary>
         <#= documentation_AxisX_minX_AxisX_maxX #>
         /// <param name="where">The predicate constraint of the removal.</param>
-        void Remove(<#= chain_AxisX_minX_AxisX_maxX #>, Predicate<T> where);
+        void RemoveEncapsulated(<#= chain_AxisX_minX_AxisX_maxX #>, Predicate<T> where);
+
+		/// <summary>Removes all the items in a given space.</summary>
+        <#= documentation_AxisX_axisX #>
+        void RemoveOverlapped(<#= chain_AxisX_axisX #>);
+        /// <summary>Removes all the items in a given space.</summary>
+        <#= documentation_AxisX_minX_AxisX_maxX #>
+        void RemoveOverlapped(<#= chain_AxisX_minX_AxisX_maxX #>);
+        /// <summary>Removes all the items in a given space where equality is met.</summary>
+        <#= documentation_AxisX_axisX #>
+        /// <param name="where">The equality constraint of the removal.</param>
+        void RemoveOverlapped(<#= chain_AxisX_axisX #>, Predicate<T> where);
+        /// <summary>Removes all the items in a given space where predicate is met.</summary>
+        <#= documentation_AxisX_minX_AxisX_maxX #>
+        /// <param name="where">The predicate constraint of the removal.</param>
+        void RemoveOverlapped(<#= chain_AxisX_minX_AxisX_maxX #>, Predicate<T> where);
 
         /// <summary>Performs and specialized traversal of the structure and performs a delegate on every node within the provided dimensions.</summary>
         /// <param name="step">The step function to perform on all items in the tree within the given bounds.</param>
         <#= documentation_AxisX_minX_AxisX_maxX #>
-        void Stepper(Step<T> step, <#= chain_AxisX_minX_AxisX_maxX #>);
+        void StepperEncapsulated(Step<T> step, <#= chain_AxisX_minX_AxisX_maxX #>);
         /// <summary>Performs and specialized traversal of the structure and performs a delegate on every node within the provided dimensions.</summary>
         /// <param name="step">The step function to perform on all items in the tree within the given bounds.</param>
         <#= documentation_AxisX_minX_AxisX_maxX #>
-        StepStatus Stepper(StepBreak<T> step, <#= chain_AxisX_minX_AxisX_maxX #>);
+        StepStatus StepperEncapsulated(StepBreak<T> step, <#= chain_AxisX_minX_AxisX_maxX #>);
+        
+		/// <summary>Performs and specialized traversal of the structure and performs a delegate on every node within the provided dimensions.</summary>
+        /// <param name="step">The step function to perform on all items in the tree within the given bounds.</param>
+        <#= documentation_AxisX_minX_AxisX_maxX #>
+        void StepperOverlapped(Step<T> step, <#= chain_AxisX_minX_AxisX_maxX #>);
+        /// <summary>Performs and specialized traversal of the structure and performs a delegate on every node within the provided dimensions.</summary>
+        /// <param name="step">The step function to perform on all items in the tree within the given bounds.</param>
+        <#= documentation_AxisX_minX_AxisX_maxX #>
+        StepStatus StepperOverlapped(StepBreak<T> step, <#= chain_AxisX_minX_AxisX_maxX #>);
+
+		/// <summary>Performs and specialized traversal of the structure and performs a delegate on every node within the provided dimensions.</summary>
+        /// <param name="step">The step function to perform on all items in the tree within the given bounds.</param>
+        <#= documentation_AxisX_axisX #>
+        void StepperOverlapped(Step<T> step, <#= chain_AxisX_axisX #>);
         /// <summary>Performs and specialized traversal of the structure and performs a delegate on every node within the provided dimensions.</summary>
         /// <param name="step">The step function to perform on all items in the tree within the given bounds.</param>
         <#= documentation_AxisX_axisX #>
-        void Stepper(Step<T> step, <#= chain_AxisX_axisX #>);
-        /// <summary>Performs and specialized traversal of the structure and performs a delegate on every node within the provided dimensions.</summary>
-        /// <param name="step">The step function to perform on all items in the tree within the given bounds.</param>
-        <#= documentation_AxisX_axisX #>
-        StepStatus Stepper(StepBreak<T> function, <#= chain_AxisX_axisX #>);
+        StepStatus StepperOverlapped(StepBreak<T> function, <#= chain_AxisX_axisX #>);
 
         #endregion
     }
@@ -187,7 +206,7 @@ namespace Theta.Structures
 
         private int _depth_load; // ln(count); min = _defaultLoad
         private int _node_load; // ln(count); min = _children_per_node
-        private Omnitree.Location<T, Axis1<# for (int j = 2; j <= i; j++) { #>, Axis<#= j #><# } #>> _locate;
+        private Omnitree.GetBounds<T, Axis1<# for (int j = 2; j <= i; j++) { #>, Axis<#= j #><# } #>> _getBounds;
 
         private bool _defaultEquate;
         private Equate<T> _equate;
@@ -244,7 +263,7 @@ namespace Theta.Structures
             /// <summary>The first object stored in this node.</summary>
             public ValueNode Head { get { return this._head; } set { this._head = value; } }
             public Node[] Children { get { return this._children; } set { this._children = value; } }
-            internal Omnitree.Vector<<#= chain_AxisX #>>? PointOfDivision { get { return this._pointOfDivision; } internal set { this._pointOfDivision = value; } }
+            public Omnitree.Vector<<#= chain_AxisX #>>? PointOfDivision { get { return this._pointOfDivision; } internal set { this._pointOfDivision = value; } }
 
             /// <summary>Gets child by index.</summary>
             /// <param name="child_index">The index of the child to get.</param>
@@ -380,7 +399,7 @@ namespace Theta.Structures
             this._top = omnitree._top.Clone();
             this._depth_load = omnitree._depth_load;
             this._node_load = omnitree._node_load;
-            this._locate = omnitree._locate;
+            this._getBounds = omnitree._getBounds;
             this._defaultEquate = omnitree._defaultEquate;
             this._equate = omnitree._equate;
 <# for (int j = 1; j <= i; j++) { #>
@@ -394,7 +413,7 @@ namespace Theta.Structures
         }
 
         private OmnitreeBoundsLinked(
-            Omnitree.Location<T, <#= chain_AxisX #>> locate,
+            Omnitree.GetBounds<T, <#= chain_AxisX #>> getBounds,
 
             bool defaultEquate,
             Equate<T> equate,
@@ -408,14 +427,14 @@ namespace Theta.Structures
             Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<<#= chain_AxisX #>>> subdivisionOverride1<# for (int j = 2; j <= i; j++) { #>,
             Omnitree.SubdivisionOverride<T, Axis<#= j #>, Omnitree.Bounds<<#= chain_AxisX #>>> subdivisionOverride<#= j #><# } #>)
         {
-            Code.AssertArgNonNull(locate, "locate");
+            Code.AssertArgNonNull(getBounds, "getBounds");
             Code.AssertArgNonNull(equate, "equate");
 <# for (int j = 1; j <= i; j++) { #>
             Code.AssertArgNonNull(equateAxis<#= j #>, "equateAxis<#= j #>");<# } #>
 <# for (int j = 1; j <= i; j++) { #>
             Code.AssertArgNonNull(compare<#= j #>, "compare<#= j #>");<# } #>
 
-            this._locate = locate;
+            this._getBounds = getBounds;
             this._defaultEquate = defaultEquate;
             this._equate = equate;
 <# for (int j = 1; j <= i; j++) { #>
@@ -432,7 +451,7 @@ namespace Theta.Structures
         }
 
         private OmnitreeBoundsLinked(
-            Omnitree.Location<T, <#= chain_AxisX #>> locate,
+            Omnitree.GetBounds<T, <#= chain_AxisX #>> getBounds,
             Equate<T> equate,
 <# for (int j = 1; j <= i; j++) { #>
             Equate<Axis<#= j #>> equateAxis<#= j #>,<# } #>
@@ -442,7 +461,7 @@ namespace Theta.Structures
             Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<<#= chain_AxisX #>>> subdivisionOverride1<# for (int j = 2; j <= i; j++) { #>,
             Omnitree.SubdivisionOverride<T, Axis<#= j #>, Omnitree.Bounds<<#= chain_AxisX #>>> subdivisionOverride<#= j #><# } #>)
             : this(
-            locate,
+            getBounds,
 
             false,
             equate,
@@ -458,7 +477,7 @@ namespace Theta.Structures
         { }
 
         public OmnitreeBoundsLinked(
-            Omnitree.Location<T, <#= chain_AxisX #>> locate,
+            Omnitree.GetBounds<T, <#= chain_AxisX #>> getBounds,
 
             Equate<T> equate,
 <# for (int j = 1; j <= i; j++) { #>
@@ -467,7 +486,7 @@ namespace Theta.Structures
             Compare<Axis1> compare1<# for (int j = 2; j <= i; j++) { #>,
             Compare<Axis<#= j #>> compare<#= j #><# } #>)
             : this(
-                locate,
+                getBounds,
 
                 false,
                 equate,
@@ -485,14 +504,14 @@ namespace Theta.Structures
 
 
         public OmnitreeBoundsLinked(
-            Omnitree.Location<T, <#= chain_AxisX #>> locate,
+            Omnitree.GetBounds<T, <#= chain_AxisX #>> getBounds,
 
             Equate<T> equate,
 
             Compare<Axis1> compare1<# for (int j = 2; j <= i; j++) { #>,
             Compare<Axis<#= j #>> compare<#= j #><# } #>)
             : this(
-                locate,
+                getBounds,
                 false,
                 equate,
 <# for (int j = 1; j <= i; j++) { #>
@@ -507,7 +526,7 @@ namespace Theta.Structures
         { }
 
         public OmnitreeBoundsLinked(
-            Omnitree.Location<T, <#= chain_AxisX #>> locate,
+            Omnitree.GetBounds<T, <#= chain_AxisX #>> getBounds,
             Equate<T> equate,
 <# for (int j = 1; j <= i; j++) { #>
             Compare<Axis<#= j #>> compare<#= j #>,<# } #>
@@ -515,7 +534,7 @@ namespace Theta.Structures
             Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<<#= chain_AxisX #>>> subdivisionOverride1<# for (int j = 2; j <= i; j++) { #>,
             Omnitree.SubdivisionOverride<T, Axis<#= j #>, Omnitree.Bounds<<#= chain_AxisX #>>> subdivisionOverride<#= j #><# } #>)
             : this(
-                locate,
+                getBounds,
 
                 false,
                 equate,
@@ -531,12 +550,12 @@ namespace Theta.Structures
         { }
 
         public OmnitreeBoundsLinked(
-            Omnitree.Location<T, <#= chain_AxisX #>> locate,
+            Omnitree.GetBounds<T, <#= chain_AxisX #>> getBounds,
 
             Compare<Axis1> compare1<# for (int j = 2; j <= i; j++) { #>,
             Compare<Axis<#= j #>> compare<#= j #><# } #>)
             : this(
-                locate,
+                getBounds,
                 true,
                 Theta.Equate.Default,
 <# for (int j = 1; j <= i; j++) { #>
@@ -551,14 +570,14 @@ namespace Theta.Structures
         { }
 
         public OmnitreeBoundsLinked(
-            Omnitree.Location<T, <#= chain_AxisX #>> locate,
+            Omnitree.GetBounds<T, <#= chain_AxisX #>> getBounds,
 <# for (int j = 1; j <= i; j++) { #>
             Compare<Axis<#= j #>> compare<#= j #>,<# } #>
 
             Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<<#= chain_AxisX #>>> subdivisionOverride1<# for (int j = 2; j <= i; j++) { #>,
             Omnitree.SubdivisionOverride<T, Axis<#= j #>, Omnitree.Bounds<<#= chain_AxisX #>>> subdivisionOverride<#= j #><# } #>)
             : this(
-                locate,
+                getBounds,
 
                 true,
                 Theta.Equate.Default,
@@ -574,10 +593,10 @@ namespace Theta.Structures
         { }
 
         public OmnitreeBoundsLinked(
-            Omnitree.Location<T, <#= chain_AxisX #>> locate,
+            Omnitree.GetBounds<T, <#= chain_AxisX #>> getBounds,
             Equate<T> equate)
             : this(
-                locate,
+                getBounds,
 
                 false,
                 equate,
@@ -593,12 +612,12 @@ namespace Theta.Structures
         { }
 
         public OmnitreeBoundsLinked(
-            Omnitree.Location<T, <#= chain_AxisX #>> locate,
+            Omnitree.GetBounds<T, <#= chain_AxisX #>> getBounds,
             Equate<T> equate,
             Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<<#= chain_AxisX #>>> subdivisionOverride1<# for (int j = 2; j <= i; j++) { #>,
             Omnitree.SubdivisionOverride<T, Axis<#= j #>, Omnitree.Bounds<<#= chain_AxisX #>>> subdivisionOverride<#= j #><# } #>)
             : this(
-                locate,
+                getBounds,
 
                 false,
                 equate,
@@ -614,9 +633,27 @@ namespace Theta.Structures
         { }
 
         public OmnitreeBoundsLinked(
-            Omnitree.Location<T, <#= chain_AxisX #>> locate)
+            Omnitree.GetBounds<T, <#= chain_AxisX #>> getBounds)
             : this(
-                locate,
+                getBounds,
+
+                true,
+                Theta.Equate.Default,
+<# for (int j = 1; j <= i; j++) { #>
+                true,
+                Theta.Equate.Default,<# } #>
+<# for (int j = 1; j <= i; j++) { #>
+                true,
+                Compare.Default,<# } #>
+
+                null<# for (int j = 2; j <= i; j++) { #>,
+                null<# } #>)
+        { }
+
+		public OmnitreeBoundsLinked(
+            Omnitree.GetBoundings<T, <#= chain_AxisX #>> getBoundings)
+            : this(
+                Omnitree.ConvertToGetBounds(getBoundings),
 
                 true,
                 Theta.Equate.Default,
@@ -632,11 +669,11 @@ namespace Theta.Structures
         { }
 
         public OmnitreeBoundsLinked(
-            Omnitree.Location<T, <#= chain_AxisX #>> locate,
+            Omnitree.GetBounds<T, <#= chain_AxisX #>> getBounds,
             Omnitree.SubdivisionOverride<T, Axis1, Omnitree.Bounds<<#= chain_AxisX #>>> subdivisionOverride1<# for (int j = 2; j <= i; j++) { #>,
             Omnitree.SubdivisionOverride<T, Axis<#= j #>, Omnitree.Bounds<<#= chain_AxisX #>>> subdivisionOverride<#= j #><# } #>)
             : this(
-                locate,
+                getBounds,
 
                 true,
                 Theta.Equate.Default,
@@ -655,17 +692,6 @@ namespace Theta.Structures
 
         #region Properties
 
-        /// <summary>Steps through all the items at a given coordinate.</summary><# for (int j = 1; j <= i; j++) { #>
-        /// <param name="axis<#= j #>">The coordinate along axis <#= j #>.</param><# } #>
-        /// <returns>The stepper for the items at the given coordinate.</returns>
-        public Stepper<T> this[<#= chain_AxisX_axisX #>]
-        {
-            get
-            {
-                return (Step<T> step) => { this.Stepper(step, <#= chain_axisX #>); };
-            }
-        }
-
         /// <summary>The number of dimensions in this tree.</summary>
         public int Dimensions { get { return _dimensions; } }
 
@@ -673,8 +699,7 @@ namespace Theta.Structures
         public Equate<T> Equate { get { return this._equate; } }
 
         /// <summary>The location function the Omnitree is using.</summary>
-        public Omnitree.Location<T, <#= chain_AxisX #>> Locate { get { return this._locate; } }
-
+        public Omnitree.GetBounds<T, <#= chain_AxisX #>> GetBounds { get { return this._getBounds; } }
 <# for (int j = 1; j <= i; j++) { #>
         /// <summary>The comparison function the Omnitree is using along the <#= j #>D axis.</summary>
         public Compare<Axis<#= j #>> Compare<#= j #> { get { return this._compare<#= j #>; } }<# } #>
@@ -735,229 +760,238 @@ namespace Theta.Structures
 
         #region Bulk
 
-        public void Add(BigArray<T> additions, bool allowMultithreading)
-        {
-            if (additions.Length > int.MaxValue)
-                throw new System.Exception("The maximum size of the Omnitree was exceeded during bulk addition.");
+		// not yet implemented
 
-            if (this._top.Count != 0 || (int)additions.Length <= this._depth_load)
-            {
-                for (ulong i = 0; i < additions.Length; i++)
-                    this.Add(additions[i]);
-            }
-            else
-            {
-                // adjust the loads prior to additions
-                ComputeLoads((int)additions.Length);
+//        public void Add(BigArray<T> additions, bool allowMultithreading)
+//        {
+//            if (additions.Length > int.MaxValue)
+//                throw new System.Exception("The maximum size of the Omnitree was exceeded during bulk addition.");
+//
+//            if (this._top.Count != 0 || (int)additions.Length <= this._depth_load)
+//            {
+//                for (ulong i = 0; i < additions.Length; i++)
+//                    this.Add(additions[i]);
+//            }
+//            else
+//            {
+//                // adjust the loads prior to additions
+//                ComputeLoads((int)additions.Length);
+//
+//                Node new_top = new Node(Omnitree.Bounds<<#= chain_AxisX #>>.None, null, -1);
+//                new_top.Count = (int)additions.Length;
+//
+//<# for (int j = 1; j <= i; j++) { #>
+//                // prepare data for median computations
+//                BigArray<Axis<#= j #>> values<#= j #>;
+//                IAsyncResult result<#= j #> = null;
+//                if (this._subdivisionOverride<#= j #> != null)
+//                    values<#= j #> = null;
+//                else
+//                {
+//                    values<#= j #> = null;
+//                    Theta.Parallels.Parallel.Operation operation = () =>
+//                    {
+//                        values<#= j #> = new BigArray<Axis<#= j #>>(additions.Length * 2);
+//                        for (ulong i = 0; i < additions.Length; i++)
+//						{
+//							Omnitree.Bounds<<#= chain_AxisX #>> bounds = GetBoundings(additions[i]);
+//                            values<#= j #>[i * 2] = bounds.Min1;
+//							values<#= j #>[i * 2 + 1] = bounds.Max1;
+//						}
+//
+//                        Theta.Algorithms.Sort<Axis<#= j #>>.Merge(this._compare<#= j #>, (int i) => { return values<#= j #>[(ulong)i]; }, (int i, Axis<#= j #> value) => { values<#= j #>[(ulong)i] = value; }, 0, (int)(additions.Length - 1));
+//                    };
+//
+//                    if (allowMultithreading)
+//                        result<#= j #> = Theta.Parallels.Parallel.Thread(operation);
+//                    else
+//                        operation();
+//                }
+//<# } #>
+//
+//<# for (int j = 1; j <= i; j++) { #>
+//                if (this._subdivisionOverride<#= j #> == null && allowMultithreading)
+//                    result<#= j #>.AsyncWaitHandle.WaitOne();<# } #>
+//
+//                // build the tree
+//                Add(new_top, 1, -1, additions.Stepper(), (int)additions.Length, <# for (int j = 1; j <= i; j++) { #>int.MinValue, <# } #>(int)additions.Length, <# for (int j = 1; j <= i; j++) { #>(int index) => { return values<#= j #>[index]; }, <# } #>allowMultithreading);
+//                
+//                this._top = new_top;
+//            }
+//        }
+//
+//        public void Add(bool allowMultithreading, params T[] additions)
+//        {
+//            if (additions.Length > int.MaxValue)
+//                throw new System.Exception("The maximum size of the Omnitree was exceeded during bulk addition.");
+//
+//            if (this._top.Count != 0 || (int)additions.Length <= this._depth_load)
+//            {
+//                for (int i = 0; i < additions.Length; i++)
+//                    this.Add(additions[i]);
+//            }
+//            else
+//            {
+//                // adjust the loads prior to additions
+//                ComputeLoads((int)additions.Length);
+//
+//                Node new_top = new Node(Omnitree.Bounds<<#= chain_AxisX #>>.None, null, -1);
+//                new_top.Count = (int)additions.Length;
+//
+//<# for (int j = 1; j <= i; j++) { #>
+//                // prepare data for median computations
+//                BigArray<Axis<#= j #>> values<#= j #>;
+//                IAsyncResult result<#= j #> = null;
+//                if (this._subdivisionOverride<#= j #> != null)
+//                    values<#= j #> = null;
+//                else
+//                {
+//                    values<#= j #> = null;
+//                    Theta.Parallels.Parallel.Operation operation = () =>
+//                    {
+//                        values<#= j #> = new BigArray<Axis<#= j #>>(additions.Length);
+//                        for (int i = 0; i < additions.Length; i++)
+//                            values<#= j #>[i] = LocateVector(additions[i]).Axis<#= j #>;
+//                        Theta.Algorithms.Sort<Axis<#= j #>>.Merge(this._compare<#= j #>, (int i) => { return values<#= j #>[(ulong)i]; }, (int i, Axis<#= j #> value) => { values<#= j #>[(ulong)i] = value; }, 0, (int)(additions.Length - 1));
+//                    };
+//
+//                    if (allowMultithreading)
+//                        result<#= j #> = Theta.Parallels.Parallel.Thread(operation);
+//                    else
+//                        operation();
+//                }
+//<# } #>
+//
+//<# for (int j = 1; j <= i; j++) { #>
+//                if (this._subdivisionOverride<#= j #> == null && allowMultithreading)
+//                    result<#= j #>.AsyncWaitHandle.WaitOne();
+//<# } #>
+//
+//                // build the tree
+//                Add(new_top, 1, -1, additions.Stepper(), additions.Length, <# for (int j = 1; j <= i; j++) { #>int.MinValue, <# } #>(int)additions.Length, <# for (int j = 1; j <= i; j++) { #>(int index) => { return values<#= j #>[index]; }, <# } #>allowMultithreading);
+//                
+//                this._top = new_top;
+//            }
+//        }
+//
+//        
+//        private int Add(Node parent, int depth, <#= child_index_type #> child, Stepper<T> additions, int parent_count, <# for (int j = 1; j <= i; j++) { #>int prevmed<#= j #>, <# } #>int initial_count, <# for (int j = 1; j <= i; j++) { #>Get<Axis<#= j #>> values<#= j #>, <# } #>bool allowMultithreading)
+//        {<# for (int j = 1; j <= i; j++) { #>
+//            Axis<#= j #> pointOfDivision<#= j #>;<# } #>
+//<# for (int j = 1; j <= i; j++) { #>
+//            int median_axis<#= j #> = -1;<# } #>
+//            if (this._subdivisionOverride1 == null<# for (int j = 2; j <= i; j++) { #> || this._subdivisionOverride<#= j #> == null<# } #>)
+//                GetMedianIndexes(initial_count, child, depth, <# for (int j = 1; j <= i; j++) { #>prevmed<#= j #>, <# } #>out median_axis1<# for (int j = 2; j <= i; j++) { #>, out median_axis<#= j #><# } #>);
+//<# for (int j = 1; j <= i; j++) { #>
+//            if (this._subdivisionOverride<#= j #> != null)
+//                pointOfDivision<#= j #> = this._subdivisionOverride<#= j #>(parent.Bounds, additions);
+//            else
+//                pointOfDivision<#= j #> = values<#= j #>(median_axis<#= j #>);
+//<# } #>
+//            parent.PointOfDivision = new Omnitree.Vector<<#= chain_AxisX #>>(pointOfDivision1<# for (int j = 2; j <= i; j++) { #>, pointOfDivision<#= j #><# } #>);
+//
+//            // divide the values along the medians
+//            Map<List<T>, <#= child_index_type #>> collection_map = new MapHashLinked<List<T>, <#= child_index_type #>>();
+//            additions((T value) => 
+//            {
+//                <#= child_index_type #> index = DetermineChildIndex(parent.PointOfDivision.Value, LocateVector(value));
+//                List<T> list = null;
+//                if (collection_map.TryGet(index, out list))
+//                {
+//                    list.Add(value);
+//                }
+//                else
+//                {
+//                    if (parent_count < 100000)
+//                        list = new ListArray<T>();
+//                    else
+//                        list = new ListLinked<T>();
+//                    collection_map.Add(index, list);
+//                    list.Add(value);
+//                }
+//            });
+//
+//            if (depth == 1 && allowMultithreading)
+//            {
+//                // NOTE: Must assign placeholders before multithreading so that the threads do not overwrite each other
+//                collection_map.Keys((<#= child_index_type #> key) => { parent[key] = new Node(Omnitree.Bounds<<#= chain_AxisX #>>.None, parent, key); });
+//                IAsyncResult[] handles = new IAsyncResult[Environment.ProcessorCount];
+//                for (int i = 0; i < handles.Length; i++)
+//                {
+//                    int multiTheadSafe_i = i; // used as catpure variable below making it multithread-safe
+//                    handles[i] = Theta.Parallels.Parallel.Thread(() =>
+//                    {
+//                        Step.EveryNth<Link<List<T>, <#= child_index_type #>>>(collection_map.Pairs, multiTheadSafe_i + 1)(
+//                        (Link<List<T>, <#= child_index_type #>> link) =>
+//                            {
+//                                ReversedChildBuilding(parent, link._2, depth, link._1.Stepper, link._1.Count, <# for (int j = 1; j <= i; j++) { #>median_axis<#= j #>, <# } #>initial_count, <# for (int j = 1; j <= i; j++) { #>values<#= j #>, <# } #>allowMultithreading);
+//                            });
+//                    });
+//                }
+//                
+//                foreach (IAsyncResult handle in handles)
+//                {
+//                    handle.AsyncWaitHandle.WaitOne();
+//                }
+//            }
+//            else
+//            {
+//                collection_map.Pairs((Link<List<T>, <#= child_index_type #>> link) =>
+//                { 
+//                    ReversedChildBuilding(parent, link._2, depth, link._1.Stepper, link._1.Count, <# for (int j = 1; j <= i; j++) { #>median_axis<#= j #>, <# } #>initial_count, <# for (int j = 1; j <= i; j++) { #>values<#= j #>, <# } #>allowMultithreading);
+//                });
+//            }
+//
+//            int count = 0;
+//            foreach (Node node in parent.Children)
+//                count += node.Count;
+//            return count;
+//        }
+//
+//        int ReversedChildBuilding(Node parent, <#= child_index_type #> child_index, int depth, Stepper<T> additions, int count, <# for (int j = 1; j <= i; j++) { #>int prevmed<#= j #>, <# } #>int initial_count, <# for (int j = 1; j <= i; j++) { #>Get<Axis<#= j #>> values<#= j #>, <# } #>bool allowMultithreading)
+//        {
+//            Omnitree.Bounds<<#= chain_AxisX #>> child_bounds = DetermineChildBounds(parent, child_index);
+//            if (depth >= this._depth_load || count <= this._node_load)
+//            {
+//                Node new_leaf = new Node(child_bounds, parent, child_index);
+//                additions((T value) => { new_leaf.Add(value); });
+//                parent[new_leaf.Index] = new_leaf;
+//                return new_leaf.Count;
+//            }
+//            else
+//            {
+//                Node new_branch = new Node(Omnitree.Vector<<#= chain_AxisX #>>.Default, child_bounds, parent, child_index);
+//                parent[new_branch.Index] = new_branch;
+//                new_branch.Count = Add(new_branch, depth + 1, child_index, additions, count, <# for (int j = 1; j <= i; j++) { #>prevmed<#= j #>, <# } #>count, <# for (int j = 1; j <= i; j++) { #>values<#= j #>, <# } #>allowMultithreading);
+//                return new_branch.Count;
+//            }
+//        }
+//
+//        /// <summary>Gets the indeces of the median values at the given position during bulk additions.</summary>
+//        private void GetMedianIndexes(int count, <#= child_index_type #> child_index, int depth, <# for (int j = 1; j <= i; j++) { #>int previous<#= j #>, <# } #>out int index1<# for (int j = 2; j <= i; j++) { #>, out int index<#= j #><# } #>)
+//        {
+//            if (depth == 1)
+//            {<# for (int j = 1; j <= i; j++) { #>
+//                index<#= j #> = (count - 1) / 2;<# } #>
+//                return;
+//            }
+//
+//            int splits = Compute<int>.Power(2, depth);
+//            int mid_child_range = count / splits;
+//<# for (int j = i; j >= 1; j--) { #>
+//            if (child_index >= <#= (2 << (j - 1)) / 2 #>)
+//            {
+//                index<#= j #> = previous<#= j #> + mid_child_range;
+//                child_index -= <#= (2 << (j - 1)) / 2 #>;
+//            }
+//            else
+//            {
+//                index<#= j #> = previous<#= j #> - mid_child_range;
+//            }
+//<# } #>
+//        }
 
-                Node new_top = new Node(Omnitree.Bounds<<#= chain_AxisX #>>.None, null, -1);
-                new_top.Count = (int)additions.Length;
-
-<# for (int j = 1; j <= i; j++) { #>
-                // prepare data for median computations
-                BigArray<Axis<#= j #>> values<#= j #>;
-                IAsyncResult result<#= j #> = null;
-                if (this._subdivisionOverride<#= j #> != null)
-                    values<#= j #> = null;
-                else
-                {
-                    values<#= j #> = null;
-                    Theta.Parallels.Parallel.Operation operation = () =>
-                    {
-                        values<#= j #> = new BigArray<Axis<#= j #>>(additions.Length);
-                        for (ulong i = 0; i < additions.Length; i++)
-                            values<#= j #>[i] = LocateVector(additions[i]).Axis<#= j #>;
-                        Theta.Algorithms.Sort<Axis<#= j #>>.Merge(this._compare<#= j #>, (int i) => { return values<#= j #>[(ulong)i]; }, (int i, Axis<#= j #> value) => { values<#= j #>[(ulong)i] = value; }, 0, (int)(additions.Length - 1));
-                    };
-
-                    if (allowMultithreading)
-                        result<#= j #> = Theta.Parallels.Parallel.Thread(operation);
-                    else
-                        operation();
-                }
-<# } #>
-
-<# for (int j = 1; j <= i; j++) { #>
-                if (this._subdivisionOverride<#= j #> == null && allowMultithreading)
-                    result<#= j #>.AsyncWaitHandle.WaitOne();<# } #>
-
-                // build the tree
-                Add(new_top, 1, -1, additions.Stepper(), (int)additions.Length, <# for (int j = 1; j <= i; j++) { #>int.MinValue, <# } #>(int)additions.Length, <# for (int j = 1; j <= i; j++) { #>(int index) => { return values<#= j #>[index]; }, <# } #>allowMultithreading);
-                
-                this._top = new_top;
-            }
-        }
-
-        public void Add(bool allowMultithreading, params T[] additions)
-        {
-            if (additions.Length > int.MaxValue)
-                throw new System.Exception("The maximum size of the Omnitree was exceeded during bulk addition.");
-
-            if (this._top.Count != 0 || (int)additions.Length <= this._depth_load)
-            {
-                for (int i = 0; i < additions.Length; i++)
-                    this.Add(additions[i]);
-            }
-            else
-            {
-                // adjust the loads prior to additions
-                ComputeLoads((int)additions.Length);
-
-                Node new_top = new Node(Omnitree.Bounds<<#= chain_AxisX #>>.None, null, -1);
-                new_top.Count = (int)additions.Length;
-
-<# for (int j = 1; j <= i; j++) { #>
-                // prepare data for median computations
-                BigArray<Axis<#= j #>> values<#= j #>;
-                IAsyncResult result<#= j #> = null;
-                if (this._subdivisionOverride<#= j #> != null)
-                    values<#= j #> = null;
-                else
-                {
-                    values<#= j #> = null;
-                    Theta.Parallels.Parallel.Operation operation = () =>
-                    {
-                        values<#= j #> = new BigArray<Axis<#= j #>>(additions.Length);
-                        for (int i = 0; i < additions.Length; i++)
-                            values<#= j #>[i] = LocateVector(additions[i]).Axis<#= j #>;
-                        Theta.Algorithms.Sort<Axis<#= j #>>.Merge(this._compare<#= j #>, (int i) => { return values<#= j #>[(ulong)i]; }, (int i, Axis<#= j #> value) => { values<#= j #>[(ulong)i] = value; }, 0, (int)(additions.Length - 1));
-                    };
-
-                    if (allowMultithreading)
-                        result<#= j #> = Theta.Parallels.Parallel.Thread(operation);
-                    else
-                        operation();
-                }
-<# } #>
-
-<# for (int j = 1; j <= i; j++) { #>
-                if (this._subdivisionOverride<#= j #> == null && allowMultithreading)
-                    result<#= j #>.AsyncWaitHandle.WaitOne();
-<# } #>
-
-                // build the tree
-                Add(new_top, 1, -1, additions.Stepper(), additions.Length, <# for (int j = 1; j <= i; j++) { #>int.MinValue, <# } #>(int)additions.Length, <# for (int j = 1; j <= i; j++) { #>(int index) => { return values<#= j #>[index]; }, <# } #>allowMultithreading);
-                
-                this._top = new_top;
-            }
-        }
-
-        
-        private int Add(Node parent, int depth, <#= child_index_type #> child, Stepper<T> additions, int parent_count, <# for (int j = 1; j <= i; j++) { #>int prevmed<#= j #>, <# } #>int initial_count, <# for (int j = 1; j <= i; j++) { #>Get<Axis<#= j #>> values<#= j #>, <# } #>bool allowMultithreading)
-        {<# for (int j = 1; j <= i; j++) { #>
-            Axis<#= j #> pointOfDivision<#= j #>;<# } #>
-<# for (int j = 1; j <= i; j++) { #>
-            int median_axis<#= j #> = -1;<# } #>
-            if (this._subdivisionOverride1 == null<# for (int j = 2; j <= i; j++) { #> || this._subdivisionOverride<#= j #> == null<# } #>)
-                GetMedianIndexes(initial_count, child, depth, <# for (int j = 1; j <= i; j++) { #>prevmed<#= j #>, <# } #>out median_axis1<# for (int j = 2; j <= i; j++) { #>, out median_axis<#= j #><# } #>);
-<# for (int j = 1; j <= i; j++) { #>
-            if (this._subdivisionOverride<#= j #> != null)
-                pointOfDivision<#= j #> = this._subdivisionOverride<#= j #>(parent.Bounds, additions);
-            else
-                pointOfDivision<#= j #> = values<#= j #>(median_axis<#= j #>);
-<# } #>
-            parent.PointOfDivision = new Omnitree.Vector<<#= chain_AxisX #>>(pointOfDivision1<# for (int j = 2; j <= i; j++) { #>, pointOfDivision<#= j #><# } #>);
-
-            // divide the values along the medians
-            Map<List<T>, <#= child_index_type #>> collection_map = new MapHashLinked<List<T>, <#= child_index_type #>>();
-            additions((T value) => 
-            {
-                <#= child_index_type #> index = DetermineChildIndex(parent.PointOfDivision.Value, LocateVector(value));
-                List<T> list = null;
-                if (collection_map.TryGet(index, out list))
-                {
-                    list.Add(value);
-                }
-                else
-                {
-                    if (parent_count < 100000)
-                        list = new ListArray<T>();
-                    else
-                        list = new ListLinked<T>();
-                    collection_map.Add(index, list);
-                    list.Add(value);
-                }
-            });
-
-            if (depth == 1 && allowMultithreading)
-            {
-                // NOTE: Must assign placeholders before multithreading so that the threads do not overwrite each other
-                collection_map.Keys((<#= child_index_type #> key) => { parent[key] = new Node(Omnitree.Bounds<<#= chain_AxisX #>>.None, parent, key); });
-                IAsyncResult[] handles = new IAsyncResult[Environment.ProcessorCount];
-                for (int i = 0; i < handles.Length; i++)
-                {
-                    int multiTheadSafe_i = i; // used as catpure variable below making it multithread-safe
-                    handles[i] = Theta.Parallels.Parallel.Thread(() =>
-                    {
-                        Step.EveryNth<Link<List<T>, <#= child_index_type #>>>(collection_map.Pairs, multiTheadSafe_i + 1)(
-                        (Link<List<T>, <#= child_index_type #>> link) =>
-                            {
-                                ReversedChildBuilding(parent, link._2, depth, link._1.Stepper, link._1.Count, <# for (int j = 1; j <= i; j++) { #>median_axis<#= j #>, <# } #>initial_count, <# for (int j = 1; j <= i; j++) { #>values<#= j #>, <# } #>allowMultithreading);
-                            });
-                    });
-                }
-                
-                foreach (IAsyncResult handle in handles)
-                {
-                    handle.AsyncWaitHandle.WaitOne();
-                }
-            }
-            else
-            {
-                collection_map.Pairs((Link<List<T>, <#= child_index_type #>> link) =>
-                { 
-                    ReversedChildBuilding(parent, link._2, depth, link._1.Stepper, link._1.Count, <# for (int j = 1; j <= i; j++) { #>median_axis<#= j #>, <# } #>initial_count, <# for (int j = 1; j <= i; j++) { #>values<#= j #>, <# } #>allowMultithreading);
-                });
-            }
-
-            int count = 0;
-            foreach (Node node in parent.Children)
-                count += node.Count;
-            return count;
-        }
-
-        int ReversedChildBuilding(Node parent, <#= child_index_type #> child_index, int depth, Stepper<T> additions, int count, <# for (int j = 1; j <= i; j++) { #>int prevmed<#= j #>, <# } #>int initial_count, <# for (int j = 1; j <= i; j++) { #>Get<Axis<#= j #>> values<#= j #>, <# } #>bool allowMultithreading)
-        {
-            Omnitree.Bounds<<#= chain_AxisX #>> child_bounds = DetermineChildBounds(parent, child_index);
-            if (depth >= this._depth_load || count <= this._node_load)
-            {
-                Node new_leaf = new Node(child_bounds, parent, child_index);
-                additions((T value) => { new_leaf.Add(value); });
-                parent[new_leaf.Index] = new_leaf;
-                return new_leaf.Count;
-            }
-            else
-            {
-                Node new_branch = new Node(Omnitree.Vector<<#= chain_AxisX #>>.Default, child_bounds, parent, child_index);
-                parent[new_branch.Index] = new_branch;
-                new_branch.Count = Add(new_branch, depth + 1, child_index, additions, count, <# for (int j = 1; j <= i; j++) { #>prevmed<#= j #>, <# } #>count, <# for (int j = 1; j <= i; j++) { #>values<#= j #>, <# } #>allowMultithreading);
-                return new_branch.Count;
-            }
-        }
-
-        /// <summary>Gets the indeces of the median values at the given position during bulk additions.</summary>
-        private void GetMedianIndexes(int count, <#= child_index_type #> child_index, int depth, <# for (int j = 1; j <= i; j++) { #>int previous<#= j #>, <# } #>out int index1<# for (int j = 2; j <= i; j++) { #>, out int index<#= j #><# } #>)
-        {
-            if (depth == 1)
-            {<# for (int j = 1; j <= i; j++) { #>
-                index<#= j #> = (count - 1) / 2;<# } #>
-                return;
-            }
-
-            int splits = Compute<int>.Power(2, depth);
-            int mid_child_range = count / splits;
-<# for (int j = i; j >= 1; j--) { #>
-            if (child_index >= <#= (2 << (j - 1)) / 2 #>)
-            {
-                index<#= j #> = previous<#= j #> + mid_child_range;
-                child_index -= <#= (2 << (j - 1)) / 2 #>;
-            }
-            else
-            {
-                index<#= j #> = previous<#= j #> - mid_child_range;
-            }
-<# } #>
-        }
+		
 
         #endregion
 
@@ -973,22 +1007,22 @@ namespace Theta.Structures
             // dynamic tree sizes
             ComputeLoads(this._top.Count);
 
-            Omnitree.Vector<<#= chain_AxisX #>> location = LocateVector(addition);
+            Omnitree.Bounds<<#= chain_AxisX #>> bounds = GetBoundings(addition);
 
             // grow the first branch of the tree
-            if (this._top is Leaf && (this._top as Leaf).Count >= this._node_load)
+            if (!this._top.PointOfDivision.HasValue && this._top.Count >= this._node_load)
             {
-                Leaf top = this._top as Leaf;
+                Node top = this._top;
 
                 // create the new branch from the median values
                 this._top = new Node(DetermineMedians(top), Omnitree.Bounds<<#= chain_AxisX #>>.None, null, -1);
 
                 // iterate through the elements and add them to the appropriate children
-                for (Leaf.Node list = top.Head; list != null; list = list.Next)
-                    Add(list.Value, this._top, LocateVector(list.Value), 0);
+                for (Node.ValueNode list = top.Head; list != null; list = list.Next)
+                    Add(list.Value, this._top, GetBoundings(list.Value), 0);
             }
 
-            this.Add(addition, this._top, location, 0);
+            this.Add(addition, this._top, bounds, 0);
         }
         
         /// <summary>Recursive version of the add function.</summary>
@@ -996,56 +1030,68 @@ namespace Theta.Structures
         /// <param name="node">The current node for tree trversal.</param>
         /// <param name="ms">The location of the addition.</param>
         /// <param name="depth">The current depth of iteration.</param>
-        private void Add(T addition, Node node, Omnitree.Vector<<#= chain_AxisX #>> location, int depth)
+        private void Add(T addition, Node node, Omnitree.Bounds<<#= chain_AxisX #>> bounds, int depth)
         {
-            if (node is Leaf)
+            if (!node.PointOfDivision.HasValue)
             {
-                Leaf leaf = node as Leaf;
-                if (depth >= this._depth_load || !(leaf.Count >= this._node_load))
+                //Leaf leaf = node as Leaf;
+                if (depth >= this._depth_load || !(node.Count >= this._node_load))
                 {
-                    leaf.Add(addition);
+                    node.Add(addition);
                     return;
                 }
                 else
                 {
-                    Node parent = node.Parent;
-                    <#= child_index_type #> child_index = this.DetermineChildIndex(parent.PointOfDivision, location);
-                    Node growth = new Node(DetermineMedians(leaf), leaf.Bounds, parent, child_index);
-                    parent[child_index] = growth;
-                    for (Leaf.Node list = leaf.Head; list != null; list = list.Next)
+                    //Node parent = node.Parent;
+                    //<#= child_index_type #> child_index = this.DetermineChildIndex(parent.PointOfDivision, location);
+                    //Node growth = new Node(DetermineMedians(leaf), leaf.Bounds, parent, child_index);
+                    //parent[child_index] = growth;
+
+					Node growth = new Node(DetermineMedians(node), node.Bounds, node.Parent, node.Index);
+                    node.Parent[node.Index] = growth;
+
+                    for (Node.ValueNode list = node.Head; list != null; list = list.Next)
                     {
-                        Omnitree.Vector<<#= chain_AxisX #>> temp_location = LocateVector(list.Value);
-                        if (EncapsulationCheck(growth.Bounds, temp_location))
-                            Add(list.Value, growth, temp_location, depth);
+                        Omnitree.Bounds<<#= chain_AxisX #>> temp_bounds = GetBoundings(list.Value);
+                        if (EncapsulationCheck(growth.Bounds, temp_bounds))
+                            Add(list.Value, growth, temp_bounds, depth);
                         else
                         {
-                            ReduceParentCounts(parent, 1);
-                            Add(list.Value, this._top, temp_location, depth);
+                            ReduceParentCounts(node.Parent, 1);
+                            Add(list.Value, this._top, temp_bounds, depth);
                         }
                     }
 
-                    Add(addition, growth, location, depth);
+                    Add(addition, growth, bounds, depth);
                     return;
                 }
             }
             else
             {
-                Node branch = node as Node;
-                <#= child_index_type #> child_index = this.DetermineChildIndex(branch.PointOfDivision, location); // determine the child "index" (0 through 2^Dimensions) the addition belongs in
-                Node child_node = branch[child_index];
+                //Node branch = node as Node;
+                <#= child_index_type #> child_index = this.DetermineChildIndex(node.PointOfDivision.Value, bounds); // determine the child "index" (0 through 2^Dimensions) the addition belongs in
+                
+				// if -1, then the bounds of the addition straddle the point of division (keep it in current node)
+				if (child_index == -1)
+				{
+					node.Add(addition);
+                    return;
+				}
+				
+				Node child_node = node[child_index];
 
                 // null children in branches are just empty leaves
                 if (child_node == null)
                 {
-                    Leaf new_leaf = new Leaf(DetermineChildBounds(branch, child_index), branch, child_index);
-                    branch[child_index] = new_leaf;
-                    new_leaf.Add(addition);
+                    Node new_node = new Node(DetermineChildBounds(node, child_index), node, child_index);
+                    node[child_index] = new_node;
+                    new_node.Add(addition);
                 }
                 else
                     // child exists already, continue adding
-                    Add(addition, child_node, location, depth + 1);
+                    Add(addition, child_node, bounds, depth + 1);
 
-                branch.Count++;
+                node.Count++;
                 return;
             }
         }
@@ -1056,39 +1102,37 @@ namespace Theta.Structures
         /// <param name="median1">The computed minimum dimensions of the child node along the 1D axis.</param>
         /// <param name="median2">The computed minimum dimensions of the child node along the 2D axis.</param>
         /// <param name="median3">The computed minimum dimensions of the child node along the 3D axis.</param>
-        private Omnitree.Vector<<#= chain_AxisX #>> DetermineMedians(Leaf leaf)
+        private Omnitree.Vector<<#= chain_AxisX #>> DetermineMedians(Node node)
         {
             try
             {
                 // extract the values<# for (int j = 1; j <= i; j++) { #>
-                Axis<#= j #>[] values<#= j #> = new Axis<#= j #>[leaf.Count];<# } #>
-                Leaf.Node for_current = leaf.Head; // used in for loop
-                for (int i = 0; i < leaf.Count; i++, for_current = for_current.Next)
-                    this._locate(for_current.Value, out values1[i]<# for (int j = 2; j <= i; j++) { #>, out values<#= j #>[i]<# } #>);
-                // sort the values<# for (int j = 1; j <= i; j++) { #>
-                if (_defaultCompare<#= j #>) Array.Sort(values<#= j #>);
-                else Array.Sort(values<#= j #>, Compare.ToSystemComparison(this._compare<#= j #>));<# } #>
-                // pull out the lazy medians (if even # of items... just take the left)
-                int index = (leaf.Count - 1) / 2;
-                return new Omnitree.Vector<<#= chain_AxisX #>>(values1[index]<# for (int j = 2; j <= i; j++) { #>, values<#= j #>[index]<# } #>);
+                Omnitree.Bound<Axis<#= j #>>[] values<#= j #> = new Omnitree.Bound<Axis<#= j #>>[node.Count * 2];<# } #>
+                Node.ValueNode for_current = node.Head; // used in for loop
+                for (int i = 0; i < node.Count; i++, for_current = for_current.Next)
+                    this._getBounds(for_current.Value, 
+					out values1[i * 2], out values1[i * 2 + 1]<# for (int j = 2; j <= i; j++) { #>, 
+					out values<#= j #>[i * 2], out values<#= j #>[i * 2 + 1]<# } #>);
+                return new Omnitree.Vector<<#= chain_AxisX #>>(
+					Omnitree.SubDivide(values1, this._defaultCompare1 ? Compare.Default : this._compare1)<# for (int j = 2; j <= i; j++) { #>, 
+					Omnitree.SubDivide(values<#= j #>, this._defaultCompare<#= j #> ? Compare.Default : this._compare<#= j #>)<# } #>);
             }
             catch
             {
                 // extract the values<# for (int j = 1; j <= i; j++) { #>
-                BigArray<Axis<#= j #>> values<#= j #> = new BigArray<Axis<#= j #>>(leaf.Count);<# } #>
-                Leaf.Node for_current = leaf.Head; // used in for loop
-                for (int i = 0; i < leaf.Count; i++, for_current = for_current.Next)
+                BigArray<Omnitree.Bound<Axis<#= j #>>> values<#= j #> = new BigArray<Omnitree.Bound<Axis<#= j #>>>(node.Count * 2);<# } #>
+                Node.ValueNode for_current = node.Head; // used in for loop
+                for (int i = 0; i < node.Count; i++, for_current = for_current.Next)
                 {<# for (int j = 1; j <= i; j++) { #>
-                    Axis<#= j #> value<#= j #>;<# } #>
-                    this._locate(for_current.Value, out value1<# for (int j = 2; j <= i; j++) { #>, out value<#= j #><# } #>);<# for (int j = 1; j <= i; j++) { #>
-                    values<#= j #>[i] = value<#= j #>;<# } #>
+                    Omnitree.Bound<Axis<#= j #>> min<#= j #>; Omnitree.Bound<Axis<#= j #>> max<#= j #>;<# } #>
+                    this._getBounds(for_current.Value,
+						out min1, out max1<# for (int j = 2; j <= i; j++) { #>,
+						out min<#= j #>, out max<#= j #><# } #>);<# for (int j = 1; j <= i; j++) { #>
+                    values<#= j #>[i * 2] = min<#= j #>; values<#= j #>[i * 2 + 1] = max<#= j #>;<# } #>
                 }
-                // sort the values<# for (int j = 1; j <= i; j++) { #>
-                if (_defaultCompare<#= j #>) Theta.Algorithms.Sort<Axis<#= j #>>.Merge(Compare.Default, (int sorting_index) => { return values<#= j #>[sorting_index]; }, (int sorting_index, Axis<#= j #> axis<#= j #>) => { values<#= j #>[sorting_index] = axis<#= j #>; }, 0, (int)values1.Length);
-                else Theta.Algorithms.Sort<Axis<#= j #>>.Merge(_compare<#= j #>, (int sorting_index) => { return values<#= j #>[sorting_index]; }, (int sorting_index, Axis<#= j #> axis<#= j #>) => { values<#= j #>[sorting_index] = axis<#= j #>; }, 0, (int)values1.Length);<# } #>
-                // pull out the lazy medians (if even # of items... just take the left)
-                int index = (leaf.Count - 1) / 2;
-                return new Omnitree.Vector<<#= chain_AxisX #>>(values1[index]<# for (int j = 2; j <= i; j++) { #>, values<#= j #>[index]<# } #>);
+				return new Omnitree.Vector<<#= chain_AxisX #>>(
+					Omnitree.SubDivide(values1, this._defaultCompare1 ? Compare.Default : this._compare1)<# for (int j = 2; j <= i; j++) { #>, 
+					Omnitree.SubDivide(values<#= j #>, this._defaultCompare<#= j #> ? Compare.Default : this._compare<#= j #>)<# } #>);
             }
         }
 
@@ -1096,20 +1140,22 @@ namespace Theta.Structures
 
         #region Add Helpers
 
-        private Omnitree.Bounds<<#= chain_AxisX #>> DetermineChildBounds(Node branch, <#= child_index_type #> child_index)
+        private Omnitree.Bounds<<#= chain_AxisX #>> DetermineChildBounds(Node node, <#= child_index_type #> child_index)
         {
+			// the node parameter should always have a point of division value for this function
+			Omnitree.Vector<<#= chain_AxisX #>> pointOfDivision = node.PointOfDivision.Value;
 <# for (int j = i; j >= 1; j--) { #>
             Omnitree.Bound<Axis<#= j #>> min<#= j #>, max<#= j #>;
             if (child_index >= <#= (2 << (j - 1)) / 2 #>)
             {
-                min<#= j #> = branch.PointOfDivision.Axis<#= j #>;
-                max<#= j #> = branch.Bounds.Max<#= j #>;
+                min<#= j #> = pointOfDivision.Axis<#= j #>;
+                max<#= j #> = node.Bounds.Max<#= j #>;
                 child_index -= <#= (2 << (j - 1)) / 2 #>;
             }
             else
             {
-                min<#= j #> = branch.Bounds.Min<#= j #>;
-                max<#= j #> = branch.PointOfDivision.Axis<#= j #>;
+                min<#= j #> = node.Bounds.Min<#= j #>;
+                max<#= j #> = pointOfDivision.Axis<#= j #>;
             }
 <# } #>
             return new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>);
@@ -1124,7 +1170,7 @@ namespace Theta.Structures
         /// <summary>Returns the tree to an empty state.</summary>
         public void Clear()
         {
-            this._top = new Leaf(Omnitree.Bounds<<#= chain_AxisX #>>.None, null, -1);
+            this._top = new Node(Omnitree.Bounds<<#= chain_AxisX #>>.None, null, -1);
             ComputeLoads(0);
         }
 
@@ -1143,63 +1189,103 @@ namespace Theta.Structures
 
         #region Count
 
-        /// <summary>Counts the number of items in a sub space.</summary>
+        /// <summary>Counts the number of items encapsulated by a sub space.</summary>
         <#= documentation_AxisX_minX_AxisX_maxX #>
         /// <returns>The number of items in the provided sub space.</returns>
-        public int CountSubSpace(<#= chain_AxisX_minX_AxisX_maxX #>)
+        public int CountSubSpaceEncapsulated(<#= chain_AxisX_minX_AxisX_maxX #>)
         {
-            return CountSubSpace(_top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
+            return CountSubSpaceEncapsulated(_top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
         }
-        /// <summary>Counts the number of items in a sub space.</summary>
+        /// <summary>Counts the number of items encapsulated by a sub space.</summary>
         <#= documentation_AxisX_minX_AxisX_maxX #>
         /// <returns>The number of items in the provided sub space.</returns>
-        public int CountSubSpace(<#= chain_BoundAxisX_minX_BoundAxisX_maxX #>)
+        public int CountSubSpaceEncapsulated(<#= chain_BoundAxisX_minX_BoundAxisX_maxX #>)
         {
-            return CountSubSpace(_top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
+            return CountSubSpaceEncapsulated(_top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
         }
-        /// <summary>Counts the number of items in a sub space.</summary>
+        /// <summary>Counts the number of items encapsulated by a sub space.</summary>
         <#= documentation_AxisX_axisX #>
         /// <returns>The number of items in the provided sub space.</returns>
-        public int CountSubSpace(<#= chain_AxisX_axisX #>)
+        public int CountSubSpaceEncapsulated(<#= chain_AxisX_axisX #>)
         {
-            return CountSubSpace(_top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_axisX_axisX #>));
+            return CountSubSpaceEncapsulated(_top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_axisX_axisX #>));
         }
-        /// <summary>Counts the number of items in a sub space.</summary>
+        /// <summary>Counts the number of items encapsulated by a sub space.</summary>
         <#= documentation_AxisX_axisX #>
         /// <returns>The number of items in the provided sub space.</returns>
-        public int CountSubSpace(<#= chain_BoundAxisX_axisX #>)
+        public int CountSubSpaceEncapsulated(<#= chain_BoundAxisX_axisX #>)
         {
-            return CountSubSpace(_top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_axisX_axisX #>));
+            return CountSubSpaceEncapsulated(_top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_axisX_axisX #>));
         }
-        /// <summary>Counts the number of items in a sub space.</summary>
-        /// <param name="node">The current traversal node.</param>
+
+        /// <summary>Counts the number of items overlapped by a sub space.</summary>
+        <#= documentation_AxisX_minX_AxisX_maxX #>
         /// <returns>The number of items in the provided sub space.</returns>
-        private int CountSubSpace(Node node, Omnitree.Bounds<<#= chain_AxisX #>> bounds)
+        public int CountSubSpaceOverlapped(<#= chain_AxisX_minX_AxisX_maxX #>)
+        {
+            return CountSubSpaceOverlapped(_top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
+        }
+        /// <summary>Counts the number of items overlapped by a sub space.</summary>
+        <#= documentation_AxisX_minX_AxisX_maxX #>
+        /// <returns>The number of items in the provided sub space.</returns>
+        public int CountSubSpaceOverlapped(<#= chain_BoundAxisX_minX_BoundAxisX_maxX #>)
+        {
+            return CountSubSpaceOverlapped(_top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
+        }
+        /// <summary>Counts the number of items overlapped by a sub space.</summary>
+        <#= documentation_AxisX_axisX #>
+        /// <returns>The number of items in the provided sub space.</returns>
+        public int CountSubSpaceOverlapped(<#= chain_AxisX_axisX #>)
+        {
+            return CountSubSpaceOverlapped(_top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_axisX_axisX #>));
+        }
+        /// <summary>Counts the number of items overlapped by a sub space.</summary>
+        <#= documentation_AxisX_axisX #>
+        /// <returns>The number of items in the provided sub space.</returns>
+        public int CountSubSpaceOverlapped(<#= chain_BoundAxisX_axisX #>)
+        {
+            return CountSubSpaceOverlapped(_top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_axisX_axisX #>));
+        }
+
+		private int CountSubSpaceEncapsulated(Node node, Omnitree.Bounds<<#= chain_AxisX #>> bounds)
+		{
+			return CountSubSpaceBase(_top, bounds, (a, b) => EncapsulationCheck(a, b));
+		}
+
+		private int CountSubSpaceOverlapped(Node node, Omnitree.Bounds<<#= chain_AxisX #>> bounds)
+		{
+			return CountSubSpaceBase(_top, bounds, (a, b) => InclusionCheck(a, b));
+		}
+
+		private int CountSubSpaceBase(
+			Node node,
+			Omnitree.Bounds<<#= chain_AxisX #>> bounds,
+			Omnitree.SpatialCheck<Omnitree.Bounds<<#= chain_AxisX #>>, Omnitree.Bounds<<#= chain_AxisX #>>> spatialCheck)
         {
             // adjust min/max values
             int count = 0;
             if (EncapsulationCheck(bounds, node.Bounds))
                 count += node.Count;
-            else if (node is Leaf)
+            else if (!node.PointOfDivision.HasValue)
             {
-                for (Leaf.Node list = (node as Leaf).Head; list != null; list = list.Next)
-                    if (EncapsulationCheck(bounds, LocateVector(list.Value)))
+                for (Node.ValueNode list = node.Head; list != null; list = list.Next)
+                    if (spatialCheck(bounds, GetBoundings(list.Value)))
                         count++;
             }
             else
             {
                 Node branch = node as Node;
-                if (!StraddlesLines(branch.Bounds, branch.PointOfDivision))
+                if (!StraddlesLines(branch.Bounds, branch.PointOfDivision.Value))
                 {
-                    <#= child_index_type #> child_index = DetermineChildIndex(branch.PointOfDivision, new Omnitree.Vector<<#= chain_AxisX #>>(bounds.Min1.Value<# for (int j = 2; j <= i; j++) { #>, bounds.Min<#= j #>.Value<# } #>));
+                    <#= child_index_type #> child_index = DetermineChildIndex(branch.PointOfDivision.Value, bounds);
                     Node child = branch[child_index];
                     if (child != null)
-                      count += this.CountSubSpace(child, bounds);
+                      count += this.CountSubSpaceBase(child, bounds, spatialCheck);
                 }
                 else
                 {
                     foreach (Node child in node.Children)
-                        count += this.CountSubSpace(child, bounds);
+                        count += this.CountSubSpaceBase(child, bounds, spatialCheck);
                 }
             }
             return count;
@@ -1220,40 +1306,42 @@ namespace Theta.Structures
         /// <param name="depth">The current depth of iteration.</param>
         private int Update(Node node, int depth)
         {
+			// I messed up this function in the conversion
+			throw new System.NotImplementedException();
+
             int removals = 0;
 
-            if (node is Leaf)
+            if (!node.PointOfDivision.HasValue)
             {
-                Leaf leaf = node as Leaf;
-                Leaf.Node current = leaf.Head;
-                Leaf.Node previous = null;
+                Node.ValueNode current = node.Head;
+                Node.ValueNode previous = null;
                 while (current != null)
                 {
-                    Omnitree.Vector<<#= chain_AxisX #>> location = LocateVector(current.Value);
-                    if (!this.EncapsulationCheck(node.Bounds, location))
+                    Omnitree.Bounds<<#= chain_AxisX #>> bounds = GetBoundings(current.Value);
+                    if (!this.EncapsulationCheck(node.Bounds, bounds))
                     {
                         removals++;
                         T updated = current.Value;
                         if (previous == null)
                         {
-                            leaf.Head = current.Next;
+                            node.Head = current.Next;
                             goto HeadRemoved;
                         }
                         else
                             previous.Next = current.Next;
 
-                        Node whereToAdd = GetEncapsulationParent(node.Parent, location);
+                        Node whereToAdd = GetEncapsulationParent(node.Parent, bounds);
 
                         if (whereToAdd == null)
                             throw new System.Exception("an item was updated outside the range of the omnitree");
 
-                        this.Add(updated, whereToAdd, location, whereToAdd.Depth);
+                        this.Add(updated, whereToAdd, bounds, whereToAdd.Depth);
                     }
                     previous = current;
                 HeadRemoved:
                     current = current.Next;
                 }
-                leaf.Count -= removals;
+                node.Count -= removals;
                 return removals;
             }
             else
@@ -1307,40 +1395,42 @@ namespace Theta.Structures
         }
         private int Update(Omnitree.Bounds<<#= chain_AxisX #>> bounds, Node node, int depth)
         {
+			// I messed up this function in the conversion
+			throw new System.NotImplementedException();
+
             if (!InclusionCheck(bounds, node.Bounds))
                 return 0;
 
             int removals = 0;
 
-            if (node is Leaf)
+            if (!node.PointOfDivision.HasValue)
             {
-                Leaf leaf = node as Leaf;
-                Leaf.Node current = leaf.Head;
-                Leaf.Node previous = null;
+                Node.ValueNode current = node.Head;
+                Node.ValueNode previous = null;
                 while (current != null)
                 {
-                    Omnitree.Vector<<#= chain_AxisX #>> location = LocateVector(current.Value);
-                    if (!this.EncapsulationCheck(node.Bounds, location))
+                    Omnitree.Bounds<<#= chain_AxisX #>> item_bounds = GetBoundings(current.Value);
+                    if (!this.EncapsulationCheck(node.Bounds, item_bounds))
                     {
                         removals++;
                         T updated = current.Value;
                         if (previous == null)
                         {
-                            leaf.Head = current.Next;
+                            node.Head = current.Next;
                             goto HeadRemoved;
                         }
                         else
                             previous.Next = current.Next;
-                        Node whereToAdd = GetEncapsulationParent(node.Parent, location);
+                        Node whereToAdd = GetEncapsulationParent(node.Parent, item_bounds);
                         if (whereToAdd == null)
                             throw new System.Exception("an item was updates outside the range of the omnitree");
-                        this.Add(updated, whereToAdd, location, whereToAdd.Depth);
+                        this.Add(updated, whereToAdd, item_bounds, whereToAdd.Depth);
                     }
                     previous = current;
                 HeadRemoved:
                     current = current.Next;
                 }
-                leaf.Count -= removals;
+                node.Count -= removals;
                 return removals;
             }
             else
@@ -1386,316 +1476,277 @@ namespace Theta.Structures
         private int Remove(Node node, Predicate<T> where)
         {
             int removals = 0;
-            if (node is Leaf)
+
+			// items
+            while (node.Head != null && where(node.Head.Value))
             {
-                Leaf leaf = node as Leaf;
-                while (leaf.Head != null && where(leaf.Head.Value))
+                node.Head = node.Head.Next;
+                removals++;
+            }
+            if (node.Head != null)
+            {
+                Node.ValueNode list = node.Head;
+                while (list.Next != null)
                 {
-                    leaf.Head = leaf.Head.Next;
-                    removals++;
-                }
-                if (leaf.Head != null)
-                {
-                    Leaf.Node list = leaf.Head;
-                    while (list.Next != null)
+                    if (where(list.Next.Value))
                     {
-                        if (where(list.Next.Value))
-                        {
-                            list.Next = list.Next.Next;
-                            removals++;
-                        }
+                        list.Next = list.Next.Next;
+                        removals++;
                     }
                 }
-
-                leaf.Count -= removals;
-                return removals;
             }
-            else
-            {
-                Node branch = node as Node;
-                int skipped = 0;
-                for (int i = 0; i + skipped < branch.Children.Length; )
-                {
-                    removals += this.Remove(branch.Children[i], where);
-                    if (branch.Children[i].Count == 0)
-                        branch.Children[i] = branch.Children[branch.Children.Length - skipped++ - 1];
-                    else
-                        i++;
-                }
-                Node[] newArray = new Node[branch.Children.Length - skipped];
-                Array.Copy(branch.Children, newArray, newArray.Length);
-                branch.Children = newArray;
+            node.Count -= removals;
+            
+			// children
+			if (node.Children != null)
+			{
+				int skipped = 0;
+				for (int i = 0; i + skipped < node.Children.Length; )
+				{
+				    removals += this.Remove(node.Children[i], where);
+				    if (node.Children[i].Count == 0)
+				        node.Children[i] = node.Children[node.Children.Length - skipped++ - 1];
+				    else
+				        i++;
+				}
+				Node[] newArray = new Node[node.Children.Length - skipped];
+				Array.Copy(node.Children, newArray, newArray.Length);
+				node.Children = newArray;
 
-                branch.Count -= removals;
+				node.Count -= removals;
 
-                if (branch.Count < this._depth_load && branch.Count != 0)
-                    ShrinkChild(branch.Parent, branch.Index);
-
-                return removals;
-            }
+				if (node.Count < this._depth_load && node.Count != 0)
+				    ShrinkChild(node.Parent, node.Index);
+			}
+            return removals;
         }
 
-        /// <summary>Removes all the items in a given space.</summary>
+        /// <summary>Removes all the items encapsulated in a given space.</summary>
         <#= documentation_AxisX_minX_AxisX_maxX #>
         /// <returns>The number of items that were removed.</returns>
-        public void Remove(<#= chain_AxisX_minX_AxisX_maxX #>)
+        public void RemoveEncapsulated(<#= chain_AxisX_minX_AxisX_maxX #>)
         {
-            this.Remove(this._top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
-            ComputeLoads(this._top.Count);
+            this.RemoveEncapsulated(this._top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
         }
-        /// <summary>Removes all the items in a given space.</summary>
+        /// <summary>Removes all the items encapsulated in a given space.</summary>
         <#= documentation_AxisX_minX_AxisX_maxX #>
         /// <returns>The number of items that were removed.</returns>
-        public void Remove(<#= chain_BoundAxisX_minX_BoundAxisX_maxX #>)
+        public void RemoveEncapsulated(<#= chain_BoundAxisX_minX_BoundAxisX_maxX #>)
         {
-            this.Remove(this._top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
-            ComputeLoads(this._top.Count);
+            this.RemoveEncapsulated(this._top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
         }
-        /// <summary>Removes all the items in a given space.</summary>
+        /// <summary>Removes all the items encapsulated in a given space.</summary>
         <#= documentation_AxisX_axisX #>
-        public void Remove(<#= chain_BoundAxisX_axisX #>)
+        public void RemoveEncapsulated(<#= chain_BoundAxisX_axisX #>)
         {
-            this.Remove(this._top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_axisX_axisX #>));
+            this.RemoveEncapsulated(this._top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_axisX_axisX #>));
         }
-        private int Remove(Node node, Omnitree.Bounds<<#= chain_AxisX #>> bounds)
+        private int RemoveEncapsulated(Node node, Omnitree.Bounds<<#= chain_AxisX #>> bounds)
+        {
+            int removals = this.RemoveBase(node, bounds, (a, b) => this.EncapsulationCheck(a, b));
+			ComputeLoads(this._top.Count);
+			return removals;
+        }
+
+		/// <summary>Removes all the items overlapping a given space.</summary>
+        <#= documentation_AxisX_minX_AxisX_maxX #>
+        /// <returns>The number of items that were removed.</returns>
+        public void RemoveOverlapped(<#= chain_AxisX_minX_AxisX_maxX #>)
+        {
+            this.RemoveOverlapped(this._top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
+        }
+        /// <summary>Removes all the items overlapping a given space.</summary>
+        <#= documentation_AxisX_minX_AxisX_maxX #>
+        /// <returns>The number of items that were removed.</returns>
+        public void RemoveOverlapped(<#= chain_BoundAxisX_minX_BoundAxisX_maxX #>)
+        {
+            this.RemoveOverlapped(this._top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
+        }
+        private int RemoveOverlapped(Node node, Omnitree.Bounds<<#= chain_AxisX #>> bounds)
+        {
+            int removals = this.RemoveBase(node, bounds, (a, b) => this.EncapsulationCheck(a, b));
+			ComputeLoads(this._top.Count);
+			return removals;
+        }
+
+		private int RemoveBase(
+			Node node,
+			Omnitree.Bounds<<#= chain_AxisX #>> bounds,
+			Omnitree.SpatialCheck<Omnitree.Bounds<<#= chain_AxisX #>>, Omnitree.Bounds<<#= chain_AxisX #>>> spatialCheck)
         {
             int removals = 0;
             if (InclusionCheck(bounds, node.Bounds))
             {
-                if (node is Leaf)
+				// items
+                Node.ValueNode current_node = node.Head;
+                Node.ValueNode previous_node = null;
+                while (current_node != null)
                 {
-                    Leaf leaf = node as Leaf;
-                    Leaf.Node current_node = leaf.Head;
-                    Leaf.Node previous_node = null;
-                    while (current_node != null)
+                    Node.ValueNode temp_previous = current_node;
+                    if (spatialCheck(bounds, GetBoundings(current_node.Value)))
                     {
-                        Leaf.Node temp_previous = current_node;
-                        if (EncapsulationCheck(bounds, LocateVector(current_node.Value)))
-                        {
-                            removals++;
-                            if (current_node == leaf.Head)
-                                leaf.Head = leaf.Head.Next;
-                            else
-                            {
-                                previous_node.Next = current_node.Next;
-                                temp_previous = previous_node;
-                            }
-                        }
-                        previous_node = temp_previous;
-                        current_node = current_node.Next;
-                    }
-                    leaf.Count -= removals;
-                }
-                else
-                {
-                    Node branch = node as Node;
-                    int skipped = 0;
-                    for (int i = 0; i + skipped < branch.Children.Length; )
-                    {
-                        removals += this.Remove(branch.Children[i], bounds);
-                        if (branch.Children[i].Count == 0)
-                            branch.Children[i] = branch.Children[branch.Children.Length - skipped++ - 1];
+                        removals++;
+                        if (current_node == node.Head)
+                            node.Head = node.Head.Next;
                         else
-                            i++;
+                        {
+                            previous_node.Next = current_node.Next;
+                            temp_previous = previous_node;
+                        }
                     }
-                    Node[] newArray = new Node[branch.Children.Length - skipped];
-                    Array.Copy(branch.Children, newArray, newArray.Length);
-                    branch.Children = newArray;
-
-                    branch.Count -= removals;
-                    // convert this branch back into a leaf
-                    // Note: if count is zero, it will be chopped off
-                    if (branch.Count < this._depth_load && branch.Count > 0)
-                        ShrinkChild(branch.Parent, branch.Index);
+                    previous_node = temp_previous;
+                    current_node = current_node.Next;
                 }
-            }
+                node.Count -= removals;
+                
+				// children
+				if (node.Children != null)
+				{
+					int skipped = 0;
+					for (int i = 0; i + skipped < node.Children.Length; )
+					{
+					    removals += this.RemoveBase(node.Children[i], bounds, spatialCheck);
+					    if (node.Children[i].Count == 0)
+					        node.Children[i] = node.Children[node.Children.Length - skipped++ - 1];
+					    else
+					        i++;
+					}
+					Node[] newArray = new Node[node.Children.Length - skipped];
+					Array.Copy(node.Children, newArray, newArray.Length);
+					node.Children = newArray;
 
+					node.Count -= removals;
+					// convert this branch back into a leaf
+					// Note: if count is zero, it will be chopped off
+					if (node.Count < this._depth_load && node.Count > 0)
+					    ShrinkChild(node.Parent, node.Index);
+				}
+            }
+			
             return removals;
         }
 
+		/// <summary>Removes all the items in a given space validated by a predicate.</summary>
+        <#= documentation_AxisX_minX_AxisX_maxX #>
+        /// <param name="where">The equality constraint of the removal.</param>
+        public void RemoveEncapsulated(<#= chain_AxisX_minX_AxisX_maxX #>, Predicate<T> where)
+        {
+            this.RemoveEncapsulated(this._top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>), where);
+        }
         /// <summary>Removes all the items in a given space validated by a predicate.</summary>
         <#= documentation_AxisX_minX_AxisX_maxX #>
         /// <param name="where">The equality constraint of the removal.</param>
-        public void Remove(<#= chain_AxisX_minX_AxisX_maxX #>, Predicate<T> where)
+        public void RemoveEncapsulated(<#= chain_BoundAxisX_minX_BoundAxisX_maxX #>, Predicate<T> where)
         {
-            this.Remove(this._top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>), where);
-            ComputeLoads(this._top.Count);
+            this.RemoveEncapsulated(this._top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>), where);
+        }
+        private int RemoveEncapsulated(Node node, Omnitree.Bounds<<#= chain_AxisX #>> bounds, Predicate<T> where)
+        {
+            int removals = RemoveBase(node, bounds, where, (a, b) => this.EncapsulationCheck(a, b));
+			ComputeLoads(this._top.Count);
+			return removals;
+        }
+
+        /// <summary>Removes all the items in a given space validated by a predicate.</summary>
+        <#= documentation_AxisX_minX_AxisX_maxX #>
+        /// <param name="where">The equality constraint of the removal.</param>
+        public void RemoveOverlapped(<#= chain_AxisX_minX_AxisX_maxX #>, Predicate<T> where)
+        {
+            this.RemoveOverlapped(this._top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>), where);
         }
         /// <summary>Removes all the items in a given space validated by a predicate.</summary>
         <#= documentation_AxisX_minX_AxisX_maxX #>
         /// <param name="where">The equality constraint of the removal.</param>
-        public void Remove(<#= chain_BoundAxisX_minX_BoundAxisX_maxX #>, Predicate<T> where)
+        public void RemoveOverlapped(<#= chain_BoundAxisX_minX_BoundAxisX_maxX #>, Predicate<T> where)
         {
-            this.Remove(this._top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>), where);
-            ComputeLoads(this._top.Count);
+            this.RemoveOverlapped(this._top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>), where);
         }
-        /// <summary>Removes all the items in a given space.</summary>
-        <#= documentation_AxisX_axisX #>
-        /// <param name="where">The equality constraint of the removal.</param>
-        public void Remove(<#= chain_BoundAxisX_axisX #>, Predicate<T> where)
+        private int RemoveOverlapped(Node node, Omnitree.Bounds<<#= chain_AxisX #>> bounds, Predicate<T> where)
         {
-            this.Remove(this._top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_axisX_axisX #>), where);
+            int removals = RemoveBase(node, bounds, where, (a, b) => this.InclusionCheck(a, b));
+			ComputeLoads(this._top.Count);
+			return removals;
         }
-        private int Remove(Node node, Omnitree.Bounds<<#= chain_AxisX #>> bounds, Predicate<T> where)
+
+		private int RemoveBase(
+			Node node,
+			Omnitree.Bounds<<#= chain_AxisX #>> bounds,
+			Predicate<T> where,
+			Omnitree.SpatialCheck<Omnitree.Bounds<<#= chain_AxisX #>>, Omnitree.Bounds<<#= chain_AxisX #>>> spatialCheck)
         {
             if (!InclusionCheck(node.Bounds, bounds))
                 return 0;
             int removals = 0;
-            if (node is Leaf)
+            
+			// items
+            Node.ValueNode current = node.Head;
+            Node.ValueNode previous = null;
+            while (current != null)
             {
-                Leaf leaf = node as Leaf;
-                Leaf.Node current = leaf.Head;
-                Leaf.Node previous = null;
-                while (current != null)
+                if (spatialCheck(bounds, GetBoundings(current.Value)) && where(current.Value))
                 {
-                    if (this.EncapsulationCheck(bounds, LocateVector(current.Value)) && where(current.Value))
+                    removals++;
+                    if (previous == null)
                     {
-                        removals++;
-                        if (previous == null)
-                        {
-                            leaf.Head = current.Next;
-                            goto HeadRemoved;
-                        }
-                        else
-                            previous.Next = current.Next;
+                        node.Head = current.Next;
+                        goto HeadRemoved;
                     }
-                    previous = current;
-                HeadRemoved:
-                    current = current.Next;
-                }
-
-                leaf.Count -= removals;
-                return removals;
-            }
-            else
-            {
-                Node branch = node as Node;
-                int skipped = 0;
-                for (int i = 0; i + skipped < branch.Children.Length; )
-                {
-                    removals += this.Remove(branch.Children[i], bounds, where);
-                    if (branch.Children[i].Count == 0)
-                        branch.Children[i] = branch.Children[branch.Children.Length - skipped++ - 1];
                     else
-                        i++;
+                        previous.Next = current.Next;
                 }
-                Node[] newArray = new Node[branch.Children.Length - skipped];
-                Array.Copy(branch.Children, newArray, newArray.Length);
-                branch.Children = newArray;
-
-                node.Count -= removals;
-
-                if (node.Count < this._depth_load && node.Count != 0)
-                    ShrinkChild(node.Parent, node.Index);
-
-                return removals;
+                previous = current;
+            HeadRemoved:
+                current = current.Next;
             }
+            node.Count -= removals;
+
+            // children
+			if (node.Children != null)
+			{
+				int skipped = 0;
+				for (int i = 0; i + skipped < node.Children.Length; )
+				{
+				    removals += this.RemoveBase(node.Children[i], bounds, where, spatialCheck);
+				    if (node.Children[i].Count == 0)
+				        node.Children[i] = node.Children[node.Children.Length - skipped++ - 1];
+				    else
+				        i++;
+				}
+				Node[] newArray = new Node[node.Children.Length - skipped];
+				Array.Copy(node.Children, newArray, newArray.Length);
+				node.Children = newArray;
+
+				node.Count -= removals;
+
+				if (node.Count < this._depth_load && node.Count != 0)
+				    ShrinkChild(node.Parent, node.Index);
+			}
+            return removals;
         }
 
         /// <summary>Removes all instances of a given value.</summary>
         public void Remove(T removal)
         {<# for (int j = 1; j <= i; j++) { #>
-            Axis<#= j #> axis<#= j #>;<# } #>
-            this._locate(removal, out axis1<# for (int j = 2; j <= i; j++) { #>, out axis<#= j #><# } #>);
-            this.Remove(<# for (int j = 1; j <= i; j++) { #>axis<#= j #>, <# } #>(T item) => { return this._equate(item, removal); });
+            Omnitree.Bound<Axis<#= j #>> min<#= j #>; Omnitree.Bound<Axis<#= j #>> max<#= j #>;<# } #>
+            this._getBounds(removal, out min1, out max1<# for (int j = 2; j <= i; j++) { #>, out min<#= j #>, out max<#= j #><# } #>);
+            this.RemoveOverlapped(this._top, new Omnitree.Bounds<<#= chain_AxisX #>>(min1, max1<# for (int j = 2; j <= i; j++) { #>, min<#= j #>, max<#= j #><# } #>), item => this._equate(item, removal));
         }
         /// <summary>Removes all the items in a given space.</summary>
         <#= documentation_axisX #>
         /// <returns>The number of items that were removed.</returns>
-        public void Remove(Axis1 axis1<# for (int j = 2; j <= i; j++) { #>, Axis<#= j #> axis<#= j #><# } #>)
+        public void RemoveOverlapped(Axis1 axis1<# for (int j = 2; j <= i; j++) { #>, Axis<#= j #> axis<#= j #><# } #>)
         {
-            this.Remove(this._top, new Omnitree.Vector<<#= chain_AxisX #>>(axis1<# for (int j = 2; j <= i; j++) { #>, axis<#= j #><# } #>));
+            this.RemoveOverlapped(axis1, axis1<# for (int j = 2; j <= i; j++) { #>, axis<#= j #>, axis<#= j #><# } #>);
             ComputeLoads(this._top.Count);
         }
-        private int Remove(Node node, Omnitree.Vector<<#= chain_AxisX #>> vector)
-        {
-            int removals = 0;
-            if (node is Leaf)
-            {
-                Leaf leaf = node as Leaf;
-                Leaf.Node current_node = leaf.Head;
-                Leaf.Node previous_node = null;
-                while (current_node != null)
-                {
-                    Leaf.Node temp_previous = current_node;
-                    if (EqualsCheck(vector, LocateVector(current_node.Value)))
-                    {
-                        removals++;
-                        if (current_node == leaf.Head)
-                            leaf.Head = leaf.Head.Next;
-                        else
-                        {
-                            previous_node.Next = current_node.Next;
-                            temp_previous = previous_node;
-                        }
-                    }
-                    previous_node = temp_previous;
-                    current_node = current_node.Next;
-                }
-                leaf.Count -= removals;
-            }
-            else
-            {
-                Node branch = node as Node;
-                <#= child_index_type #> child_index = DetermineChildIndex(branch.PointOfDivision, vector);
-                removals += Remove(branch[child_index], vector);
-                branch.Count -= removals;
-                // convert this branch back into a leaf
-                // Note: if count is zero, it will be chopped off
-                if (branch.Count < this._depth_load && branch.Count > 0)
-                    ShrinkChild(branch.Parent, branch.Index);
-            }
-
-            return removals;
-        }
-
+        
         /// <summary>Removes all the items in a given space validated by a predicate.</summary>
         <#= documentation_axisX #>
         /// <param name="where">The equality constraint of the removal.</param>
-        public void Remove(<#= chain_AxisX_axisX #>, Predicate<T> where)
+        public void RemoveOverlapped(<#= chain_AxisX_axisX #>, Predicate<T> where)
         {
-            this.Remove(this._top, new Omnitree.Vector<<#= chain_AxisX #>>(<#= chain_axisX #>), where);
+			this.RemoveOverlapped(axis1, axis1<# for (int j = 2; j <= i; j++) { #>, axis<#= j #>, axis<#= j #><# } #>, where);
             ComputeLoads(this._top.Count);
-        }
-        private int Remove(Node node, Omnitree.Vector<<#= chain_AxisX #>> vector, Predicate<T> where)
-        {
-            int removals = 0;
-            if (node is Leaf)
-            {
-                Leaf leaf = node as Leaf;
-                Leaf.Node current_node = leaf.Head;
-                Leaf.Node previous_node = null;
-                while (current_node != null)
-                {
-                    Leaf.Node temp_previous = current_node;
-                    if (EqualsCheck(vector, LocateVector(current_node.Value)) && where(current_node.Value))
-                    {
-                        removals++;
-                        if (current_node == leaf.Head)
-                            leaf.Head = leaf.Head.Next;
-                        else
-                        {
-                            previous_node.Next = current_node.Next;
-                            temp_previous = previous_node;
-                        }
-                    }
-                    previous_node = temp_previous;
-                    current_node = current_node.Next;
-                }
-                leaf.Count -= removals;
-            }
-            else
-            {
-                Node branch = node as Node;
-                <#= child_index_type #> child_index = DetermineChildIndex(branch.PointOfDivision, vector);
-                removals += Remove(branch[child_index], vector, where);
-                branch.Count -= removals;
-                // convert this branch back into a leaf
-                // Note: if count is zero, it will be chopped off
-                if (branch.Count < this._depth_load && branch.Count > 0)
-                    ShrinkChild(branch.Parent, branch.Index);
-            }
-            return removals;
         }
 
         #endregion
@@ -1710,20 +1761,15 @@ namespace Theta.Structures
         }
         private void Stepper(Step<T> function, Node node)
         {
-            if (node is Leaf)
+            Node.ValueNode list = node.Head;
+            while (list != null)
             {
-                Leaf.Node list = (node as Leaf).Head;
-                while (list != null)
-                {
-                    function(list.Value);
-                    list = list.Next;
-                }
+                function(list.Value);
+                list = list.Next;
             }
-            else
-            {
-                foreach (Node child in node.Children)
-                    this.Stepper(function, child);
-            }
+			if (node.Children != null)
+				foreach (Node child in node.Children)
+				    this.Stepper(function, child);
         }
 
         /// <summary>Traverses every item in the tree and performs the delegate in them.</summary>
@@ -1740,162 +1786,163 @@ namespace Theta.Structures
         private StepStatus Stepper(StepBreak<T> function, Node node)
         {
             StepStatus status = StepStatus.Continue;
-            if (node is Leaf)
-            {
-                for (Leaf.Node list = (node as Leaf).Head; list != null; list = list.Next)
-                    if (Code.ReturnAssign(ref status, function(list._value)) != StepStatus.Continue)
-                        break;
-            }
-            else
-            {
-                foreach (Node child in node.Children)
-                    if (Code.ReturnAssign(ref status, Stepper(function, child)) != StepStatus.Continue)
-                        break;
-            }
+            
+            for (Node.ValueNode list = node.Head; list != null; list = list.Next)
+                if (Code.ReturnAssign(ref status, function(list._value)) != StepStatus.Continue)
+                    break;
+            
+			if (node.Children != null)
+				foreach (Node child in node.Children)
+				    if (Code.ReturnAssign(ref status, Stepper(function, child)) != StepStatus.Continue)
+				        break;
+            
             return status;
         }
 
         /// <summary>Performs and specialized traversal of the structure and performs a delegate on every node within the provided dimensions.</summary>
         /// <param name="function">The delegate to perform on all items in the tree within the given bounds.</param>
         <#= documentation_AxisX_minX_AxisX_maxX #>
-        public void Stepper(Step<T> function, <#= chain_AxisX_minX_AxisX_maxX #>)
+        public void StepperEncapsulated(Step<T> function, <#= chain_AxisX_minX_AxisX_maxX #>)
         {
-            Stepper(function, _top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
+            StepperEncapsulated(function, _top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
         }
         /// <summary>Performs and specialized traversal of the structure and performs a delegate on every node within the provided dimensions.</summary>
         /// <param name="function">The delegate to perform on all items in the tree within the given bounds.</param>
         <#= documentation_AxisX_minX_AxisX_maxX #>
-        public void Stepper(Step<T> function, <#= chain_BoundAxisX_minX_BoundAxisX_maxX #>)
+        public void StepperEncapsulated(Step<T> function, <#= chain_BoundAxisX_minX_BoundAxisX_maxX #>)
         {
-            Stepper(function, _top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
+            StepperEncapsulated(function, _top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
         }
-        private void Stepper(Step<T> function, Node node, Omnitree.Bounds<<#= chain_AxisX #>> bounds)
+        private void StepperEncapsulated(Step<T> function, Node node, Omnitree.Bounds<<#= chain_AxisX #>> bounds)
         {
-            if (node is Leaf)
-            {
-                for (Leaf.Node list = (node as Leaf).Head; list != null; list = list.Next)
-                    if (EncapsulationCheck(bounds, LocateVector(list.Value)))
-                        function(list.Value);
-            }
-            else
-            {
-                foreach (Node child in node.Children)
-                    // optimization: stop bounds checking if space encapsulates node
-                    if (EncapsulationCheck(bounds, child.Bounds))
-                        this.Stepper(function, child);
-                    else if (InclusionCheck(child.Bounds, bounds))
-                        this.Stepper(function, child, bounds);
-            }
+            StepperBase(function, node, bounds, (a, b) => this.EncapsulationCheck(a, b));
+        }
+
+		/// <summary>Performs and specialized traversal of the structure and performs a delegate on every node within the provided dimensions.</summary>
+        /// <param name="function">The delegate to perform on all items in the tree within the given bounds.</param>
+        <#= documentation_AxisX_minX_AxisX_maxX #>
+        public void StepperOverlapped(Step<T> function, <#= chain_AxisX_minX_AxisX_maxX #>)
+        {
+            StepperOverlapped(function, _top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
+        }
+        /// <summary>Performs and specialized traversal of the structure and performs a delegate on every node within the provided dimensions.</summary>
+        /// <param name="function">The delegate to perform on all items in the tree within the given bounds.</param>
+        <#= documentation_AxisX_minX_AxisX_maxX #>
+        public void StepperOverlapped(Step<T> function, <#= chain_BoundAxisX_minX_BoundAxisX_maxX #>)
+        {
+            StepperOverlapped(function, _top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
+        }
+        private void StepperOverlapped(Step<T> function, Node node, Omnitree.Bounds<<#= chain_AxisX #>> bounds)
+        {
+            StepperBase(function, node, bounds, (a, b) => this.InclusionCheck(a, b));
+        }
+
+		private void StepperBase(
+			Step<T> function,
+			Node node,
+			Omnitree.Bounds<<#= chain_AxisX #>> bounds,
+			Omnitree.SpatialCheck<Omnitree.Bounds<<#= chain_AxisX #>>, Omnitree.Bounds<<#= chain_AxisX #>>> spatialCheck)
+        {
+            for (Node.ValueNode list = node.Head; list != null; list = list.Next)
+                if (spatialCheck(bounds, GetBoundings(list.Value)))
+                    function(list.Value);
+
+			if (node.Children != null)
+			{
+				foreach (Node child in node.Children)
+				    // optimization: stop bounds checking if space encapsulates node
+				    if (EncapsulationCheck(bounds, child.Bounds))
+				        this.Stepper(function, child);
+				    else if (InclusionCheck(child.Bounds, bounds))
+				        this.StepperBase(function, child, bounds, spatialCheck);
+			}
         }
 
         /// <summary>Performs and specialized traversal of the structure and performs a delegate on every node within the provided dimensions.</summary>
         <#= documentation_AxisX_minX_AxisX_maxX #>
-        public StepStatus Stepper(StepBreak<T> function, <#= chain_AxisX_minX_AxisX_maxX #>)
+        public StepStatus StepperEncapsulated(StepBreak<T> function, <#= chain_AxisX_minX_AxisX_maxX #>)
         {
-            StepStatus status;
-            do
-            {
-                status = Stepper(function, _top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
-            } while (status == StepStatus.Restart);
-            return status;
+            return StepperEncapsulated(function, _top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
         }
         /// <summary>Performs and specialized traversal of the structure and performs a delegate on every node within the provided dimensions.</summary>
         <#= documentation_AxisX_minX_AxisX_maxX #>
-        public StepStatus Stepper(StepBreak<T> function, <#= chain_BoundAxisX_minX_BoundAxisX_maxX #>)
+        public StepStatus StepperEncapsulated(StepBreak<T> function, <#= chain_BoundAxisX_minX_BoundAxisX_maxX #>)
         {
-            StepStatus status;
+			return StepperEncapsulated(function, _top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
+        }
+        private StepStatus StepperEncapsulated(StepBreak<T> function, Node node, Omnitree.Bounds<<#= chain_AxisX #>> bounds)
+        {
+			StepStatus status;
             do
             {
-                status = Stepper(function, _top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
+                status = StepperBase(function, node, bounds, (a, b) => this.EncapsulationCheck(a, b));
             } while (status == StepStatus.Restart);
             return status;
         }
-        private StepStatus Stepper(StepBreak<T> function, Node node, Omnitree.Bounds<<#= chain_AxisX #>> bounds)
+
+		/// <summary>Performs and specialized traversal of the structure and performs a delegate on every node within the provided dimensions.</summary>
+        <#= documentation_AxisX_minX_AxisX_maxX #>
+        public StepStatus StepperOverlapped(StepBreak<T> function, <#= chain_AxisX_minX_AxisX_maxX #>)
+        {
+            return StepperOverlapped(function, _top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
+        }
+        /// <summary>Performs and specialized traversal of the structure and performs a delegate on every node within the provided dimensions.</summary>
+        <#= documentation_AxisX_minX_AxisX_maxX #>
+        public StepStatus StepperOverlapped(StepBreak<T> function, <#= chain_BoundAxisX_minX_BoundAxisX_maxX #>)
+        {
+			return StepperOverlapped(function, _top, new Omnitree.Bounds<<#= chain_AxisX #>>(<#= chain_minX_maxX #>));
+        }
+        private StepStatus StepperOverlapped(StepBreak<T> function, Node node, Omnitree.Bounds<<#= chain_AxisX #>> bounds)
+        {
+			StepStatus status;
+            do
+            {
+                status = StepperBase(function, node, bounds, (a, b) => this.InclusionCheck(a, b));
+            } while (status == StepStatus.Restart);
+            return status;
+        }
+
+		private StepStatus StepperBase(
+			StepBreak<T> function,
+			Node node,
+			Omnitree.Bounds<<#= chain_AxisX #>> bounds,
+			Omnitree.SpatialCheck<Omnitree.Bounds<<#= chain_AxisX #>>, Omnitree.Bounds<<#= chain_AxisX #>>> spatialCheck)
         {
             StepStatus status = StepStatus.Continue;
-            if (node is Leaf)
-            {
-                for (Leaf.Node list = (node as Leaf).Head; list != null; list = list.Next)
-                    if (EncapsulationCheck(bounds, LocateVector(list.Value)) &&
-                        Code.ReturnAssign(ref status, function(list.Value)) != StepStatus.Continue)
-                        break;
-            }
-            else
-            {
-                foreach (Node child in node.Children)
-                    // optimization: stop bounds checking if space encapsulates node
-                    if (EncapsulationCheck(bounds, child.Bounds) &&
-                        Code.ReturnAssign(ref status, this.Stepper(function, child)) != StepStatus.Continue)
-                        break;
-                    else if (!InclusionCheck(child.Bounds, bounds) &&
-                        Code.ReturnAssign(ref status, this.Stepper(function, child, bounds)) != StepStatus.Continue)
-                        break;
-            }
+
+            for (Node.ValueNode list = node.Head; list != null; list = list.Next)
+                if (spatialCheck(bounds, GetBoundings(list.Value)) &&
+                    Code.ReturnAssign(ref status, function(list.Value)) != StepStatus.Continue)
+                    break;
+
+			if (node.Children != null)
+			{
+				foreach (Node child in node.Children)
+				    // optimization: stop bounds checking if space encapsulates node
+				    if (EncapsulationCheck(bounds, child.Bounds) &&
+				        Code.ReturnAssign(ref status, this.Stepper(function, child)) != StepStatus.Continue)
+				        break;
+				    else if (!InclusionCheck(child.Bounds, bounds) &&
+				        Code.ReturnAssign(ref status, this.StepperBase(function, child, bounds, spatialCheck)) != StepStatus.Continue)
+				        break;
+			}
+
             return status;
         }
 
         /// <summary>Performs and specialized traversal of the structure and performs a delegate on every node within the provided dimensions.</summary>
         <#= documentation_axisX #>
-        public void Stepper(Step<T> function, <#= chain_AxisX_axisX #>)
+        public void StepperOverlapped(Step<T> function, <#= chain_AxisX_axisX #>)
         {
-            Stepper(function, _top, new Omnitree.Vector<<#= chain_AxisX #>>(<#= chain_axisX #>));
-        }
-        private void Stepper(Step<T> function, Node node, Omnitree.Vector<<#= chain_AxisX #>> vector)
-        {
-            Node current = node;
-            while (current != null)
-            {
-                if (current is Leaf)
-                {
-                    for (Leaf.Node leaf_node = (current as Leaf).Head; leaf_node != null; leaf_node = leaf_node.Next)
-                        if (EqualsCheck(vector, LocateVector(leaf_node.Value)))
-                            function(leaf_node.Value);
-                    break;
-                }
-                else
-                {
-                    Node branch = current as Node;
-                    <#= child_index_type #> child_index = DetermineChildIndex(branch.PointOfDivision, vector);
-                    current = branch[child_index];
-                }
-            }
+            StepperOverlapped(function, this._top, new Omnitree.Bounds<<#= chain_AxisX #>>(axis1, axis1<# for (int j = 2; j <= i; j++) { #>, axis<#= j #>, axis<#= j #><# } #>));
         }
 
         /// <summary>Performs and specialized traversal of the structure and performs a delegate on every node within the provided dimensions.</summary>
         /// <param name="function">The delegate to perform on all items in the tree within the given bounds.</param>
         <#= documentation_axisX #>
-        public StepStatus Stepper(StepBreak<T> function, <#= chain_AxisX_axisX #>)
+        public StepStatus StepperOverlapped(StepBreak<T> function, <#= chain_AxisX_axisX #>)
         {
-            StepStatus status;
-            do
-            {
-                status = Stepper(function, _top, new Omnitree.Vector<<#= chain_AxisX #>>(<#= chain_axisX #>));
-            } while (status == StepStatus.Restart);
-            return status;
-        }
-        private StepStatus Stepper(StepBreak<T> function, Node node, Omnitree.Vector<<#= chain_AxisX #>> vector)
-        {
-            Node current = node;
-            while (current != null)
-            {
-                if (current is Leaf)
-                {
-                    for (Leaf.Node list = (current as Leaf).Head; list != null; list = list.Next)
-                    {
-                        StepStatus status = StepStatus.Continue;
-                        if (EqualsCheck(vector, LocateVector(list.Value)) &&
-                            Code.ReturnAssign(ref status, function(list.Value)) != StepStatus.Continue)
-                            return status;
-                    }
-                }
-                else
-                {
-                    Node branch = current as Node;
-                    <#= child_index_type #> child_index = DetermineChildIndex(branch.PointOfDivision, vector);
-                    current = branch[child_index];
-                }
-            }
-            return StepStatus.Continue;
+			return StepperOverlapped(function, this._top, new Omnitree.Bounds<<#= chain_AxisX #>>(axis1, axis1<# for (int j = 2; j <= i; j++) { #>, axis<#= j #>, axis<#= j #><# } #>));
         }
 
         /// <summary>FOR COMPATIBILITY ONLY. AVOID IF POSSIBLE.</summary>
@@ -1918,8 +1965,9 @@ namespace Theta.Structures
 
         private bool StraddlesLines(Omnitree.Bounds<<#= chain_AxisX #>> bounds, Omnitree.Vector<<#= chain_AxisX #>> vector)
         {<# for (int j = 1; j <= i; j++) { #>
-            if (bounds.Min<#= j #>.Exists && bounds.Max<#= j #>.Exists && this._compare<#= j #>(bounds.Min<#= j #>.Value, vector.Axis<#= j #>) != Comparison.Greater && (this._compare<#= j #>(bounds.Max<#= j #>.Value, vector.Axis<#= j #>) != Comparison.Less))
-                return true;<# } #>
+			if ((!bounds.Min<#= j #>.Exists || (this._compare<#= j #>(bounds.Min<#= j #>.Value, vector.Axis<#= j #>) != Comparison.Greater)) &&
+				(!bounds.Max<#= j #>.Exists || (this._compare<#= j #>(bounds.Max<#= j #>.Value, vector.Axis<#= j #>) != Comparison.Less)))
+				return true;<# } #>
             return false;
         }
 
@@ -1927,10 +1975,14 @@ namespace Theta.Structures
         /// <param name="node">The branch .</param>
         /// <param name="vector">The dimensions to determine the child index.</param>
         /// <returns>The computed child index based on the coordinates relative to the center of the node.</returns>
-        private <#= child_index_type #> DetermineChildIndex(Omnitree.Vector<<#= chain_AxisX #>> pointOfDivision, Omnitree.Vector<<#= chain_AxisX #>> vector)
+        private <#= child_index_type #> DetermineChildIndex(Omnitree.Vector<<#= chain_AxisX #>> pointOfDivision, Omnitree.Bounds<<#= chain_AxisX #>> bounds)
         {
+			// make sure a child encapsulates the bounds (otherwise the bounds cannot move down the tree)
+			if (StraddlesLines(bounds, pointOfDivision))
+				return -1;
+
             <#= child_index_type #> child = 0;<# for (int j = 1; j <= i; j++) { #>
-            if (!(this._compare<#= j #>(vector.Axis<#= j #>, pointOfDivision.Axis<#= j #>) == Comparison.Less))
+            if (!bounds.Min<#= j #>.Exists || !(this._compare<#= j #>(bounds.Min<#= j #>.Value, pointOfDivision.Axis<#= j #>) == Comparison.Less))
                 child += 1 << <#= j - 1 #>;<# } #>
             return child;
         }
@@ -2036,13 +2088,11 @@ namespace Theta.Structures
 
         /// <summary>Gets the nearest parent that encapsulates a location.</summary>
         /// <param name="node">The starting node to find the encapsulating parent of the location.</param>
-        /// <param name="coordinate1">The coordinate along the 1D axis.</param>
-        /// <param name="coordinate2">The coordinate along the 2D axis.</param>
-        /// <param name="coordinate3">The coordinate along the 3D axis.</param>
+        /// <param name="bounds">The bounds to get the encapsulating parent from.</param>
         /// <returns>The nearest node that encapsulates the given location.</returns>
-        private Node GetEncapsulationParent(Node node, Omnitree.Vector<<#= chain_AxisX #>> vector)
+        private Node GetEncapsulationParent(Node node, Omnitree.Bounds<<#= chain_AxisX #>> bounds)
         {
-            while (node != null && !EncapsulationCheck(node.Bounds, vector))
+            while (node != null && !EncapsulationCheck(node.Bounds, bounds))
                 node = node.Parent;
             return node;
         }
@@ -2052,15 +2102,18 @@ namespace Theta.Structures
         {
             int natural_log = (int)Math.Log(count);
             this._depth_load = Compute<int>.Maximum(natural_log, _default_depth_load);
-            //this._node_load = (int)Compute<<#= child_index_type #>>.Maximum(natural_log, _children_per_node);
-            this._node_load = (int)Compute<int>.Maximum(natural_log, 8);
+            this._node_load = (int)Compute<<#= child_index_type #>>.Maximum(natural_log, _children_per_node);
         }
 
-        private Omnitree.Vector<<#= chain_AxisX #>> LocateVector(T value)
+        private Omnitree.Bounds<<#= chain_AxisX #>> GetBoundings(T value)
         {<# for (int j = 1; j <= i; j++) { #>
-            Axis<#= j #> axis<#= j #>;<# } #>
-            this._locate(value, out axis1<# for (int j = 2; j <= i; j++) { #>, out axis<#= j #><# } #>);
-            return new Omnitree.Vector<<#= chain_AxisX #>>(<#= chain_axisX #>);
+            Omnitree.Bound<Axis<#= j #>> min<#= j #>; Omnitree.Bound<Axis<#= j #>> max<#= j #>;<# } #>
+            this._getBounds(value,
+				out min1, out max1<# for (int j = 2; j <= i; j++) { #>,
+				out min<#= j #>, out max<#= j #><# } #>);
+            return new Omnitree.Bounds<<#= chain_AxisX #>>(
+				min1, max1<# for (int j = 2; j <= i; j++) { #>,
+				min<#= j #>, max<#= j #><# } #>);
         }
 
         #endregion
@@ -2072,5 +2125,5 @@ namespace Theta.Structures
 
     #endregion
 
-    */
+	*/
 }
