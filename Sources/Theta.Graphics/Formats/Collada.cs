@@ -25,6 +25,8 @@ namespace Theta.Graphics.Formats
         public static float[] TEXTURECOORDINATEDATA;
         public static int[] JOINTIDSDATA;
         public static float[] JOINTWEIGHTSDATA;
+        public static float[] WEIGHTS;
+        public static int[] EFFECTORJOINTCOUNTS;
 
         #region XmlNode Extension Methods
 
@@ -114,6 +116,8 @@ namespace Theta.Graphics.Formats
                 weights[i] = float.Parse(weightStringSplits[i]);
             }
 
+            WEIGHTS = weights;
+
             // Vertex-Effector Joint Counts (how many joints effect each vertex)
             string[] effectorJointCountStringSplits = xml_vertex_weights.First(x => x.Name == "vcount").InnerText.Trim().Split(' ');
             int[] effectorJointCounts = new int[effectorJointCountStringSplits.Length];
@@ -121,6 +125,9 @@ namespace Theta.Graphics.Formats
             {
                 effectorJointCounts[i] = int.Parse(effectorJointCountStringSplits[i]);
             }
+
+            EFFECTORJOINTCOUNTS = effectorJointCounts;
+            int TEMP = 0;
 
             // Model Array Initializations
             int[] jointIds = new int[effectorJointCounts.Length * maxJointEffectors];
@@ -131,6 +138,9 @@ namespace Theta.Graphics.Formats
             int currentString = 0;
             for (int i = 0; i < effectorJointCounts.Length; i++)
             {
+                if (i == 143)
+                    System.Diagnostics.Debugger.Break();
+
                 int count = effectorJointCounts[i];
 
                 Link<int, float>[] jointAndWeightsPerVertex = new Link<int, float>[count];
@@ -138,19 +148,28 @@ namespace Theta.Graphics.Formats
                 {
                     int jointIndex = int.Parse(vertexJointMappingStringSplits[currentString++]);
                     int weightIndex = int.Parse(vertexJointMappingStringSplits[currentString++]);
+
+                    if (Collada_OLD.JOINTINDEXDATA[TEMP] != jointIndex)
+                        System.Diagnostics.Debugger.Break();
+                    if (Collada_OLD.WEIGHTSINDEXDATA[TEMP++] != weightIndex)
+                        System.Diagnostics.Debugger.Break();
+
+
                     float weight = weights[weightIndex];
                     jointAndWeightsPerVertex[j] = new Link<int, float>(jointIndex, weight);
                 }
 
+                Sort<Link<int, float>>.Merge((x, y) => Compare.Invert(Compute<float>.Compare(x._2, y._2)), jointAndWeightsPerVertex);
+
                 // Joint Effector Count Syncronization (get all verteces to have the same number of effectors)
                 if (count > maxJointEffectors) // too many effectors (select largest weights)
                 {
-                    Sort<Link<int, float>>.Merge((x, y) => Compute<float>.Compare(x._2, y._2), jointAndWeightsPerVertex);
+                    //Sort<Link<int, float>>.Merge((x, y) => Compute<float>.Compare(x._2, y._2), jointAndWeightsPerVertex);
                     Link<int, float>[] limitedJointAndWeightsPerVertex = new Link<int, float>[maxJointEffectors];
                     float totalWeightPerMaxEffectors = 0;
                     for (int j = 0; j < maxJointEffectors; j++)
                     {
-                        limitedJointAndWeightsPerVertex[j] = jointAndWeightsPerVertex[count - j - 1];
+                        limitedJointAndWeightsPerVertex[j] = jointAndWeightsPerVertex[j];
                         totalWeightPerMaxEffectors += jointAndWeightsPerVertex[j]._2;
                     }
                     for (int j = 0; j < maxJointEffectors; j++)
@@ -176,6 +195,14 @@ namespace Theta.Graphics.Formats
 
                 for (int j = 0; j < maxJointEffectors; j++)
                 {
+                    int old_id = Collada_OLD.JOINTIDSDATA[i * maxJointEffectors + j];
+                    float old_weight = Collada_OLD.JOINTWEIGHTSDATA[i * maxJointEffectors + j];
+
+                    if (old_id != jointAndWeightsPerVertex[j]._1)
+                        System.Diagnostics.Debugger.Break();
+                    if (old_weight != jointAndWeightsPerVertex[j]._2)
+                        System.Diagnostics.Debugger.Break();
+
                     jointIds[i * maxJointEffectors + j] = jointAndWeightsPerVertex[j]._1;
                     jointWeights[i * maxJointEffectors + j] = jointAndWeightsPerVertex[j]._2;
                 }
@@ -576,6 +603,11 @@ namespace Theta.Graphics.Formats
         public static float[] TEXTURECOORDINATEDATA;
         public static int[] JOINTIDSDATA;
         public static float[] JOINTWEIGHTSDATA;
+        public static float[] WEIGHTS;
+        public static int[] EFFECTORJOINTCOUNTS;
+
+        public static ListArray<int> JOINTINDEXDATA = new ListArray<int>();
+        public static ListArray<int> WEIGHTSINDEXDATA = new ListArray<int>();
 
         #region types
 
@@ -1264,6 +1296,9 @@ namespace Theta.Graphics.Formats
                     float[] weights = loadWeights();
                     XmlNode weightsDataNode = skinningData.First(x => x.Name == "vertex_weights");
                     int[] effectorJointCounts = getEffectiveJointsCounts(weightsDataNode);
+
+                    EFFECTORJOINTCOUNTS = effectorJointCounts;
+
                     ListArray<VertexSkinData> vertexWeights = getSkinData(weightsDataNode, effectorJointCounts, weights);
 
                     JOINTIDSDATA = new int[vertexWeights.Count * maxWeights];
@@ -1305,6 +1340,9 @@ namespace Theta.Graphics.Formats
                     {
                         weights[i] = float.Parse(rawData[i]);
                     }
+
+                    WEIGHTS = weights;
+
                     return weights;
                 }
 
@@ -1324,13 +1362,24 @@ namespace Theta.Graphics.Formats
                     string[] rawData = weightsDataNode.First(x => x.Name == "v").InnerText.Split(' ');
                     ListArray<VertexSkinData> skinningData = new ListArray<VertexSkinData>();
                     int pointer = 0;
+                    int temp = 0;
                     foreach (int count in counts)
                     {
+                        if (temp == 143)
+                            System.Diagnostics.Debugger.Break();
+                        temp++;
+
                         VertexSkinData skinData = new VertexSkinData();
                         for (int i = 0; i < count; i++)
                         {
+                            
+
                             int jointId = int.Parse(rawData[pointer++]);
                             int weightId = int.Parse(rawData[pointer++]);
+
+                            JOINTINDEXDATA.Add(jointId);
+                            WEIGHTSINDEXDATA.Add(weightId);
+
                             skinData.addJointEffect(jointId, weights[weightId]);
                         }
                         skinData.limitJointNumber(maxWeights);
@@ -1482,4 +1531,5 @@ namespace Theta.Graphics.Formats
 
     #endregion
 }
+
 

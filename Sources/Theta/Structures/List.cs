@@ -538,7 +538,8 @@ namespace Theta.Structures
 			}
 			for (int i = this._count; i > index; i--)
 				this._list[i] = this._list[i - 1];
-			this._list[index] = addition;
+            this._list[index] = addition;
+            this._count++;
 		}
 
 		#endregion
