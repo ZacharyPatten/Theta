@@ -57,39 +57,41 @@ namespace GraphicsWindow
             {
                 xml_file_contents = reader.ReadToEnd();
             }
-
-
-
-            Collada_OLD.AnimatedModelData data = Collada_OLD.Collada.LoadModel(xml_file_contents, 3);
-            Collada_OLD.AnimationData animdata = Collada_OLD.Collada.LoadAnimation(xml_file_contents);
             
             Model model = Collada.Parse(xml_file_contents);
 
-            if (!model._positions.ValuesAreEqual(data.mesh.vertices))
-                throw new Exception("positions");
-            if (!model._normals.ValuesAreEqual(data.mesh.normals))
-                throw new Exception("normals");
-            if (!model._indices.ValuesAreEqual(data.mesh.indices))
-                throw new Exception("indices");
-            if (!model._textureCoordinates.ValuesAreEqual(data.mesh.textureCoords))
-                throw new Exception("textureCoordinates");
+            #region Debugging
 
-            if (!Collada.EFFECTORJOINTCOUNTS.ValuesAreEqual(Collada_OLD.EFFECTORJOINTCOUNTS))
-                throw new Exception("EFFECTORJOINTCOUNTS");
-            if (!Collada.WEIGHTS.ValuesAreEqual(Collada_OLD.WEIGHTS))
-                throw new Exception("WEIGHTS");
-            if (!Collada.JOINTIDSDATA.ValuesAreEqual(Collada_OLD.JOINTIDSDATA))
-                throw new Exception("JOINTIDSDATA");
-            if (!Collada.JOINTWEIGHTSDATA.ValuesAreEqual(Collada_OLD.JOINTWEIGHTSDATA))
-                throw new Exception("JOINTWEIGHTSDATA");
+            //Collada_OLD.AnimatedModelData data = Collada_OLD.Collada.LoadModel(xml_file_contents, 3);
+            //Collada_OLD.AnimationData animdata = Collada_OLD.Collada.LoadAnimation(xml_file_contents);
 
-            if (!model._jointWeights.ValuesAreEqual(data.mesh.vertexWeights))
-                throw new Exception("jointWeights");
-            if (!model._jointIds.ValuesAreEqual(data.mesh.jointIds))
-                throw new Exception("jointIds");
-            
-            //model._jointIds = data.mesh.jointIds;
-            //model._jointWeights = data.mesh.vertexWeights;
+            //if (!model._positions.ValuesAreEqual(data.mesh.vertices))
+            //    throw new Exception("positions");
+            //if (!model._normals.ValuesAreEqual(data.mesh.normals))
+            //    throw new Exception("normals");
+            //if (!model._indices.ValuesAreEqual(data.mesh.indices))
+            //    throw new Exception("indices");
+            //if (!model._textureCoordinates.ValuesAreEqual(data.mesh.textureCoords))
+            //    throw new Exception("textureCoordinates");
+
+            //if (!Collada.EFFECTORJOINTCOUNTS.ValuesAreEqual(Collada_OLD.EFFECTORJOINTCOUNTS))
+            //    throw new Exception("EFFECTORJOINTCOUNTS");
+            //if (!Collada.WEIGHTS.ValuesAreEqual(Collada_OLD.WEIGHTS))
+            //    throw new Exception("WEIGHTS");
+            //if (!Collada.JOINTIDSDATA.ValuesAreEqual(Collada_OLD.JOINTIDSDATA))
+            //    throw new Exception("JOINTIDSDATA");
+            //if (!Collada.JOINTWEIGHTSDATA.ValuesAreEqual(Collada_OLD.JOINTWEIGHTSDATA))
+            //    throw new Exception("JOINTWEIGHTSDATA");
+
+            //if (!model._jointWeights.ValuesAreEqual(data.mesh.vertexWeights))
+            //    throw new Exception("jointWeights");
+            //if (!model._jointIds.ValuesAreEqual(data.mesh.jointIds))
+            //    throw new Exception("jointIds");
+
+            ////model._jointIds = data.mesh.jointIds;
+            ////model._jointWeights = data.mesh.vertexWeights;
+
+            #endregion
 
             var textureFile = "GraphicsWindow.Resources.diffuse.png";
             Bitmap texture = new Bitmap(assembly.GetManifestResourceStream(textureFile));

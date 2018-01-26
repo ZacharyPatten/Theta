@@ -23,6 +23,8 @@ namespace Theta.Physics.Shapes
 
         public Sphere(Vector<T> position, Quaternion<T> orientation, T radius)
         {
+            Code.Assert<ArgumentException>(position.Dimensions == 3, "The position vector privided was not 3 dimensional.");
+
             this._position = position;
             this._orientation = orientation;
             this._radius = radius;

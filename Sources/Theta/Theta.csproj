@@ -90,19 +90,10 @@
     <Compile Include="Code.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Integer.cs" />
-    <Compile Include="Logic\Logic.cs" />
     <Compile Include="Measurements\Angle.cs" />
     <Compile Include="Mathematics\Compute.cs" />
     <Compile Include="Mathematics\Constants.cs" />
-    <Compile Include="Mathematics\Spaces\Collision.cs" />
-    <Compile Include="Mathematics\Spaces\Cube.cs" />
-    <Compile Include="Mathematics\Spaces\Line.cs" />
     <Compile Include="Mathematics\Matrix.cs" />
-    <Compile Include="Mathematics\Spaces\PointRadius.cs" />
-    <Compile Include="Mathematics\Spaces\Rectangle.cs" />
-    <Compile Include="Mathematics\Spaces\Space.cs" />
-    <Compile Include="Mathematics\Spaces\Square.cs" />
-    <Compile Include="Mathematics\Spaces\VectorRange.cs" />
     <Compile Include="Measurements\Attenuation.cs" />
     <Compile Include="Measurements\Current.cs" />
     <Compile Include="Measurements\Delegates.cs" />
@@ -138,7 +129,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyInfo.tt</DependentUpon>
     </Compile>
-    <Compile Include="RegularExpressions\RegularExpressionLibrary.cs" />
+    <Compile Include="RegularExpressions.cs" />
     <Compile Include="Serialize.cs" />
     <Compile Include="Structures\Array.cs" />
     <Compile Include="Structures\BTree.cs" />

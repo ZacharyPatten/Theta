@@ -1,6 +1,4 @@
-﻿using Theta.Mathematics.Spaces;
-
-namespace Theta.Mathematics
+﻿namespace Theta.Mathematics
 {
 	/// <summary>Represents a range denoted by a minimum and maximum point.</summary>
 	/// <typeparam name="T">The generic type </typeparam>

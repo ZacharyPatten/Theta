@@ -15,6 +15,8 @@ namespace Theta.Physics.Shapes
 
         public Cube(T halfLength, Vector<T> position, Quaternion<T> orientation)
         {
+            Code.Assert<ArgumentException>(position.Dimensions == 3, "The position vector privided was not 3 dimensional.");
+
             this._halfLength = halfLength;
             this._position = position;
             this._orientation = orientation;

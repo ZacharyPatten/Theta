@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Material.cs" />
-    <Compile Include="PhysicsObject.cs" />
+    <Compile Include="RigidPhysicsObject.cs" />
     <None Include="Properties\AssemblyInfo.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>AssemblyInfo1.cs</LastGenOutput>
@@ -52,12 +52,14 @@
       <DependentUpon>AssemblyInfo.tt</DependentUpon>
     </Compile>
     <Compile Include="Shapes\Capsule.cs" />
+    <Compile Include="Collision.cs" />
     <Compile Include="Shapes\Cone.cs" />
     <Compile Include="Shapes\Cube.cs" />
     <Compile Include="Shapes\Cylinder.cs" />
     <Compile Include="Shapes\INTERFACES.cs" />
     <Compile Include="Shapes\Cuboid.cs" />
-    <Compile Include="Shapes\ShapeOverlap.cs" />
+    <Compile Include="Shapes\Line.cs" />
+    <Compile Include="Shapes\ShapeOverlapDetection.cs" />
     <Compile Include="Shapes\Sphere.cs" />
     <Compile Include="PhysicsSystem.cs" />
   </ItemGroup>

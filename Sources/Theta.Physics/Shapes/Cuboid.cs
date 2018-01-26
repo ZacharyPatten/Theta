@@ -82,7 +82,7 @@ namespace Theta.Physics.Shapes
             {
                 // Optimization Notes:
                 // If we don't care about being very accurate, we can just encapsulate
-                // this cuboid in a large enough cuboid to accoutn for any rotation.
+                // this cuboid in a large enough cuboid to account for any rotation.
 
                 T maxDimension = Compute<T>.Maximum(this._halfLength, this._halfWidth, this._halfHeight);
                 T length = Compute<T>.Add(maxDimension, maxDimension);

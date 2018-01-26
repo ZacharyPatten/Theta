@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Theta.Mathematics.Spaces
+namespace Theta.Physics.Shapes
 {
-    public class Square
+    public class Line
     {
     }
 }
